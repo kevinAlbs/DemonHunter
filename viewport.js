@@ -16,6 +16,9 @@ GM.viewport = (function(){
 	var BGBufferFirstNode = 0; //index of ground array which the first node in the BGBuffer array points to
 	var BGBufferOffset = 0;
 
+	//timers
+	var randomizationTimer;
+
 	function generateTerrain(){
 		// generate heights
 		var sign = 1; // positive 10% chance of sign change
@@ -126,6 +129,25 @@ GM.viewport = (function(){
 		}
 		return LLNode;
 	};
+
+	/*
+	 this is the absolute x and y of the player
+	 changes offsets on viewport to follow player
+	*/
+	function updateOffsets(x,y){
+		//to center x:
+		xOffset = (x - cWidth / 2);
+		if(xOffset < leftMin){
+			xOffset = leftMin;
+		}
+		var rightBound = (rightMax - cWidth);
+		if(xOffset > rightBound){
+			xOffset = rightBound;
+		}
+
+		updateBGBuffer(xOffset, 0);
+	};
+
 	that.randomizeColor = function(){
 		var col = Math.floor(Math.random() * BGBuffer.getSize());
 		var row = Math.floor(Math.random() * (cHeight / 10));
@@ -143,7 +165,9 @@ GM.viewport = (function(){
 		generateTerrain();
 		initBGBuffer();
 	};
-
+	that.update = function(playerx, playery){
+		updateOffsets(playerx, playery);
+	};
 	that.paint = function(ctx){
 
 		var node = BGBuffer.iterate();
@@ -163,22 +187,10 @@ GM.viewport = (function(){
 	that.getXOffset = function(){
 		return xOffset;
 	};
-	/*
-	 this is the absolute x and y of the player
-	*/
-	that.updateOffsets = function(x,y){
-		//to center x:
-		xOffset = (x - cWidth / 2);
-		if(xOffset < leftMin){
-			xOffset = leftMin;
-		}
-		var rightBound = (rightMax - cWidth);
-		if(xOffset > rightBound){
-			xOffset = rightBound;
-		}
 
-		updateBGBuffer(xOffset, 0);
-	};
+
+
+
 
 	return that;
 }());

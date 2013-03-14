@@ -20,7 +20,8 @@ GM.logic = (function(){
 			d: false
 		};
 
-	var playerx = 400, playery = 100;//temps for testing viewport
+	var player = new playerMob();
+
 	function handleKeyDown(e){
 		//console.log(e.which);
 		switch(e.which){
@@ -75,12 +76,17 @@ GM.logic = (function(){
 	//TODO calculate real time diff and account for slow fps with extra updates etc.
 	function update(){
 		if(keys.r){
-			playerx += 3;
+			player.moveX(1);
 		}
-		if(keys.l){
-			playerx -= 3;
+		else if(keys.l){
+			player.moveX(-1);
 		}
-		GM.viewport.updateOffsets(playerx, playery);
+		else{
+			player.moveX(0);
+		}
+		
+		player.update();
+		GM.viewport.update(player.getX(), player.getY());
 		paint();
 		GM.viewport.randomizeColor();
 		if(!paused){
@@ -91,6 +97,7 @@ GM.logic = (function(){
 	function paint(){
 		ctx.clearRect(0,0,cWidth, cHeight);
 		GM.viewport.paint(ctx);
+		player.paint(ctx);
 	};
 
 	/* public methods */
@@ -99,5 +106,13 @@ GM.logic = (function(){
 		init();
 		update();
 	}
+	//returns ground from x1 to x2
+	that.getGround = function(x1, x2){
+		var ground = GM.viewport.getGround();
+		var e1 = Math.floor(x1/10);
+		var e2 = Math.ceil(x2/10);
+		return ground.slice(e1, e2);
+	};
+	that.getCHeight = function(){return cHeight;}
 	return that;
 }());

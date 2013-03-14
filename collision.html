@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Collision testing</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <style type="text/css">
+	canvas{
+		border: 1px black solid;
+	}
+  </style>
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <canvas id="mycanvas" width="800" height="600"></canvas>
+  <script>
+ 	var canvas = document.getElementById("mycanvas");
+ 	var ctx = canvas.getContext("2d");
+
+ 	var b1 = {
+ 		x: 10,
+ 		y: 10,
+ 		width: 100,
+ 		height: 100,
+ 		xVel : 3,
+ 		yVel : 6
+ 	};
+ 	var b2 = {
+ 		x: 200,
+ 		y: 200,
+ 		width: 100,
+ 		height: 100,
+ 		xVel : 0,
+ 		yVel : 0
+ 	};
+
+ 	function update(){
+ 		ctx.clearRect(0,0,800,600);
+ 		ctx.strokeRect(b1.x, b1.y, b1.width, b1.height);
+ 		ctx.strokeRect(b2.x, b2.y, b2.width, b2.height);
+ 		//check collisions based on velocity signs
+ 		var b1_brx = b1.x + b1.width;
+ 		var b1_bry = b1.y + b1.height;
+
+ 		var xerr = b1_brx - b2.x;
+ 		var yerr = b1_bry - b2.y;
+
+ 		if(xerr > 0 && yerr > 0 && xerr < b2.width && yerr < b2.height){
+ 			b1.x = b2.x - b1.width;
+ 			b1.xVel = 0;
+ 			console.log("Collision");
+ 		}
+ 		// console.log(xerr, yerr);
+
+ 		
+ 		b1.x += b1.xVel;
+ 		b1.y += b1.yVel;
+ 		b2.x += b2.xVel;
+ 		b2.y += b2.yVel;
+ 	}
+
+ 	window.setInterval(update, 1000/10);
+  </script>
+</body>
+</html>
