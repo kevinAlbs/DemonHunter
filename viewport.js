@@ -16,8 +16,8 @@ GM.viewport = (function(){
 	var BGBufferFirstNode = 0; //index of ground array which the first node in the BGBuffer array points to
 	var BGBufferOffset = 0;
 
-	//timers
-	var randomizationTimer;
+	var timeFactor = 0;//for time of day		
+	var time = 1;
 
 	function generateTerrain(){
 		// generate heights
@@ -60,7 +60,7 @@ GM.viewport = (function(){
 	};
 
 	function initBGBuffer(){
-		BGBuffer = new LinkedList();
+		BGBuffer = new BGBufferArray();
 		//make the size of the LL 1 + amount of 10x10 blocks that fit in width of screen
 		var bufferSize = cWidth/10 + 1;
 		for(var i = 0; i < bufferSize; i++){
@@ -93,7 +93,7 @@ GM.viewport = (function(){
 
 
 	};
-	function getColor(type, ref){
+	function getColor(row, type, ref){
 		//if ref is defined, this is a pass by reference
 		var cData;
 		if(ref){
@@ -103,31 +103,35 @@ GM.viewport = (function(){
 			//create new object
 			cData = {type: type};
 		}	
+
+		//apply scaled version timeFactor to background
+		//0 <= timeFactor <= 1000
+		
 		switch(type){
 			case 's':
-				cData.r =  120;
-				cData.g = 220;
-				cData.b = Math.floor(Math.random() * 25) + 210;
+				cData.r =  100 - row;
+				cData.g = 120 + 2 * row;
+				cData.b = Math.floor(Math.random() * 25) + 150 + 2 * row;
 			break;
 			case 'g':
-				cData.r = 80;
-				cData.g = Math.floor(Math.random() * 25) + 180;
-				cData.b = 50;
+				cData.r = 80 - 2 * row;
+				cData.g = Math.floor(Math.random() * 25) + 180 - row;
+				cData.b = 50 - 2 * row;
 			break;
 		}
 		return cData;
 	};
-	function colorColumn(LLNode, groundHeight){
+	function colorColumn(node, groundHeight){
 		//eventually this can depend on where in the map the player is
 		//which can be determined by the leftOffset	
-		var skyLim = (LLNode.pixels.length - groundHeight);
+		var skyLim = (node.pixels.length - groundHeight);
 		for(var i = 0; i < skyLim; i++){
-			LLNode.pixels[i] = getColor('s');
+			node.pixels[i] = getColor(i, 's');
 		}
-		for(var j = skyLim; j < LLNode.pixels.length; j++){
-			LLNode.pixels[j] = getColor('g');
+		for(var j = skyLim; j < node.pixels.length; j++){
+			node.pixels[j] = getColor(i, 'g');
 		}
-		return LLNode;
+		return node;
 	};
 
 	/*
@@ -153,7 +157,7 @@ GM.viewport = (function(){
 		var row = Math.floor(Math.random() * (cHeight / 10));
 		var nodeData = BGBuffer.getArr()[col];
 		var curPixel = nodeData.pixels[row];
-		getColor(curPixel.type, curPixel);
+		getColor(row, curPixel.type, curPixel);
 	};
 
 	that.init = function(cW, cH, mW){
@@ -167,6 +171,13 @@ GM.viewport = (function(){
 	};
 	that.update = function(playerx, playery){
 		updateOffsets(playerx, playery);
+		timeFactor += time;
+		if(timeFactor > 1000){
+			time = -1;
+		}
+		else if(timeFactor <= 0){
+			time = 1;
+		}
 	};
 	that.paint = function(ctx){
 

@@ -1,4 +1,4 @@
-var GM = {};
+
 /*
  * contains game logic
  * acts as mediator
@@ -84,6 +84,10 @@ GM.logic = (function(){
 		else{
 			player.moveX(0);
 		}
+
+		if(keys.u){
+			player.jump();
+		}
 		
 		player.update();
 		GM.viewport.update(player.getX(), player.getY());
@@ -111,8 +115,13 @@ GM.logic = (function(){
 		var ground = GM.viewport.getGround();
 		var e1 = Math.floor(x1/10);
 		var e2 = Math.ceil(x2/10);
+		if(e1 < 0) e1 = 0;
+		if(e2 > ground.length) e2 = ground.length;
 		return ground.slice(e1, e2);
 	};
+	that.getXOffset = function(){
+		return GM.viewport.getXOffset();
+	}
 	that.getCHeight = function(){return cHeight;}
 	return that;
 }());
