@@ -21,9 +21,9 @@ function Animation(frames){
 	this._curFrame = 0;
 	this._ticks = 0;//counter incremented on update, set to 0 on each frame change
 
-	function updateFrame(){
+	this._updateFrame = function(){
 		this._ticks++;
-		if(this._ticks > this._frames[this._curFrame]){
+		if(this._ticks > this._frames[this._curFrame].time){
 			this._curFrame++;
 			if(this._curFrame >= this._frames.length){
 				this._curFrame = 0;
@@ -37,7 +37,13 @@ function Animation(frames){
 	*/
 	this.drawFrame = function(x,y,width,height,ctx){
 		var f = this._frames[this._curFrame];
-		ctx.drawImage(f.x, f.y, f.width, f.height, x, y, f.width, f.height);
+		ctx.drawImage(GM.deps.spritesheet, f.x, f.y, f.width, f.height, x, y, f.width, f.height);
+		this._updateFrame();
+	}
+
+	this.reset = function(){
+		this._ticks = 0;
+		this._curFrame = 0;
 	}
 };
 
