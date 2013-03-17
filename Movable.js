@@ -7,61 +7,63 @@ function Movable(){
 	if(this == window){
 		return new Movable();
 	}
-	this.x = 0;
-	this.y = 0;
-	this.width = 0;
-	this.height = 0;
-	this.xVel = 0;
-	this.yVel = 0;
-	this.gravity = 0;
-	this.onGround = false;
+	this._x = 0;
+	this._y = 0;
+	this._width = 0;
+	this._height = 0;
+	this._xVel = 0;
+	this._yVel = 0;
+	this._gravity = 0;
+	this._onGround = false;
 }
 
+GM.utils.inherits(Movable, Paintable);
+
 //default properties
-Movable.prototype.collidingWith(movable){
+Movable.prototype.collidingWith = function(movable){
 	//returns true/false if colliding with other movable object
 };
 
 //updates gravity, checks for collision with ground
 Movable.prototype.gravityUpdate = function(){
 		var ground;
-		if(xVel > 0){
+		if(this._xVel > 0){
 			//add x velocity to 'to' parameter
-			ground = GM.logic.getGround(this.x, this.x+this.width+this.xVel);
+			ground = GM.logic.getGround(this._x, this._x+this._width+this._xVel);
 		}
 		else{
 			//add x velocity to 'from' parameter
-			ground = GM.logic.getGround(this.x+this.xVel, this.x+this.width);
+			ground = GM.logic.getGround(this._x+this._xVel, this._x+this._width);
 		}
-		var cHeight = GM.logic.getCHeight();
+		var c_height = GM.logic.getCHeight();
 
 		//check if about to hit ground xwise
-		if(this.xVel > 0){
+		if(this._xVel > 0){
 			//check right side
 			//do I only have to check the last ground block?
 			//we know that getGround will get the last block which x is moving to
 			//or that the first block will be the block which x is moving to
-			actualHeight = cHeight - ground[ground.length-1] * 10;
-			if(this.y + this.height > actualHeight){
+			actual_height = c_height - ground[ground.length-1] * 10;
+			if(this._y + this._height > actual_height){
 				//move up to just before the block they are about to hit
-				this.x = (this.x + this.xVel + this.width) - ((this.x + this.xVel + this.width) % 10) - this.width;
-				this.xVel = 0;
+				this._x = (this._x + this._xVel + this._width) - ((this._x + this._xVel + this._width) % 10) - this._width;
+				this._xVel = 0;
 				//remove the last block from y checking, since it will not be moving there
 				ground.splice(ground.length-1, 1);
 			}
 		}
-		else if(xVel < 0){
+		else if(this._xVel < 0){
 			//check left side
-			actualHeight = cHeight - ground[0] * 10;
-			if(this.y + this.height > actualHeight){
+			actual_height = c_height - ground[0] * 10;
+			if(this._y + this._height > actual_height){
 				//move up to just before the block they are about to hit
-				this.x = (this.x + this.xVel) + (10 - ((this.x + this.xVel) % 10));
-				this.xVel = 0;
+				this._x = (this._x + this._xVel) + (10 - ((this._x + this._xVel) % 10));
+				this._xVel = 0;
 				//remove the last block from y checking, since it will not be moving there
 				ground.splice(0, 1);
 			}
 		}	
-		this.x += this.xVel;
+		this._x += this._xVel;
 
 		//see if about to hit ground or if off of ground
 		var highest = 0; 
@@ -70,27 +72,31 @@ Movable.prototype.gravityUpdate = function(){
 				highest = ground[i];	
 			}
 		}
-		var actualHeight = cHeight - highest * 10;
+		var actual_height = c_height - highest * 10;
 
-		if(this.onGround == false){
-			if(this.yVel < terminalVelocity){
+		if(this._onGround == false){
+			if(this._yVel < this._terminalVelocity){
 				//apply gravity
-				this.yVel += this.gravity;
+				this._yVel += this._gravity;
 			}
 		}
 		//if the player is already on the ground, check if they are no longer on the ground by checking one pixel below them
-		if(this.onGround && this.y + 1 + this.height < actualHeight){
+		if(this._onGround && this._y + 1 + this._height < actual_height){
 			//no longer on ground
-			this.yVel += this.gravity;
-			this.onGround = false;
+			this._yVel += this._gravity;
+			this._onGround = false;
 		}
 
 		//else check if they are mid air and falling and about to hit the ground
-		if(this.y + this.yVel + this.height > actualHeight){
-			this.y = actualHeight - this.height;
-			this.yVel = 0;
-			this.onGround = true;
+		if(this._y + this._yVel + this._height > actual_height){
+			this._y = actual_height - this._height;
+			this._yVel = 0;
+			this._onGround = true;
 		}
 
-		this.y += this.yVel;
+		this._y += this._yVel;
 	};
+
+Movable.prototype.getX = function(){return this._x;}
+Movable.prototype.getY = function(){return this._y;}
+

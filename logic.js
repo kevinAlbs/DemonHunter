@@ -20,7 +20,7 @@ GM.logic = (function(){
 			d: false
 		};
 
-	var player = new playerMob();
+	var player = new Player();
 
 	function handleKeyDown(e){
 		//console.log(e.which);
