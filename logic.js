@@ -27,19 +27,21 @@ GM.logic = (function(){
 		switch(e.which){
 			case 39:
 			keys.r = true;
+			e.preventDefault();
 			break;
 			case 37:
 			keys.l = true;
+			e.preventDefault();
 			break;
 			case 38:
 			keys.u = true;
+			e.preventDefault();
 			break;
 			case 40:
 			keys.d = true;
+			e.preventDefault();
 			break;
 		}
-		e.preventDefault();
-		return false;
 	};
 
 	function handleKeyUp(e){
