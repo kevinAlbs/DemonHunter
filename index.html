@@ -9,19 +9,31 @@
 <body>
 <canvas id="mycanvas" width="800" height="600"></canvas>
 <script>
+	var deps = [
+		{
+			type: 'img',
+			name: 'spritesheet',
+			src: 'spritesheet.png'
+		}
+	];
 	var GM = {};
 	GM.debug = true;
 </script>
 <script src="utils.js"></script>
 <script src="BGBufferArray.js"></script>
 <script src="Paintable.js"></script>
+<script src="Animation.js"></script>
 <script src="Movable.js"></script>
 <script src="Mob.js"></script>
 <script src="Player.js"></script>
 <script src="logic.js"></script>
 <script src="viewport.js"></script>
 <script>
-	window.addEventListener("load", function(){GM.logic.startGame();});
+function pageLoaded(){
+	//onces deps are loaded, start game
+	GM.logic.loadDependencies(deps, function(){GM.logic.startGame();});
+}
+window.addEventListener("load", pageLoaded);
 </script>
 </body>
 </html>

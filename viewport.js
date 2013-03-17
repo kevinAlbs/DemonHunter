@@ -77,13 +77,11 @@ GM.viewport = (function(){
 		//find the current xOffset and see the diff
 		while(targetFirstNode > BGBufferFirstNode){
 			//the user has moved to the right, increasing the xOffset
-				console.log(xOffset);
-				BGBufferFirstNode++;
-				var nodeNum = cWidth/10 + BGBufferFirstNode;
-				colorColumn(BGBuffer.shiftLeft(), ground[nodeNum]);	
+			BGBufferFirstNode++;
+			var nodeNum = cWidth/10 + BGBufferFirstNode;
+			colorColumn(BGBuffer.shiftLeft(), ground[nodeNum]);	
 		}	
 		while(targetFirstNode < BGBufferFirstNode){
-			console.log(xOffset);
 			BGBufferFirstNode--;
 			colorColumn(BGBuffer.shiftRight(), ground[BGBufferFirstNode]);	
 		}

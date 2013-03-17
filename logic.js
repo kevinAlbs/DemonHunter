@@ -112,6 +112,38 @@ GM.logic = (function(){
 		init();
 		update();
 	}
+
+	/* deps is defined as an array of objects describing media type:
+	[{
+		type: 'img',
+		src: 'filepath.jpg',
+		name: 'spritesheet'
+	}]
+	name is final name in GM.deps
+	*/
+	that.loadDependencies = function(deps, callback){
+		var total = deps.length, loadedTotal = 0;
+		GM.deps = {};
+		function loaded(){
+			loadedTotal++;
+			if(loadedTotal == total){
+				//finished loading all dependencies
+				callback.call(window);
+			}
+		}
+		//load each one
+		for(var i = 0; i < deps.length; i++){
+			switch(deps[i].type){
+				case "img":
+					//load image
+					var img = new Image();
+					img.onload = loaded;
+					img.src = deps[i].src;
+					GM.deps[deps[i].name] = img;
+				break;
+			}
+		}
+	}
 	//returns ground from x1 to x2
 	that.getGround = function(x1, x2){
 		var ground = GM.viewport.getGround();
