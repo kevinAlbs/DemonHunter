@@ -83,7 +83,7 @@ function Player(){
 		this.gravityUpdate();
 	};
 	this.paint = function(ctx){
-		curAnimation.drawFrame(this._x - GM.logic.getXOffset(), this._y, this._width, this._height, ctx);
+		curAnimation.drawFrame(this._x - GM.logic.getXOffset(), this._y, this._width, this._height, ctx, this._xDir);
 		if(GM.debug){
 			ctx.fillText(this._x + "," + this._y, this._x - GM.logic.getXOffset(), this._y - 10);
 		}

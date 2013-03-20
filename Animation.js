@@ -34,10 +34,21 @@ function Animation(frames){
 	/*
 		x,y,width,height - describes bounding box of mob/object which this animation applies to,
 		the image will be centered around this rectangular area
+		dir - the direction the mob is facing (1 for right, -1 for left), image will be flipped to face that direction
 	*/
-	this.drawFrame = function(x,y,width,height,ctx){
+	this.drawFrame = function(x,y,width,height,ctx, dir){
 		var f = this._frames[this._curFrame];
-		ctx.drawImage(GM.deps.spritesheet, f.x, f.y, f.width, f.height, x, y, f.width, f.height);
+		var flip = 1, offset = 0;
+		if(dir == -1){
+			ctx.save();
+			ctx.scale(-1, 1);
+			flip = -1;
+			offset = -1 * f.width;
+		}
+		ctx.drawImage(GM.deps.spritesheet, f.x, f.y, f.width, f.height, flip * x + offset, y,  f.width, f.height);
+		if(dir == -1){
+			ctx.restore();
+		}
 		this._updateFrame();
 	}
 
