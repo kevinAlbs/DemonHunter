@@ -17,73 +17,21 @@ function Player(){
 	this.name = "Kaitlin";
 	this._state = "user_controlled";//no higher level behavior
 
-	//create the player animation
-	var frames = [
-		{
-			x: 0,
-			y: 0,
-			width: 22,
-			height: 60,
-			time: 10
-		},
-		{
-			x: 22,
-			y: 0,
-			width: 22,
-			height: 60,
-			time: 10
-		},
-		{
-			x: 44,
-			y: 0,
-			width: 22,
-			height: 60,
-			time: 10
-		},
-		{
-			x: 66,
-			y: 0,
-			width: 22,
-			height: 60,
-			time: 10
-		},
-		{
-			x: 88,
-			y: 0,
-			width: 22,
-			height: 60,
-			time: 10
-		},
-		{
-			x: 110,
-			y: 0,
-			width: 22,
-			height: 60,
-			time: 1
-		}
-	];
-	var animations = {
-		walking: new Animation(frames),
-		standing : new Animation([{
-			x:0,
-			y:0,
-			width: 22,
-			height: 60,
-			time: 1
-		}])
-	}
-	var curAnimation = animations.standing;
+	
+	var animation_set = new AnimationSet(GM.data.animation_sets.Player);
+	animation_set.switchAnimation("standing");
+
 	this.update = function(){
 		if(this._walking){
-			curAnimation = animations.walking;
+			animation_set.switchAnimation("walking");//remember, only actually switches if it is not already walking
 		}
 		else{
-			curAnimation = animations.standing;
+			animation_set.switchAnimation("standing");
 		}
 		this.gravityUpdate();
 	};
 	this.paint = function(ctx){
-		curAnimation.drawFrame(this._x - GM.logic.getXOffset(), this._y, this._width, this._height, ctx, this._xDir);
+		animation_set.drawFrame(this._x - GM.logic.getXOffset(), this._y, this._width, this._height, ctx, this._facing);
 		if(GM.debug){
 			ctx.fillText(this._x + "," + this._y, this._x - GM.logic.getXOffset(), this._y - 10);
 		}

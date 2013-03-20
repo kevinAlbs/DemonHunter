@@ -9,20 +9,17 @@
 <body>
 <canvas id="mycanvas" width="800" height="600"></canvas>
 <script>
-	var deps = [
-		{
-			type: 'img',
-			name: 'spritesheet',
-			src: 'spritesheet.png'
-		}
-	];
 	var GM = {};
 	GM.debug = true;
+	//I don't quite like the sequential file loading, but it'll do for now
 </script>
+
+<script src="data.js"></script>
 <script src="utils.js"></script>
 <script src="BGBufferArray.js"></script>
 <script src="Paintable.js"></script>
 <script src="Animation.js"></script>
+<script src="AnimationSet.js"></script>
 <script src="Movable.js"></script>
 <script src="Mob.js"></script>
 <script src="Player.js"></script>
@@ -31,7 +28,7 @@
 <script>
 function pageLoaded(){
 	//onces deps are loaded, start game
-	GM.logic.loadDependencies(deps, function(){GM.logic.startGame();});
+	GM.logic.loadDependencies(GM.data.dependencies, function(){GM.logic.startGame();});
 }
 window.addEventListener("load", pageLoaded);
 </script>

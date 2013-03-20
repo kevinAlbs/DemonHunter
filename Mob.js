@@ -3,17 +3,19 @@ function Mob(){
 	this._jumpSpeed = -9;
 	this._xSpeed = 5;//walking speed
 	this._walking = false;
-	this._xDir = 0;
+	this._facing = 1;//-1 for facing left, 1 for facing right, NEVER 0
 	this.name = "";
 
 	//dir must be -1, 0, or 1
 	this.moveX = function(dir){
 		if(dir > 1 || dir < -1){return;}
-		if(dir != 0) this._walking = true;
+		if(dir != 0){
+			this._walking = true;
+			this._facing = dir;
+		} 
 		else this._walking = false;
 
 		this._xVel = dir * this._xSpeed;
-		this._xDir = dir;
 	};
 	this.jump = function(){
 		if(this._onGround){
