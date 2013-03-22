@@ -32,6 +32,7 @@ function Player(){
 	};
 	this.paint = function(ctx){
 		animation_set.drawFrame(this._x - GM.logic.getXOffset(), this._y, this._width, this._height, ctx, this._facing);
+		ctx.strokeRect(this._x - GM.logic.getXOffset(), this._y, this._width, this._height);
 		if(GM.debug){
 			ctx.fillText(this._x + "," + this._y, this._x - GM.logic.getXOffset(), this._y - 10);
 		}

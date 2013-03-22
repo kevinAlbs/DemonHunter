@@ -1,3 +1,4 @@
+//manages multiple animations (making it easier for mobs to switch between different animations etc.)
 function AnimationSet(set){
 	if(this == window){
 		return new AnimationSet(set);

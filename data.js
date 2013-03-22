@@ -5,7 +5,7 @@ GM.data = {
 		{
 			type: 'img',
 			name: 'spritesheet',
-			src: 'spritesheet.png'
+			src: 'spritesheet.gif?V2'
 		}
 	],
 	//all of the animation data for the locations/times on spritesheet
