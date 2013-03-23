@@ -13,7 +13,8 @@ function Movable(){
 	this._height = 0;
 	this._xVel = 0;
 	this._yVel = 0;
-	this._gravity = 0;
+	this._gravity = .75;
+	this._terminalVelocity = 9;
 	this._onGround = false;
 }
 
@@ -23,7 +24,19 @@ GM.utils.inherits(Movable, Paintable);
 Movable.prototype.collidingWith = function(movable){
 	//returns true/false if colliding with other movable object
 };
-
+//set the y coordinate relative to ground so movable object can be placed directly on ground
+Movable.prototype.setOnGround = function(){
+	ground = GM.logic.getGround(this._x, this._x+this._width);
+	var highest = 0;
+	var c_height = GM.logic.getCHeight();
+	for(var i = 0; i < ground.length; i++){
+		if(ground[i] > highest){
+			highest = ground[i];	
+		}
+	}
+	var actual_height = c_height - highest * 10;
+	this._y = actual_height - this._height;
+};
 //updates gravity, checks for collision with ground
 Movable.prototype.gravityUpdate = function(){
 		var ground;
@@ -97,6 +110,5 @@ Movable.prototype.gravityUpdate = function(){
 		this._y += this._yVel;
 	};
 
-Movable.prototype.getX = function(){return this._x;}
-Movable.prototype.getY = function(){return this._y;}
+
 

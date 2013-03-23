@@ -194,9 +194,15 @@ GM.viewport = (function(){
 		return xOffset;
 	};
 
+	//obj inherits Paintable
+	that.inScreen = function(obj){
+		if(obj.getX() + obj.getWidth() > xOffset){
+			if(obj.getX() < xOffset + cWidth){
+				return true;
+			}	
+		}
 
-
-
+	};
 
 	return that;
 }());

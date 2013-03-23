@@ -12,8 +12,6 @@ function Player(){
 	this._yVel = 3,
 	this._width = 22, 
 	this._height = 60;
-	this._gravity = .75;
-	this._terminalVelocity = 9;
 	this.name = "Kaitlin";
 	this._state = "user_controlled";//no higher level behavior
 
@@ -39,4 +37,4 @@ function Player(){
 	}
 };
 
-GM.utils.inherits(Player, Mob);
+GM.utils.inherits(Player, Person);

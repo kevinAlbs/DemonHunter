@@ -5,6 +5,16 @@ function Paintable(){
 	this._width = 10;
 	this._height = 10;
 }
+Paintable.prototype.setX = function(val){
+	//check within bounds
+	if(val >= 0){
+		this._x = val;
+	}
+};
+Paintable.prototype.getX = function(){return this._x;}
+Paintable.prototype.getY = function(){return this._y;}
+Paintable.prototype.getWidth = function(){return this._width;}
+Paintable.prototype.getHeight = function(){return this._height;}
 Paintable.prototype.paint = function(ctx){
 	//default
 	ctx.fillRect(this._x - GM.logic.getXOffset(),this._y,this._width, this._height);
