@@ -15,16 +15,21 @@ function Player(){
 	this.name = "Kaitlin";
 	this._state = "user_controlled";//no higher level behavior
 
-	
+	var swingingSword = false;
 	var animation_set = new AnimationSet(GM.data.animation_sets.Player);
 	animation_set.switchAnimation("standing");
-
+	function doneSwing(){
+		swingingSword = false;
+		console.log("done swing");
+	}
 	this.update = function(){
-		if(this._walking){
-			animation_set.switchAnimation("walking");//remember, only actually switches if it is not already walking
-		}
-		else{
-			animation_set.switchAnimation("standing");
+		if(!swingingSword){
+			if(this._walking){
+				animation_set.switchAnimation("walking");//remember, only actually switches if it is not already walking
+			}
+			else{
+				animation_set.switchAnimation("standing");
+			}
 		}
 		this.gravityUpdate();
 	};
@@ -34,6 +39,11 @@ function Player(){
 		if(GM.debug){
 			ctx.fillText(this._x + "," + this._y, this._x - GM.logic.getXOffset(), this._y - 10);
 		}
+	}
+	this.swingSword = function(){
+		if(swingingSword) return;
+		swingingSword = true;
+		animation_set.switchAnimation("swing_sword", doneSwing);
 	}
 };
 

@@ -58,7 +58,7 @@ function Enemy(){
 					this.moveX(disp/dist);
 				}
 				else{
-					console.log("ATTACK!");
+					//console.log("ATTACK!");
 					break;
 				}
 			break;

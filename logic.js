@@ -108,6 +108,9 @@ GM.logic = (function(){
 			cObs.player.jump();
 		}
 		
+		if(keys.d){
+			cObs.player.swingSword();
+		}	
 		//update everything
 		cObs.player.update();
 		GM.viewport.update(cObs.player.getX(), cObs.player.getY());

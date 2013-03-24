@@ -12,7 +12,7 @@ function AnimationSet(set){
 		}
 	}
 	//switches and resets current animation
-	this.switchAnimation = function(newAnim){
+	this.switchAnimation = function(newAnim, callback){
 		if(newAnim == this._curAnimation){
 			return;//ignore since it is already on this animation
 		}
@@ -21,6 +21,10 @@ function AnimationSet(set){
 		}
 		if(newAnim in this._set){
 			this._curAnimation = newAnim;
+			//check if user provided callback
+			if(callback){
+				this._set[this._curAnimation].setCallback(callback);
+			}
 		}
 		else{
 			console.log(newAnim + "not in animation set");

@@ -63,6 +63,29 @@ GM.data = {
 					height: 60,
 					time: 1
 				}
+			],
+			swing_sword: [
+				{
+					x:0,
+					y:60,
+					width: 44,
+					height: 60,
+					time: 5
+				},
+				{
+					x:44,
+					y:60,
+					width: 44,
+					height: 60,
+					time: 5
+				},
+				{
+					x:88,
+					y:60,
+					width: 44,
+					height: 60,
+					time: 5
+				},
 			]
 		}
 	}
