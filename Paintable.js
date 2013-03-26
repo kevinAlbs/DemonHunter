@@ -24,5 +24,8 @@ Paintable.prototype.paint = function(ctx){
 	ctx.fillRect(this._x - GM.logic.getXOffset(),this._y,this._width, this._height);
 	if(GM.debug){
 		ctx.fillText(this._x + "," + this._y, this._x - GM.logic.getXOffset(), this._y - 10);
+		if(typeof this.getHealth == "function"){
+			ctx.fillText(this.getHealth(), this._x - GM.logic.getXOffset(), this._y - 20);
+		}
 	}
 };

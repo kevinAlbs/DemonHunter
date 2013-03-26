@@ -29,12 +29,13 @@ Movable.prototype.collidingWith = function(movable){
 		top2 = movable.getY(),
 		right1 = this._x + this._width,
 		right2 = movable.getX() + movable.getWidth(),
-		bottom1 = this._y + this.height,
+		bottom1 = this._y + this._height,
 		bottom2 = movable._y + movable.getHeight();
-		if(bottom1 < top2){
+		if(bottom1 < top2 || top1 > bottom2 || left1 > right2 || right1 < left2){
 			return false;
 		}
-		
+		console.log(bottom1, top2);
+		return true;
 };
 //set the y coordinate relative to ground so movable object can be placed directly on ground
 Movable.prototype.setOnGround = function(){

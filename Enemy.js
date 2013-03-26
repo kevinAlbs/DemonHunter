@@ -9,6 +9,9 @@ function Enemy(){
 
 	};
 	this.update = function(){
+		//call super.update to update hurt state
+		Enemy.prototype.update.apply(this);
+
 		//check whether it is on screen
 		var inScreen = GM.logic.inScreen(this);
 		var playerX = GM.logic.getPlayerX();
@@ -63,6 +66,7 @@ function Enemy(){
 				}
 			break;
 		}
+
 		this.gravityUpdate();
 		//check after gravityUpdate if trying to move but stuck
 		if(this._state == "follow_player" && this._xVel == 0){

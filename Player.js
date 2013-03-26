@@ -26,10 +26,11 @@ function Player(){
 		swingingSword = false;
 		sword.setWidth(0);
 		sword.setHeight(0);
-		console.log("done swing");
 	};
 
 	this.update = function(){
+		//call super.update to update hurt state
+		Player.prototype.update.apply(this);
 		if(!swingingSword){
 			if(this._walking){
 				animation_set.switchAnimation("walking");//remember, only actually switches if it is not already walking
@@ -60,7 +61,7 @@ function Player(){
 	this.paint = function(ctx){
 		animation_set.drawFrame(this._x - GM.logic.getXOffset(), this._y, this._width, this._height, ctx, this._facing);
 		ctx.strokeRect(this._x - GM.logic.getXOffset(), this._y, this._width, this._height);
-		//sword.paint(ctx);
+		sword.paint(ctx);
 		if(GM.debug){
 			ctx.fillText(this._x + "," + this._y, this._x - GM.logic.getXOffset(), this._y - 10);
 		}

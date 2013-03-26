@@ -98,6 +98,13 @@ GM.logic = (function(){
 		//check important collisions
 		//check if player's sword is colliding with enemies or leaves
 		//check if sword is colliding
+		var sword = cObs.player.getSword();
+		if(sword && sword.collidingWith(cObs.enemyTest)){
+			console.log("colliding");
+			if(!cObs.enemyTest.isHurt()){
+				cObs.enemyTest.hurt(10);
+			}
+		}
 	}
 	//TODO calculate real time diff and account for slow fps with extra updates etc.
 	function update(){
