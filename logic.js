@@ -97,7 +97,7 @@ GM.logic = (function(){
 	function checkCollisions(){
 		//check important collisions
 		//check if player's sword is colliding with enemies or leaves
-		
+		//check if sword is colliding
 	}
 	//TODO calculate real time diff and account for slow fps with extra updates etc.
 	function update(){
