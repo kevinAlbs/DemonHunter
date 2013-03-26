@@ -40,7 +40,7 @@ function Player(){
 		}
 
 		this.gravityUpdate();
-		
+
 		if(swingingSword){
 			//update sword position based on location and sword animation progress
 			var totalFrames = GM.data.animation_sets.Player.swing_sword.length;
@@ -60,7 +60,7 @@ function Player(){
 	this.paint = function(ctx){
 		animation_set.drawFrame(this._x - GM.logic.getXOffset(), this._y, this._width, this._height, ctx, this._facing);
 		ctx.strokeRect(this._x - GM.logic.getXOffset(), this._y, this._width, this._height);
-		sword.paint(ctx);
+		//sword.paint(ctx);
 		if(GM.debug){
 			ctx.fillText(this._x + "," + this._y, this._x - GM.logic.getXOffset(), this._y - 10);
 		}
