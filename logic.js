@@ -17,7 +17,8 @@ GM.logic = (function(){
 			l: false, //left
 			r: false, //right
 			u: false,
-			d: false
+			d: false,
+			z: false,//letter z
 		},
 		//collidable objects, categorized for ease of use
 		//make into linked lists
@@ -26,7 +27,7 @@ GM.logic = (function(){
 
 
 	function handleKeyDown(e){
-		//console.log(e.which);
+		console.log(e.which);
 		switch(e.which){
 			case 39:
 			keys.r = true;
@@ -42,6 +43,10 @@ GM.logic = (function(){
 			break;
 			case 40:
 			keys.d = true;
+			e.preventDefault();
+			break;
+			case 90:
+			keys.z = true;
 			e.preventDefault();
 			break;
 		}
@@ -60,6 +65,9 @@ GM.logic = (function(){
 			break;
 			case 40:
 			keys.d = false;
+			break;
+			case 90:
+			keys.z = false;
 			break;
 		}
 		e.preventDefault();
@@ -89,6 +97,7 @@ GM.logic = (function(){
 	function checkCollisions(){
 		//check important collisions
 		//check if player's sword is colliding with enemies or leaves
+		
 	}
 	//TODO calculate real time diff and account for slow fps with extra updates etc.
 	function update(){
@@ -108,7 +117,7 @@ GM.logic = (function(){
 			cObs.player.jump();
 		}
 		
-		if(keys.d){
+		if(keys.z){
 			cObs.player.swingSword();
 		}	
 		//update everything

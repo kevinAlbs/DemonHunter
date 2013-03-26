@@ -67,5 +67,9 @@ function Animation(frames){
 	this.setCallback = function(cb){
 		callback = cb;
 	};
+
+	this.getCurFrame = function(){
+		return this._curFrame;
+	}
 };
 

@@ -23,6 +23,18 @@ GM.utils.inherits(Movable, Paintable);
 //default properties
 Movable.prototype.collidingWith = function(movable){
 	//returns true/false if colliding with other movable object
+	var left1 = this._x,
+		left2 = movable.getX(),
+		top1 = this._y,
+		top2 = movable.getY(),
+		right1 = this._x + this._width,
+		right2 = movable.getX() + movable.getWidth(),
+		bottom1 = this._y + this.height,
+		bottom2 = movable._y + movable.getHeight();
+		if(bottom1 < top2){
+			return false;
+		}
+		
 };
 //set the y coordinate relative to ground so movable object can be placed directly on ground
 Movable.prototype.setOnGround = function(){

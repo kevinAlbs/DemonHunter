@@ -38,4 +38,8 @@ function AnimationSet(set){
 	this.getCurAnimation = function(){
 		return this._curAnimation;
 	}
+
+	this.getCurFrame = function(){
+		return this._set[this._curAnimation].getCurFrame();
+	}
 }
