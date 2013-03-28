@@ -93,6 +93,9 @@ GM.logic = (function(){
 		cObs.enemyTest.setX(200);
 		cObs.enemyTest.setOnGround();
 		//now generate trees, mobs, etc.
+
+		cObs.treeTest = new Tree();
+		cObs.treeTest.setOnGround();
 	}
 	function checkCollisions(){
 		//check important collisions
@@ -102,7 +105,7 @@ GM.logic = (function(){
 		if(sword && sword.collidingWith(cObs.enemyTest)){
 			console.log("colliding");
 			if(!cObs.enemyTest.isHurt()){
-				cObs.enemyTest.hurt(10);
+				cObs.enemyTest.hurt(50);
 			}
 		}
 	}
@@ -142,8 +145,13 @@ GM.logic = (function(){
 	function paint(){
 		ctx.clearRect(0,0,cWidth, cHeight);
 		GM.viewport.paint(ctx);
+		//paint trees
+		cObs.treeTest.paint(ctx);
+		//paint player
 		cObs.player.paint(ctx);
+		//paint enemies
 		cObs.enemyTest.paint(ctx);
+
 	};
 
 	/* public methods */
@@ -197,6 +205,7 @@ GM.logic = (function(){
 		return GM.viewport.getXOffset();
 	}
 	that.getCHeight = function(){return cHeight;}
+	that.getCWidth = function(){return cWidth;}
 	that.inScreen = function(obj){
 		return GM.viewport.inScreen(obj);
 	}

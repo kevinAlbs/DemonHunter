@@ -9,11 +9,14 @@ function Mob(){
 	//dir must be -1, 0, or 1
 	this.moveX = function(dir){
 		if(dir > 1 || dir < -1){return;}
+
 		if(dir != 0){
 			this._walking = true;
 			this._facing = dir;
 		} 
-		else this._walking = false;
+		else{
+			this._walking = false;
+		}
 
 		this._xVel = dir * this._xSpeed;
 	};

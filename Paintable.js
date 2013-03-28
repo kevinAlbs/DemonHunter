@@ -29,3 +29,17 @@ Paintable.prototype.paint = function(ctx){
 		}
 	}
 };
+
+//set the y coordinate relative to ground so movable object can be placed directly on ground
+Paintable.prototype.setOnGround = function(){
+	ground = GM.logic.getGround(this._x, this._x+this._width);
+	var highest = 0;
+	var c_height = GM.logic.getCHeight();
+	for(var i = 0; i < ground.length; i++){
+		if(ground[i] > highest){
+			highest = ground[i];	
+		}
+	}
+	var actual_height = c_height - highest * 10;
+	this._y = actual_height - this._height;
+};
