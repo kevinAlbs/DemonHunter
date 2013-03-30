@@ -22,6 +22,7 @@ function Player(){
 
 	var animation_set = new AnimationSet(GM.data.animation_sets.Player);
 	animation_set.switchAnimation("standing");
+
 	function doneSwing(){
 		swingingSword = false;
 		sword.setWidth(0);

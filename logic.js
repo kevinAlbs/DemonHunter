@@ -82,7 +82,7 @@ GM.logic = (function(){
 		ctx = cnv.getContext("2d");
 		cWidth = cnv.width;
 		cHeight = cnv.height;
-		mapWidth = 100;//in blocks
+		mapWidth = 1000;//in blocks
 		document.addEventListener("keydown",handleKeyDown, false);
 		document.addEventListener("keyup",handleKeyUp, false);
 		GM.viewport.init(cWidth, cHeight, mapWidth);
@@ -98,23 +98,29 @@ GM.logic = (function(){
 		//now generate trees, mobs, etc.
 
 		cObs.treeTest = new Tree();
-		cObs.treeTest.setOnGround();
+		
 	}
 	function checkCollisions(){
 		//check important collisions
 		//check if player's sword is colliding with enemies or leaves
 		//check if sword is colliding
 		var sword = cObs.player.getSword();
-		if(sword && sword.collidingWith(cObs.enemyTest)){
-			console.log("colliding");
-			if(!cObs.enemyTest.isHurt()){
-				cObs.enemyTest.hurt(50);
-				if(cObs.enemyTest.isDead()){
-					//remove
-					
+		if(sword){
+			//check sword collisions
+			if(sword.collidingWith(cObs.enemyTest)){
+				console.log("colliding");
+				if(!cObs.enemyTest.isHurt()){
+					cObs.enemyTest.hurt(50);
+					if(cObs.enemyTest.isDead()){
+						//remove
+
+					}
 				}
 			}
+			//check with any trees in vicinity
 		}
+		
+
 	}
 	//TODO calculate real time diff and account for slow fps with extra updates etc.
 	function update(){
@@ -145,7 +151,7 @@ GM.logic = (function(){
 		paint();
 		GM.viewport.randomizeColor();
 		if(!paused){
-			timer = window.setTimeout(update, Math.floor(1000 / fps));
+			timer = window.setTimeout(update, Math.floor(1000 / fps)); //TODO: change to requestAnimationKeyframe or something
 		}
 		//now that update has run, set all key presses to false
 		keys.zp = false;
@@ -219,7 +225,10 @@ GM.logic = (function(){
 	that.inScreen = function(obj){
 		return GM.viewport.inScreen(obj);
 	}
-	that.getPlayerX = function(){return cObs.player.getX();}
-	that.getPlayerWidth = function(){return cObs.player.getWidth();}
+	that.getPlayerX = function(){return cObs.player.getX();};
+	that.getPlayerWidth = function(){return cObs.player.getWidth();};
+	that.generateParticles = function(stg){
+		//to be implemented
+	};
 	return that;
 }());
