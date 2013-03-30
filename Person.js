@@ -56,3 +56,7 @@ Person.prototype.isHurt = function(){
 Person.prototype.getHealth = function(){
 	return this._health;
 };
+
+Person.prototype.isDead = function(){
+	return this._health <= 0;
+}

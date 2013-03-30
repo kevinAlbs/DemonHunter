@@ -16,7 +16,7 @@ function Player(){
 	this._state = "user_controlled";//no higher level behavior
 
 	var sword = new Movable(),
-		maxSwordWidth = 20,
+		maxSwordWidth = 30,
 		peakSwordFrame = 1;//which frame the sword is at max length
 		swingingSword = false;
 
@@ -48,13 +48,13 @@ function Player(){
 			var curFrame = animation_set.getCurFrame();
 			var newSwordWidth = maxSwordWidth * (1 - (Math.abs(curFrame - peakSwordFrame))/(peakSwordFrame+1));
 			sword.setWidth(newSwordWidth);
-			sword.setHeight(10);
+			sword.setHeight(5);
 			var swordX = this._x + this._width;
 			if(this._facing == -1){
 				swordX = this._x - sword.getWidth();
 			}
 			sword.setX(swordX);
-			sword.setY(this._y + 10);
+			sword.setY(this._y + 13);
 		}
 	};
 

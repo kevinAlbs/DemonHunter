@@ -77,14 +77,14 @@ GM.data = {
 					y:60,
 					width: 44,
 					height: 60,
-					time: 2
+					time: 1
 				},
 				{
 					x:88,
 					y:60,
 					width: 44,
 					height: 60,
-					time: 2
+					time: 1
 				},
 			]
 		}

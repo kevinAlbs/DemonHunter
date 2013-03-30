@@ -114,8 +114,8 @@ Movable.prototype.gravityUpdate = function(){
 		if(this._x < 0){
 			this._x = 0;
 		}
-		if(this._x > GM.logic.getCWidth()){
-			this._x = GM.logic.getCWidth() - this._width;
+		if(this._x + this._width > GM.logic.getMapWidth()){
+			this._x = GM.logic.getMapWidth() - this._width;
 		}
 	};
 

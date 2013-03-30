@@ -19,6 +19,7 @@ GM.logic = (function(){
 			u: false,
 			d: false,
 			z: false,//letter z
+			zp: false, //true when z is PRESSED ONCE!
 		},
 		//collidable objects, categorized for ease of use
 		//make into linked lists
@@ -46,6 +47,7 @@ GM.logic = (function(){
 			e.preventDefault();
 			break;
 			case 90:
+			keys.zp = !keys.z;//z is pressed when z was not already being pressed
 			keys.z = true;
 			e.preventDefault();
 			break;
@@ -68,6 +70,7 @@ GM.logic = (function(){
 			break;
 			case 90:
 			keys.z = false;
+			keys.zp = false;
 			break;
 		}
 		e.preventDefault();
@@ -79,7 +82,7 @@ GM.logic = (function(){
 		ctx = cnv.getContext("2d");
 		cWidth = cnv.width;
 		cHeight = cnv.height;
-		mapWidth = 800;
+		mapWidth = 100;//in blocks
 		document.addEventListener("keydown",handleKeyDown, false);
 		document.addEventListener("keyup",handleKeyUp, false);
 		GM.viewport.init(cWidth, cHeight, mapWidth);
@@ -106,6 +109,10 @@ GM.logic = (function(){
 			console.log("colliding");
 			if(!cObs.enemyTest.isHurt()){
 				cObs.enemyTest.hurt(50);
+				if(cObs.enemyTest.isDead()){
+					//remove
+					
+				}
 			}
 		}
 	}
@@ -127,7 +134,7 @@ GM.logic = (function(){
 			cObs.player.jump();
 		}
 		
-		if(keys.z){
+		if(keys.zp){
 			cObs.player.swingSword();
 		}	
 		//update everything
@@ -140,6 +147,8 @@ GM.logic = (function(){
 		if(!paused){
 			timer = window.setTimeout(update, Math.floor(1000 / fps));
 		}
+		//now that update has run, set all key presses to false
+		keys.zp = false;
 	};
 
 	function paint(){
@@ -206,6 +215,7 @@ GM.logic = (function(){
 	}
 	that.getCHeight = function(){return cHeight;}
 	that.getCWidth = function(){return cWidth;}
+	that.getMapWidth = function(){return mapWidth * 10;}
 	that.inScreen = function(obj){
 		return GM.viewport.inScreen(obj);
 	}
