@@ -196,13 +196,16 @@ GM.viewport = (function(){
 
 	//obj inherits Paintable
 	that.inScreen = function(obj){
-		if(obj.getX() + obj.getWidth() > xOffset){
-			if(obj.getX() < xOffset + cWidth){
+		return that.inScreenOverride(obj.getX(), obj.getWidth());
+	};
+	//not supplied object, but x and width instead (so far used for trees where "width" needs to include leaves)
+	that.inScreenOverride = function(x,w){
+		if(x + w > xOffset){
+			if(x < xOffset + cWidth){
 				return true;
 			}	
 		}
-
-	};
+	}
 
 	return that;
 }());

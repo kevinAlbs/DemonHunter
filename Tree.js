@@ -1,10 +1,11 @@
-function Tree(){
+function Tree(x){
 	var leaves;
-	this._x = 300;
+	this._x = x;
 	this._y = 0;//will be set
 	this._width = 10;
+	this._largestRow = 0;
 	var extraHeightBlocks = Math.ceil(Math.random() * 8);
-	this._height = 60 +  extraHeightBlocks * 10;
+	this._height = 70 +  extraHeightBlocks * 10;
 
 	Tree.prototype.setOnGround.apply(this);
 
@@ -20,6 +21,9 @@ function Tree(){
 	var leaves = new Array();
 	for(var i = 0; i < leaveRows; i++){
 		var rowWidth = calcLeafWidth(i);
+		if(rowWidth > this._largestRow){
+			this._largestRow = rowWidth;
+		}
 		for(var j = 0; j < rowWidth; j++){
 			var leaf = new Movable();
 			console.log("here");
@@ -31,7 +35,12 @@ function Tree(){
 		}	
 
 	}	
-
+	this.getWidthWithLeaves = function(){
+		return this._largestRow * 10;
+	};
+	this.getXWithLeaves = function(){
+		return this._x - ((this._largestRow - 1)/ 2* 10);
+	}
 	this.getLeaves = function(){
 		return leaves;
 	};

@@ -82,7 +82,7 @@ GM.logic = (function(){
 		ctx = cnv.getContext("2d");
 		cWidth = cnv.width;
 		cHeight = cnv.height;
-		mapWidth = 1000;//in blocks
+		mapWidth = 2000;//in blocks
 		document.addEventListener("keydown",handleKeyDown, false);
 		document.addEventListener("keyup",handleKeyUp, false);
 		GM.viewport.init(cWidth, cHeight, mapWidth);
@@ -95,9 +95,27 @@ GM.logic = (function(){
 		cObs.enemyTest = new Enemy();
 		cObs.enemyTest.setX(200);
 		cObs.enemyTest.setOnGround();
-		//now generate trees, mobs, etc.
 
-		cObs.treeTest = new Tree();
+		//now generate trees, mobs, etc.
+		cObs.trees = [];
+		var inc = 20; //tells how spread apart trees are (smaller in forrest area)
+		var acc = 0;//initially smaller
+		for(var i = 0; i < mapWidth; i+=inc){
+			var tree = new Tree((i + Math.ceil(Math.random() * 20)) * 10);
+			inc += acc;
+			if(inc <= 0){
+				acc = 0;
+				inc = 1;
+			}
+			if(i > mapWidth * 2 / 3){
+				acc = 1; //less dense third of map
+			}
+			else if(i > mapWidth * 1 / 3){
+				acc = -1; //denser third of map
+			}
+			tree.setOnGround();
+			cObs.trees.push(tree);
+		}
 		
 	}
 	function checkCollisions(){
@@ -160,8 +178,12 @@ GM.logic = (function(){
 	function paint(){
 		ctx.clearRect(0,0,cWidth, cHeight);
 		GM.viewport.paint(ctx);
-		//paint trees
-		cObs.treeTest.paint(ctx);
+		for(var i = 0; i < cObs.trees.length; i++){
+			var tree = cObs.trees[i];
+			if(GM.viewport.inScreenOverride(tree.getXWithLeaves(), tree.getWidthWithLeaves())){
+				tree.paint(ctx);
+			}
+		}
 		//paint player
 		cObs.player.paint(ctx);
 		//paint enemies
