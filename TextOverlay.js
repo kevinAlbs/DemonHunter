@@ -23,6 +23,9 @@ GM.textOverlay = (function(){
 						saying = false;
 					}
 					wclock = 0;
+					if(callbackProgress){
+						callbackProgress.call();
+					}
 				}
 			}
 			textarea.value = curText + append;

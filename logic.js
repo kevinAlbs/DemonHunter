@@ -132,7 +132,8 @@ GM.logic = (function(){
 			tree.setOnGround();
 			cObs.trees.push(tree);
 		}
-		
+		GM.textOverlay.show();
+		GM.textOverlay.say("Kaitlin", "Where am I?", null);
 	}
 	function checkCollisions(){
 		//check important collisions

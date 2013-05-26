@@ -61,6 +61,7 @@ GM.viewport = (function(){
 		smoothGround();
 	};
 
+	//removes those 1 block jitters
 	function smoothGround(){
 		for(var i = 0; i < ground.length - 3; i++){
 			if(ground[i+1] > ground[i] && ground[i+1] > ground[i+2]){
