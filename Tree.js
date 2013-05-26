@@ -26,7 +26,6 @@ function Tree(x){
 		}
 		for(var j = 0; j < rowWidth; j++){
 			var leaf = new Movable();
-			console.log("here");
 			leaf.setX(this._x + Math.ceil(j - rowWidth/2) * 10);
 			leaf.setY(this._y - 10 * (i - 4));
 			leaf.setWidth(10);

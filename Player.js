@@ -8,9 +8,9 @@ function Player(){
 	Player.instance = this;
 
 	//"protected"
-	this._x = 100, 
-	this._yVel = 3,
-	this._width = 22, 
+	this._x = 100;
+	this._yVel = 3;
+	this._width = 22; 
 	this._height = 60;
 	this.name = "Kaitlin";
 	this._state = "user_controlled";//no higher level behavior

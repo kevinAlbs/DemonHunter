@@ -5,6 +5,7 @@ GM.viewport = (function(){
 		yOffset = 0; // positive if player moving up
 
 	var cWidth, cHeight, mapWidth;
+	var clock = 0;//time of day
 	var leftMin = 0, rightMax = 0;//left/right bounds in pixesl
 	var ground; // holds heights of ground at every area in map 
 	var BGBuffer= null; // reference to the blocks being shown on the screen as well as their colors/types for color randomization
@@ -57,7 +58,16 @@ GM.viewport = (function(){
 			}
 			ground[i] = thisHeight;
 		}
+		smoothGround();
 	};
+
+	function smoothGround(){
+		for(var i = 0; i < ground.length - 3; i++){
+			if(ground[i+1] > ground[i] && ground[i+1] > ground[i+2]){
+				ground[i+1] = ground[i];
+			}
+		}
+	}
 
 	function initBGBuffer(){
 		BGBuffer = new BGBufferArray();

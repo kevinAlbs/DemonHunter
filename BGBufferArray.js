@@ -7,7 +7,7 @@ function BGBufferArray(arrSize){
 		iterationPointer = null,
 		size = 0;
 	var arr = new Array(arrSize);
-
+	
 	//returns next index
 	function getNext(ptr){
 		return (ptr + 1 > arr.length - 1) ? 0: ptr + 1;

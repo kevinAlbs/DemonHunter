@@ -12,7 +12,9 @@ GM.logic = (function(){
 		cWidth, // canvas width
 		cHeight,
 		mapWidth, //map width (in tens)
-		ctx, //canvas context
+		ctx, //canvas buffer context
+		buffer,
+		ctxout,
 		keys= {
 			l: false, //left
 			r: false, //right
@@ -20,6 +22,7 @@ GM.logic = (function(){
 			d: false,
 			z: false,//letter z
 			zp: false, //true when z is PRESSED ONCE!
+			s: false //space
 		},
 		//collidable objects, categorized for ease of use
 		//make into linked lists
@@ -44,6 +47,10 @@ GM.logic = (function(){
 			break;
 			case 40:
 			keys.d = true;
+			e.preventDefault();
+			break;
+			case 32:
+			keys.s = true;
 			e.preventDefault();
 			break;
 			case 90:
@@ -72,14 +79,22 @@ GM.logic = (function(){
 			keys.z = false;
 			keys.zp = false;
 			break;
+			case 32:
+			keys.s = false;
+			e.preventDefault();
+			break;
 		}
 		e.preventDefault();
 		return false;
 	};
 
 	function init(){
+		buffer = document.createElement("canvas");
 		var cnv = document.getElementById("mycanvas");
-		ctx = cnv.getContext("2d");
+		buffer.width = cnv.width;
+		buffer.height = cnv.height;
+		ctx = buffer.getContext("2d");
+		ctxout = cnv.getContext("2d");
 		cWidth = cnv.width;
 		cHeight = cnv.height;
 		mapWidth = 2000;//in blocks
@@ -92,13 +107,14 @@ GM.logic = (function(){
 		cObs.player.setOnGround();//put player on ground
 
 		//test with an enemy
+		/*
 		cObs.enemyTest = new Enemy();
 		cObs.enemyTest.setX(200);
 		cObs.enemyTest.setOnGround();
-
+		*/
 		//now generate trees, mobs, etc.
 		cObs.trees = [];
-		var inc = 20; //tells how spread apart trees are (smaller in forrest area)
+		var inc = 80; //tells how spread apart trees are (smaller in forrest area)
 		var acc = 0;//initially smaller
 		for(var i = 0; i < mapWidth; i+=inc){
 			var tree = new Tree((i + Math.ceil(Math.random() * 20)) * 10);
@@ -125,7 +141,7 @@ GM.logic = (function(){
 		var sword = cObs.player.getSword();
 		if(sword){
 			//check sword collisions
-			if(sword.collidingWith(cObs.enemyTest)){
+			/*if(sword.collidingWith(cObs.enemyTest)){
 				console.log("colliding");
 				if(!cObs.enemyTest.isHurt()){
 					cObs.enemyTest.hurt(50);
@@ -134,7 +150,7 @@ GM.logic = (function(){
 
 					}
 				}
-			}
+			}*/
 			//check with any trees in vicinity
 		}
 		
@@ -165,7 +181,7 @@ GM.logic = (function(){
 		cObs.player.update();
 		GM.viewport.update(cObs.player.getX(), cObs.player.getY());
 
-		cObs.enemyTest.update();
+		//cObs.enemyTest.update();
 		paint();
 		GM.viewport.randomizeColor();
 		if(!paused){
@@ -189,8 +205,8 @@ GM.logic = (function(){
 		//paint player
 		cObs.player.paint(ctx);
 		//paint enemies
-		cObs.enemyTest.paint(ctx);
-
+		//cObs.enemyTest.paint(ctx);
+		ctxout.drawImage(buffer, 0, 0);
 	};
 
 	/* public methods */
