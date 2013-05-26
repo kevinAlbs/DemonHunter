@@ -87,7 +87,7 @@ GM.logic = (function(){
 		document.addEventListener("keyup",handleKeyUp, false);
 		GM.viewport.init(cWidth, cHeight, mapWidth);
 		var ground = GM.viewport.getGround();
-		
+	
 		cObs.player = new Player();
 		cObs.player.setOnGround();//put player on ground
 
@@ -173,6 +173,8 @@ GM.logic = (function(){
 		}
 		//now that update has run, set all key presses to false
 		keys.zp = false;
+
+		GM.textOverlay.update();
 	};
 
 	function paint(){

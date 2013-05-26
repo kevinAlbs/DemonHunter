@@ -88,5 +88,10 @@ GM.data = {
 				},
 			]
 		}
+	},
+
+	cutscenes: {
+		firstMeeting: [
+		]
 	}
 }
