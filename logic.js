@@ -9,6 +9,7 @@ GM.logic = (function(){
 		started= false,
 		timer= null,
 		fps= 60,
+		curFPS = 0,
 		cWidth, // canvas width
 		cHeight,
 		mapWidth, //map width (in tens)
@@ -132,8 +133,8 @@ GM.logic = (function(){
 			tree.setOnGround();
 			cObs.trees.push(tree);
 		}
-		GM.textOverlay.show();
-		GM.textOverlay.say("Kaitlin", "Where am I?", null);
+		//GM.textOverlay.show();
+		//GM.textOverlay.say("Kaitlin", "Where am I?", null);
 	}
 	function checkCollisions(){
 		//check important collisions
@@ -157,8 +158,12 @@ GM.logic = (function(){
 		
 
 	}
+	var d = new Date();
+	var startTime = d.getTime();
+	var ticks = 0;
 	//TODO calculate real time diff and account for slow fps with extra updates etc.
 	function update(){
+
 		checkCollisions();
 
 		if(keys.r){
@@ -184,7 +189,7 @@ GM.logic = (function(){
 
 		//cObs.enemyTest.update();
 		paint();
-		GM.viewport.randomizeColor();
+//		GM.viewport.randomizeColor();
 		if(!paused){
 			timer = window.setTimeout(update, Math.floor(1000 / fps)); //TODO: change to requestAnimationKeyframe or something
 		}
@@ -192,10 +197,21 @@ GM.logic = (function(){
 		keys.zp = false;
 
 		GM.textOverlay.update();
+
+		
+		ticks++;
+		d = new Date();
+		if(d.getTime() - startTime > 1000){
+			curFPS = ticks;
+			ticks = 0;
+			startTime = d.getTime();
+		}
 	};
 
 	function paint(){
 		ctx.clearRect(0,0,cWidth, cHeight);
+		ctxout.clearRect(0,0,cWidth, cHeight);
+
 		GM.viewport.paint(ctx);
 		for(var i = 0; i < cObs.trees.length; i++){
 			var tree = cObs.trees[i];
@@ -207,6 +223,9 @@ GM.logic = (function(){
 		cObs.player.paint(ctx);
 		//paint enemies
 		//cObs.enemyTest.paint(ctx);
+		ctx.fillStyle = "#F00";
+		ctx.font = "30px Arial";
+		ctx.fillText(curFPS + " fps", 100,200);
 		ctxout.drawImage(buffer, 0, 0);
 	};
 

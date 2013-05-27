@@ -47,14 +47,14 @@ function Tree(x){
 	this.paint = function(ctx){
 		var xOff = GM.logic.getXOffset();
 		//paint trunk
-		ctx.fillStyle = "#820";
+		ctx.fillStyle = "#503000";
 		ctx.fillRect(this._x - xOff, this._y, this._width, this._height);
 		ctx.fillRect(this._x - 10 - xOff, this._y + 10, this._width + 20, 10);
 		//paint all leaves
 		for(var i = 0; i < leaves.length; i++){
-			ctx.fillStyle = "#090";
+			ctx.fillStyle = "#005800";
 			leaves[i].paint(ctx);
-		}	
+		}
 	};
 };
 

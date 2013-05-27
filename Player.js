@@ -9,9 +9,11 @@ function Player(){
 
 	//"protected"
 	this._x = 100;
-	this._yVel = 3;
+	this._xSpeed = 4;
+	this._yVel = 5;
 	this._width = 22; 
 	this._height = 60;
+	this._jumpSpeed = -12;
 	this.name = "Kaitlin";
 	this._state = "user_controlled";//no higher level behavior
 
