@@ -21,11 +21,10 @@ GM.textOverlay = (function(){
 					curQueueIndex++;
 					if(curQueueIndex >= textInQueue.length){
 						saying = false;
+						textOutputFinished = true;
 					}
 					wclock = 0;
-					if(callbackProgress){
-						callbackProgress.call();
-					}
+
 				}
 			}
 			textarea.value = curText + append;
@@ -45,6 +44,20 @@ GM.textOverlay = (function(){
 		this.show = function(){
 			textarea.style.display = "block";
 		}
+
+		this.startCutscene = function(data, callback){
+			var curIndex = 0;
+			var that = this;
+			function iterate(){
+				if(curIndex >= data.length){
+					callback.call();
+					return;
+				}
+				that.say(data[curIndex].name, data[curIndex].text, iterate);
+				curIndex++;
+			}
+			iterate();
+		}
 		/*
 		onProgress is a callback function called after user presses spacebar after text is written
 		*/
@@ -53,11 +66,25 @@ GM.textOverlay = (function(){
 				return false;
 			}
 			saying = true;
-			curText += name + "- ";
+			textarea.scrollTop = textarea.scrollHeight;
+			textOutputFinished = false;
+			if(name){
+				curText += name + ": ";
+			}
 			textInQueue = text.split("");
 			curQueueIndex = 0;
 			callbackProgress = onProgress;
 			return true;
+		}
+
+		this.progress = function(){
+			//called when user presses spacebar
+			if(textOutputFinished){
+				saying = false;
+				if(callbackProgress){
+					callbackProgress.call();
+				}
+			}
 		}
 	}
 

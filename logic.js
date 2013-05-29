@@ -6,6 +6,7 @@
 GM.logic = (function(){
 	var that = {};
 	var	paused= false,
+		movementPaused = false,//used for cutscenes, stops user movment
 		started= false,
 		timer= null,
 		fps= 60,
@@ -133,8 +134,13 @@ GM.logic = (function(){
 			tree.setOnGround();
 			cObs.trees.push(tree);
 		}
-		//GM.textOverlay.show();
-		//GM.textOverlay.say("Kaitlin", "Where am I?", null);
+		cObs.professor = new Professor();
+		cObs.professor.setOnGround();
+		/*
+		toggleMovement(true); 
+		GM.textOverlay.show();
+		GM.textOverlay.startCutscene(GM.data.cutscenes.firstMeeting, function(){toggleMovement(false); GM.textOverlay.hide();});
+		*/
 	}
 	function checkCollisions(){
 		//check important collisions
@@ -165,31 +171,38 @@ GM.logic = (function(){
 	function update(){
 
 		checkCollisions();
-
-		if(keys.r){
-			cObs.player.moveX(1);
-		}
-		else if(keys.l){
-			cObs.player.moveX(-1);
+		if(!movementPaused){
+			if(keys.r){
+				cObs.player.moveX(1);
+			}
+			else if(keys.l){
+				cObs.player.moveX(-1);
+			}
+			else{
+				cObs.player.moveX(0);
+			}
+			if(keys.u){
+				cObs.player.jump();
+			}
+			if(keys.zp){
+				cObs.player.swingSword();
+			}	
 		}
 		else{
-			cObs.player.moveX(0);
+			cObs.player.moveX(0);//no moving during cutscenes!
 		}
 
-		if(keys.u){
-			cObs.player.jump();
+		if(keys.s || keys.zp){
+			GM.textOverlay.progress();//go to next line!
 		}
-		
-		if(keys.zp){
-			cObs.player.swingSword();
-		}	
 		//update everything
 		cObs.player.update();
+		cObs.professor.update();
 		GM.viewport.update(cObs.player.getX(), cObs.player.getY());
 
 		//cObs.enemyTest.update();
 		paint();
-//		GM.viewport.randomizeColor();
+
 		if(!paused){
 			timer = window.setTimeout(update, Math.floor(1000 / fps)); //TODO: change to requestAnimationKeyframe or something
 		}
@@ -219,6 +232,10 @@ GM.logic = (function(){
 				tree.paint(ctx);
 			}
 		}
+		//paint professor
+		if(GM.viewport.inScreen(cObs.professor)){
+			cObs.professor.paint(ctx);
+		}
 		//paint player
 		cObs.player.paint(ctx);
 		//paint enemies
@@ -229,6 +246,9 @@ GM.logic = (function(){
 		ctxout.drawImage(buffer, 0, 0);
 	};
 
+	function toggleMovement(val){
+		movementPaused = val;
+	}
 	/* public methods */
 	that.startGame = function(){
 		console.log("Game started");
@@ -289,6 +309,18 @@ GM.logic = (function(){
 	that.getPlayerWidth = function(){return cObs.player.getWidth();};
 	that.generateParticles = function(stg){
 		//to be implemented
+	};
+	that.cutscene = function(cutsceneData, additionalCallback){
+		toggleMovement(true); 
+		GM.textOverlay.show();
+		var cb = function(){
+			toggleMovement(false); 
+			GM.textOverlay.hide(); 
+			if(additionalCallback){
+				additionalCallback.call();
+			}
+		};
+		GM.textOverlay.startCutscene(cutsceneData, cb);
 	};
 	return that;
 }());

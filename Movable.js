@@ -13,7 +13,7 @@ function Movable(){
 	this._height = 0;
 	this._xVel = 0;
 	this._yVel = 0;
-	this._gravity = .75;
+	this._gravity = .8;
 	this._terminalVelocity = 9;
 	this._onGround = false;
 }

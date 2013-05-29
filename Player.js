@@ -9,7 +9,7 @@ function Player(){
 
 	//"protected"
 	this._x = 100;
-	this._xSpeed = 4;
+	this._xSpeed = 3;
 	this._yVel = 5;
 	this._width = 22; 
 	this._height = 60;
@@ -18,7 +18,7 @@ function Player(){
 	this._state = "user_controlled";//no higher level behavior
 
 	var sword = new Movable(),
-		maxSwordWidth = 30,
+		maxSwordWidth = 50,
 		peakSwordFrame = 1;//which frame the sword is at max length
 		swingingSword = false;
 
