@@ -9,7 +9,7 @@ GM.logic = (function(){
 		movementPaused = false,//used for cutscenes, stops user movment
 		started= false,
 		timer= null,
-		fps= 60,
+		fps= 30,
 		curFPS = 0,
 		cWidth, // canvas width
 		cHeight,
@@ -30,10 +30,12 @@ GM.logic = (function(){
 		//make into linked lists
 		cObs = {
 		};
+		cObsInScreen = { //updated with objects in screen
+		},
+		myPlatform = {x1:150,y1: 270,w:100,h:20};
 
 
 	function handleKeyDown(e){
-		console.log(e.which);
 		switch(e.which){
 			case 39:
 			keys.r = true;
@@ -99,7 +101,7 @@ GM.logic = (function(){
 		ctxout = cnv.getContext("2d");
 		cWidth = cnv.width;
 		cHeight = cnv.height;
-		mapWidth = 2000;//in blocks
+		mapWidth = 150;//in blocks
 		document.addEventListener("keydown",handleKeyDown, false);
 		document.addEventListener("keyup",handleKeyUp, false);
 		GM.viewport.init(cWidth, cHeight, mapWidth);
@@ -114,55 +116,9 @@ GM.logic = (function(){
 		cObs.enemyTest.setX(200);
 		cObs.enemyTest.setOnGround();
 		*/
-		//now generate trees, mobs, etc.
-		cObs.trees = [];
-		var inc = 80; //tells how spread apart trees are (smaller in forrest area)
-		var acc = 0;//initially smaller
-		for(var i = 0; i < mapWidth; i+=inc){
-			var tree = new Tree((i + Math.ceil(Math.random() * 20)) * 10);
-			inc += acc;
-			if(inc <= 0){
-				acc = 0;
-				inc = 1;
-			}
-			if(i > mapWidth * 2 / 3){
-				acc = 1; //less dense third of map
-			}
-			else if(i > mapWidth * 1 / 3){
-				acc = -1; //denser third of map
-			}
-			tree.setOnGround();
-			cObs.trees.push(tree);
-		}
-		cObs.professor = new Professor();
-		cObs.professor.setOnGround();
-		/*
-		toggleMovement(true); 
-		GM.textOverlay.show();
-		GM.textOverlay.startCutscene(GM.data.cutscenes.firstMeeting, function(){toggleMovement(false); GM.textOverlay.hide();});
-		*/
 	}
 	function checkCollisions(){
-		//check important collisions
-		//check if player's sword is colliding with enemies or leaves
-		//check if sword is colliding
-		var sword = cObs.player.getSword();
-		if(sword){
-			//check sword collisions
-			/*if(sword.collidingWith(cObs.enemyTest)){
-				console.log("colliding");
-				if(!cObs.enemyTest.isHurt()){
-					cObs.enemyTest.hurt(50);
-					if(cObs.enemyTest.isDead()){
-						//remove
-
-					}
-				}
-			}*/
-			//check with any trees in vicinity
-		}
-		
-
+		//check bullet collisions
 	}
 	var d = new Date();
 	var startTime = d.getTime();
@@ -179,10 +135,19 @@ GM.logic = (function(){
 				cObs.player.moveX(-1);
 			}
 			else{
-				cObs.player.moveX(0);
+				cObs.player.unMoveX();
 			}
 			if(keys.u){
 				cObs.player.jump();
+			}
+			else{
+				cObs.player.unjump();
+			}
+			if(keys.d){
+				cObs.player.duck();
+			}
+			else{
+				cObs.player.unduck();
 			}
 			if(keys.zp){
 				cObs.player.swingSword();
@@ -197,7 +162,6 @@ GM.logic = (function(){
 		}
 		//update everything
 		cObs.player.update();
-		cObs.professor.update();
 		GM.viewport.update(cObs.player.getX(), cObs.player.getY());
 
 		//cObs.enemyTest.update();
@@ -222,27 +186,17 @@ GM.logic = (function(){
 	};
 
 	function paint(){
-		ctx.clearRect(0,0,cWidth, cHeight);
-		ctxout.clearRect(0,0,cWidth, cHeight);
-
+		//ctx.clearRect(0,0,cWidth, cHeight);
+		//ctxout.clearRect(0,0,cWidth, cHeight);
 		GM.viewport.paint(ctx);
-		for(var i = 0; i < cObs.trees.length; i++){
-			var tree = cObs.trees[i];
-			if(GM.viewport.inScreenOverride(tree.getXWithLeaves(), tree.getWidthWithLeaves())){
-				tree.paint(ctx);
-			}
-		}
-		//paint professor
-		if(GM.viewport.inScreen(cObs.professor)){
-			cObs.professor.paint(ctx);
-		}
 		//paint player
 		cObs.player.paint(ctx);
 		//paint enemies
 		//cObs.enemyTest.paint(ctx);
-		ctx.fillStyle = "#F00";
-		ctx.font = "30px Arial";
-		ctx.fillText(curFPS + " fps", 100,200);
+		ctx.fillStyle = "#00F";
+		ctx.font = "11px Arial";
+		ctx.fillText(curFPS + " fps", 5,10);
+		ctx.strokeRect(myPlatform.x1, myPlatform.y1, myPlatform.w, myPlatform.h);
 		ctxout.drawImage(buffer, 0, 0);
 	};
 
@@ -287,6 +241,9 @@ GM.logic = (function(){
 			}
 		}
 	}
+	that.getPlatforms = function(){
+		return myPlatform;
+	}
 	//returns ground from x1 to x2
 	that.getGround = function(x1, x2){
 		var ground = GM.viewport.getGround();
@@ -309,6 +266,7 @@ GM.logic = (function(){
 	that.getPlayerWidth = function(){return cObs.player.getWidth();};
 	that.generateParticles = function(stg){
 		//to be implemented
+		
 	};
 	that.cutscene = function(cutsceneData, additionalCallback){
 		toggleMovement(true); 
@@ -322,5 +280,6 @@ GM.logic = (function(){
 		};
 		GM.textOverlay.startCutscene(cutsceneData, cb);
 	};
+	that.collisionDebug = true;
 	return that;
 }());

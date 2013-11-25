@@ -3,6 +3,8 @@ function Mob(){
 	this._jumpSpeed = -9;
 	this._xSpeed = 5;//walking speed
 	this._walking = false;
+	this._ducking = false;
+	this._hasLongJump = false;
 	this._facing = 1;//-1 for facing left, 1 for facing right, NEVER 0
 	this.name = "";
 
@@ -11,21 +13,67 @@ function Mob(){
 		if(dir > 1 || dir < -1){return;}
 
 		if(dir != 0){
-			this._walking = true;
+			if(!this._ducking){
+				this._walking = true;
+			}
 			this._facing = dir;
 		} 
 		else{
 			this._walking = false;
 		}
-
-		this._xVel = dir * this._xSpeed;
+		if(!this._ducking){
+			this._xVel = dir * this._xSpeed;
+		}
 	};
+	this.unMoveX = function(){
+		var ab = Math.abs(this._xVel)
+		this._walking = false;
+		if(ab < .1){
+			this._xVel = 0;
+		}
+		else if(ab > 0){
+			this._xVel *= .75;
+		}
+	}
 	this.jump = function(){
-		if(this._onGround){
+		if(GM.logic.collisionDebug){
+			this._yVel = -3;
+			return;
+		}
+		if(this._onGround && !this._ducking){
 			this._onGround = false;
 			this._yVel = this._jumpSpeed;
 		}
 	}	
+	this.unjump = function(){
+		if(GM.logic.collisionDebug){
+			this._yVel = 0;
+			return;
+		}
+		if(this._hasLongJump){
+			if(this._yVel < -8){
+				this._yVel = -8;
+			}
+		}
+
+	}
+	this.duck = function(){
+		if(GM.logic.collisionDebug){
+			this._yVel = 3;
+			return;
+		}
+		if(this._onGround){
+			this._xVel = 0;
+			this._ducking = true;
+		}
+	}
+	this.unduck = function(){
+		if(GM.logic.collisionDebug){
+			this._yVel = 0;
+			return;
+		}
+		this._ducking = false;
+	}
 }
 
 GM.utils.inherits(Mob, Movable);

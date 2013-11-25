@@ -13,54 +13,16 @@ GM.viewport = (function(){
 	var time = 1;
 
 	function generateTerrain(){
-		// generate heights
-		var sign = 1; // positive 10% chance of sign change
-		var minHeight = 15, maxHeight = 30;
-
 		for(var i = 0; i < ground.length; i++){
-			if(i == 0){
-				prev = 15;
+			if((0 < i && i < 30) || (50 < i && i < 60)){
+				ground[i] = 26;
 			}
 			else{
-				prev = ground[i-1];
+				ground[i] = 0;
 			}
-			if(i > 10 && i < 30){
-				//platform for player
-				ground[i] = ground[i-1];
-				continue;
-			}
-			// height is in 10's, so from 0 to 60
-			var diff = Math.floor(Math.random() * 100); 
-			//60 percent no change
-			if(diff < 60){
-				diff = 0;
-			}
-			else{
-				diff = 1;
-			}
-			var thisHeight = prev + diff * sign;
-			if(thisHeight < minHeight){
-				thisHeight = minHeight;
-			}
-			else if(prev > maxHeight){
-				thisHeight = maxHeight;
-			}
-			if(Math.ceil(Math.random() * 10) == 1){
-				sign = -1 * sign;
-			}
-			ground[i] = thisHeight;
 		}
-		smoothGround();
 	};
 
-	//removes those 1 block jitters
-	function smoothGround(){
-		for(var i = 0; i < ground.length - 3; i++){
-			if(ground[i+1] > ground[i] && ground[i+1] > ground[i+2]){
-				ground[i+1] = ground[i];
-			}
-		}
-	}
 
 	/*
 	 this is the absolute x and y of the player
@@ -103,7 +65,7 @@ GM.viewport = (function(){
 		ctx.fillRect(0,0, cWidth, cHeight);
 		var firstBlock = Math.floor(xOffset / 10);
 		var totalBlocks = cWidth / 10 + 1;
-		ctx.fillStyle = "#00a800";
+		ctx.fillStyle = "#009800";
 		for(var i = 0; i < totalBlocks; i++){
 			ctx.fillRect(-1 * xOffset % 10 + i * 10, (cHeight/10 - ground[i + firstBlock]) * 10, 10 , cHeight - (10 * ground[i + firstBlock]));
 		}

@@ -1,0 +1,1 @@
++ Sword swing against leaves does not always destroy them. This seems to be an issue with the array splice, since destroying them by setting the x/y coordinate to a negative gives perfect results.

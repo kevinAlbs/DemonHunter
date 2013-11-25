@@ -35,7 +35,7 @@ function Tree(x){
 
 	}	
 	this.getWidthWithLeaves = function(){
-		return this._largestRow * 10;
+		return (this._largestRow + 1) * 10;
 	};
 	this.getXWithLeaves = function(){
 		return this._x - ((this._largestRow - 1)/ 2* 10);
@@ -43,7 +43,9 @@ function Tree(x){
 	this.getLeaves = function(){
 		return leaves;
 	};
-
+	this.destroyLeaf = function(index){
+		leaves.splice(index,1);//gotta change
+	}
 	this.paint = function(ctx){
 		var xOff = GM.logic.getXOffset();
 		//paint trunk

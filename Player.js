@@ -8,12 +8,15 @@ function Player(){
 	Player.instance = this;
 
 	//"protected"
-	this._x = 100;
-	this._xSpeed = 3;
-	this._yVel = 5;
+	this._x = 80;
+	this._xSpeed = 5;
+	this._yVel = 0;
 	this._width = 22; 
 	this._height = 60;
-	this._jumpSpeed = -12;
+	this._jumpSpeed = -20;
+	this._ducking = false;
+	this._hasLongJump = true;
+
 	this.name = "Kaitlin";
 	this._state = "user_controlled";//no higher level behavior
 
@@ -44,6 +47,8 @@ function Player(){
 		}
 
 		this.gravityUpdate();
+		//this._y = 50;
+		//this._x += 6;
 
 		if(swingingSword){
 			//update sword position based on location and sword animation progress
@@ -62,11 +67,12 @@ function Player(){
 	};
 
 	this.paint = function(ctx){
-		animation_set.drawFrame(this._x - GM.logic.getXOffset(), this._y, this._width, this._height, ctx, this._facing);
+		//animation_set.drawFrame(this._x - GM.logic.getXOffset(), this._y, this._width, this._height, ctx, this._facing);
 		ctx.strokeRect(this._x - GM.logic.getXOffset(), this._y, this._width, this._height);
+		ctx.fillStyle = "#000";
 		sword.paint(ctx);
 		if(GM.debug){
-			ctx.fillText(this._x + "," + this._y, this._x - GM.logic.getXOffset(), this._y - 10);
+			ctx.fillText(Math.round(this._x) + "," + Math.round(this._y), this._x - GM.logic.getXOffset(), this._y - 10);
 		}
 	};
 
@@ -84,6 +90,20 @@ function Player(){
 			return false;
 		}
 	};
+	this.duck = function(){
+		Player.prototype.duck.apply(this);
+		if(this._ducking){
+			//went through
+			this._height = 40;
+			this.setOnGround();
+		}
+	}
+	this.unduck = function(){
+		if(!this._ducking){return;}
+		Player.prototype.unduck.apply(this);
+		this._height = 60;
+		this.setOnGround();
+	}
 };
 
 GM.utils.inherits(Player, Person);

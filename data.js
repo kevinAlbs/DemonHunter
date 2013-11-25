@@ -123,7 +123,7 @@ GM.data = {
 			name: "Man",
 			text: "Hello? Is someone there?\n"
 		},
-		{
+		/*{
 			name: "Kaitlin",
 			text: "Yes yes! You look injured, are you alright?!\n"
 		},
@@ -144,7 +144,7 @@ GM.data = {
 		{
 			name: "Man",
 			text: "I'll tell you everything, just get me something to bandage this wound\n"
-		}
+		}*/
 		]
 	}
 }
