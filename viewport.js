@@ -15,7 +15,7 @@ GM.viewport = (function(){
 	function generateTerrain(){
 		for(var i = 0; i < ground.length; i++){
 			if((0 < i && i < 30) || (50 < i && i < 60)){
-				ground[i] = 26;
+				ground[i] = 5;
 			}
 			else{
 				ground[i] = 0;
