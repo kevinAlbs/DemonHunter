@@ -81,51 +81,78 @@ Movable.prototype.gravityUpdate = function(){
 		}
 
 		if(GM.logic.collisionDebug){
+			/*
+			 The following assumptions apply:
+
+			*/
+
 			//get the test platform
 			var p = GM.logic.getPlatforms();
 			//now using vector math check if it will collide within t <= 1
-			//first a point
-			var x1 = this._x + this._width;
-			var y1 = this._y + this._height;
+
+			//bottom and right sides 3pi/2 < angle < 2pi
+			var hw = this._width/2;
+			var hh = this._height/2;
+			var x = this._x + hw;
+			var y = this._y + hh;
 			var dx = this._xVel;
 			var dy = this._yVel;
-			var tx = Math.abs((p.x1 - x1)/dx);
-			var projY = y1 + tx * dy;
-			if(tx < 1){
-				console.log(projY);
-			}
-			if(!(p.y1 < projY  && projY < p.y1+p.h)){
-				//the y coordinate is not crossed on this trajectory
-				tx = 2;//so it won't happen
-			}
-			var ty = Math.abs((p.y1 - y1)/dy);
-			var projX = x1 + ty * dx;
-			if(!(p.x1 < projX && projX < p.x1 + p.w)){
-				//the x coordinate is not crossed on this trajectory
-				ty = 2;//so it won't happen
-			}
-			if(tx > 1 && ty > 1){
-				//neither is going to happen
-			}
-			else{
-				if(tx < ty){
-					console.log("Collision x");
-					this._x = (x1 + tx * dx) - this._width - 1;
-					this._xVel = 0;
+			var tx = Math.abs(((p.x-hw) - x)/dx);
+			var projY = y + tx * dy;
+			var ang = null;
+			if(dx == 0){
+				if(dy > 0){
+					ang = Math.PI/2;
 				}
-				else if(ty < tx){
-					console.log("Collision y");
-					this._y = (y1 + ty * dy) - this._height - 1;
-					this._yVel = 0;
+				else if(dy < 0){
+					ang = Math.PI * 3/2;
+				}
+			}
+			else if(dx != 0){
+				ang = Math.atan2(dx, dy);
+			}
+
+			if(ang == null){
+				return;
+			}
+			console.log(ang); //I forget the range of arctangent... will look up
+			if(Math.PI * 3/2 < ang && ang < Math.PI * 2){
+				//if the y difference of the centers is within half of it's height (since the player always bigger)
+				if(!(Math.abs(projY - (p.y + p.h/2)) <= hh + p.h/2)){
+					//the y coordinate is not crossed on this trajectory
+					tx = 2;//so it won't happen
+				}
+				var ty = Math.abs(((p.y-hh) - y)/dy);
+				var projX = x + ty * dx;
+				if(!(Math.abs(projX - (p.x + p.w/2)) <= hw + p.w/2)){
+					//the x coordinate is not crossed on this trajectory
+					ty = 2;//so it won't happen
+				}
+				if(tx > 1 && ty > 1){
+					//neither is going to happen
 				}
 				else{
-					console.log("Equal");
-					this._x = (x1 + tx * dx) - this._width - 1;
-					this._y = (y1 + ty * dy) - this._height - 1;
-					this._xVel = 0;
-					this._yVel = 0;
+					if(tx < ty){
+						//since tx is the time in which collision occurs, calculate final x position
+						console.log("Collision on right");
+						this._x += this._xVel * tx - 1;
+						this._xVel = 0;
+					}
+					else if(ty < tx){
+						console.log("Collision on bottom");
+						this._y += this._yVel * ty - 1;
+						this._yVel = 0;
+					}
+					else{
+						console.log("Collision on bottom right");
+						this._x += this._xVel * tx - 1;
+						this._y += this._yVel * ty - 1;
+						this._yVel = 0;
+						this._xVel = 0;
+					}
 				}
 			}
+			
 		}
 		this._x += this._xVel;
 
