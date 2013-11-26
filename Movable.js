@@ -49,10 +49,98 @@ Movable.prototype.collidingWith = function(movable){
 * @param m Movable - the main object, which can be moved to the final collision point
 * @param s Movable - the static object which is treated as if xVel and yVel are 0
 * @param move Boolean - if true, move the Movable object to the final collision point
-* @return Boolean - tell whether or not there is a collision
+* @return int - tell whether or not there is a collision: 0 for none, 1 for top, 2 for right, 3 for bottom, 4 for left
 */
 Movable.prototype.collMovingStatic = function(m, s, move){
+	var LEFT = Math.PI;
+	var RIGHT = 0;
+	var UP = Math.PI * .5;
+	var DOWN = Math.PI * 3/2;
 
+	//get the test platform
+	var p = GM.logic.getPlatforms();
+	//now using vector math check if it will collide within t <= 1
+
+	//bottom and right sides 3pi/2 < angle < 2pi
+	var mhw = m._width/2, shw = s._width/2;
+	var mhh = m._height/2, shh = s._height/2;
+	var mx = m._x + mhw, sx = s._x + shw; //center of rectangle coordinates
+	var my = m._y + mhh, sy = s._y + shh;
+	var dx = m._xVel;
+	var dy = m._yVel;
+	var tx = 2; //time at which it would collide on x-axis (0<=tx<=1)
+	var ty = 2;
+	var projX, projY; //projected coordinate of other given the t
+	var ang = null;
+	if(dx != 0 || dy != 0){
+		ang = Math.atan2(-1 * dy, dx);
+		if(ang < 0){
+			ang += 2 * Math.PI;
+		}
+	}
+
+	if(ang == null){
+		return;
+	}
+	//check right and left sides
+	if(ang > DOWN || ang < UP){
+		//going right
+		tx = Math.abs(((sx-shw-mhw) - mx)/dx); //time at which right side will collide
+	}
+	else if(ang > UP && ang < DOWN){
+		//going left
+		tx = Math.abs(((sx+shw+mhw) - mx)/dx); //time at which right side will collide
+	}
+
+	projY = my + tx * dy;
+	//if the y difference of the centers is within distance of their centers they are colliding
+	if(!(Math.abs(projY - sy) <= mhh + shh)){
+		//the y coordinate is not crossed on this trajectory
+		tx = 2;//so it won't happen
+	}
+
+	if(ang > LEFT){
+		//going down
+		ty = Math.abs(((sy-shh-mhh) - my)/dy);
+	}
+	else if(ang > RIGHT && ang < LEFT){
+		//going up
+		ty = Math.abs(((sy+mhh+shh) - my)/dy);
+	}
+	projX = mx + ty * dx;
+	if(!(Math.abs(projX - sx) <= mhw + shw)){
+		//the x coordinate is not crossed on this trajectory
+		ty = 2;//so it won't happen
+	}
+	//check top and bottom sides
+	if(tx <= 1 || ty <= 1){
+		var xCorrect = -1 * dx/Math.abs(dx); //we need to place player 1 pixel away, so this gives us the correction
+		var yCorrect = -1 * dy/Math.abs(dy);
+		if(tx < ty){
+			//since tx is the time in which collision occurs, calculate final x position
+			console.log("Collision on x");
+			if(move){
+				m._x += m._xVel * tx + xCorrect;
+				m._xVel = 0;
+			}
+		}
+		else if(ty < tx){
+			console.log("Collision on y");
+			if(move){
+				m._y += m._yVel * ty + yCorrect;
+				m._yVel = 0;
+			}
+		}
+		else{
+			console.log("Collision on x,y");
+			if(move){
+				m._x += m._xVel * tx + xCorrect;
+				m._y += m._yVel * ty + yCorrect;
+				m._yVel = 0;
+				m._xVel = 0;
+			}
+		}
+	}
 }
 //updates gravity, checks for collision with platforms
 Movable.prototype.gravityUpdate = function(){
@@ -95,94 +183,7 @@ Movable.prototype.gravityUpdate = function(){
 		}
 
 		if(GM.logic.collisionDebug){
-			/*
-			 The following assumptions apply:
-
-			*/
-			var LEFT = Math.PI;
-			var RIGHT = 0;
-			var UP = Math.PI * .5;
-			var DOWN = Math.PI * 3/2;
-
-			//get the test platform
-			var p = GM.logic.getPlatforms();
-			//now using vector math check if it will collide within t <= 1
-
-			//bottom and right sides 3pi/2 < angle < 2pi
-			var hw = this._width/2;
-			var hh = this._height/2;
-			var x = this._x + hw;
-			var y = this._y + hh;
-			var dx = this._xVel;
-			var dy = this._yVel;
-			var tx = 2; //time at which it would collide on x-axis (0<=tx<=1)
-			var ty = 2;
-			var projX, projY; //projected coordinate of other given the t
-			var ang = null;
-			if(dx != 0 || dy != 0){
-				ang = Math.atan2(-1 * dy, dx);
-				if(ang < 0){
-					ang += 2 * Math.PI;
-				}
-			}
-
-			if(ang == null){
-				return;
-			}
-			//check right and left sides
-			if(ang > DOWN || ang < UP){
-				//going right
-				tx = Math.abs(((p.x-hw) - x)/dx); //time at which right side will collide
-			}
-			else if(ang > UP && ang < DOWN){
-				//going left
-				tx = Math.abs(((p.x+p.w+hw) - x)/dx); //time at which right side will collide
-			}
-
-			projY = y + tx * dy;
-			//if the y difference of the centers is within distance of their centers they are colliding
-			if(!(Math.abs(projY - (p.y + p.h/2)) <= hh + p.h/2)){
-				//the y coordinate is not crossed on this trajectory
-				tx = 2;//so it won't happen
-			}
-
-			if(ang > LEFT){
-				//going down
-				ty = Math.abs(((p.y-hh) - y)/dy);
-			}
-			else if(ang > RIGHT && ang < LEFT){
-				//going up
-				ty = Math.abs(((p.y+hh+p.h) - y)/dy);
-			}
-			projX = x + ty * dx;
-			if(!(Math.abs(projX - (p.x + p.w/2)) <= hw + p.w/2)){
-				//the x coordinate is not crossed on this trajectory
-				ty = 2;//so it won't happen
-			}
-			//check top and bottom sides
-			console.log(ang); //I forget the range of arctangent... will look up
-			if(tx <= 1 || ty <= 1){
-				var xCorrect = -1 * dx/Math.abs(dx); //we need to place player 1 pixel away, so this gives us the correction
-				var yCorrect = -1 * dy/Math.abs(dy);
-				if(tx < ty){
-					//since tx is the time in which collision occurs, calculate final x position
-					console.log("Collision on x");
-					this._x += this._xVel * tx + xCorrect;
-					this._xVel = 0;
-				}
-				else if(ty < tx){
-					console.log("Collision on y");
-					this._y += this._yVel * ty + yCorrect;
-					this._yVel = 0;
-				}
-				else{
-					console.log("Collision on x,y");
-					this._x += this._xVel * tx + xCorrect;
-					this._y += this._yVel * ty + yCorrect;
-					this._yVel = 0;
-					this._xVel = 0;
-				}
-			}
+			this.collMovingStatic(this, GM.logic.getPlatforms(), true);
 		}
 		this._x += this._xVel;
 

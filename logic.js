@@ -32,7 +32,7 @@ GM.logic = (function(){
 		};
 		cObsInScreen = { //updated with objects in screen
 		},
-		myPlatform = {x:150,y: 270,w:100,h:20};
+		myPlatform = {_x:150,_y: 270,_width:100,_height:20};
 
 
 	function handleKeyDown(e){
@@ -196,7 +196,7 @@ GM.logic = (function(){
 		ctx.fillStyle = "#00F";
 		ctx.font = "11px Arial";
 		ctx.fillText(curFPS + " fps", 5,10);
-		ctx.strokeRect(myPlatform.x, myPlatform.y, myPlatform.w, myPlatform.h);
+		ctx.strokeRect(myPlatform._x, myPlatform._y, myPlatform._width, myPlatform._height);
 		ctxout.drawImage(buffer, 0, 0);
 	};
 
