@@ -1,9 +1,11 @@
 
 /*
+ * @class main
+ * singleton
  * contains game logic
  * acts as mediator
  */
-GM.logic = (function(){
+GM.main = (function(){
 	var that = {};
 	var	paused= false,
 		movementPaused = false,//used for cutscenes, stops user movment
@@ -31,8 +33,7 @@ GM.logic = (function(){
 		cObs = {
 		};
 		cObsInScreen = { //updated with objects in screen
-		},
-		myPlatform = {_x:10,_y: 270,_width:200,_height:10};
+		};
 
 
 	function handleKeyDown(e){
@@ -104,6 +105,7 @@ GM.logic = (function(){
 		mapWidth = 150;//in blocks
 		document.addEventListener("keydown",handleKeyDown, false);
 		document.addEventListener("keyup",handleKeyUp, false);
+		GM.platformList.generatePlatforms(10);
 		GM.viewport.init(cWidth, cHeight, mapWidth);
 		var ground = GM.viewport.getGround();
 	
@@ -193,10 +195,18 @@ GM.logic = (function(){
 		cObs.player.paint(ctx);
 		//paint enemies
 		//cObs.enemyTest.paint(ctx);
-		ctx.fillStyle = "#00F";
+		ctx.strokeStyle = "#00F";
 		ctx.font = "11px Arial";
 		ctx.fillText(curFPS + " fps", 5,10);
-		ctx.strokeRect(myPlatform._x, myPlatform._y, myPlatform._width, myPlatform._height);
+		for(var p = GM.platformList.getRoot(); p != null; p = p.next){
+			if(p.hasOwnProperty("color")){
+				ctx.strokeStyle = p.color;
+			}
+			else{
+				ctx.strokeStyle = "#00F";
+			}
+			ctx.strokeRect(p.getX() - GM.viewport.getXOffset(), p.getY(), p.getWidth(), p.getHeight());
+		}
 		ctxout.drawImage(buffer, 0, 0);
 	};
 
@@ -240,9 +250,6 @@ GM.logic = (function(){
 				break;
 			}
 		}
-	}
-	that.getPlatforms = function(){
-		return myPlatform;
 	}
 	//returns ground from x1 to x2
 	that.getGround = function(x1, x2){

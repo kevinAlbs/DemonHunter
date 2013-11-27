@@ -57,8 +57,8 @@
 	var GM = {};
 	GM.debug = true;
 	//I don't quite like the sequential file loading, but it'll do for now
+	//Also, the naming scheme is Capital first for class, lowercase for singleton (just object)
 </script>
-
 <script src="data.js"></script>
 <script src="utils.js"></script>
 <script src="Paintable.js"></script>
@@ -72,12 +72,13 @@
 <script src="Player.js"></script>
 <script src="Professor.js"></script>
 <script src="Enemy.js"></script>
-<script src="logic.js"></script>
+<script src="main.js"></script>
 <script src="viewport.js"></script>
+<script src="platformList.js"></script>
 <script>
 function pageLoaded(){
 	//onces deps are loaded, start game
-	GM.logic.loadDependencies(GM.data.dependencies, function(){GM.logic.startGame();});
+	GM.main.loadDependencies(GM.data.dependencies, function(){GM.main.startGame();});
 }
 window.addEventListener("load", pageLoaded);
 </script>

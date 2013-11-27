@@ -6,6 +6,7 @@ function Mob(){
 	this._ducking = false;
 	this._hasLongJump = false;
 	this._facing = 1;//-1 for facing left, 1 for facing right, NEVER 0
+	this._curPlatform = null;
 	this.name = "";
 
 	//dir must be -1, 0, or 1
@@ -36,7 +37,7 @@ function Mob(){
 		}
 	}
 	this.jump = function(){
-		if(GM.logic.collisionDebug){
+		if(GM.main.collisionDebug){
 			this._yVel = -3;
 			return;
 		}
@@ -46,7 +47,7 @@ function Mob(){
 		}
 	}	
 	this.unjump = function(){
-		if(GM.logic.collisionDebug){
+		if(GM.main.collisionDebug){
 			this._yVel = 0;
 			return;
 		}
@@ -58,7 +59,7 @@ function Mob(){
 
 	}
 	this.duck = function(){
-		if(GM.logic.collisionDebug){
+		if(GM.main.collisionDebug){
 			this._yVel = 3;
 			return;
 		}
@@ -68,11 +69,73 @@ function Mob(){
 		}
 	}
 	this.unduck = function(){
-		if(GM.logic.collisionDebug){
+		if(GM.main.collisionDebug){
 			this._yVel = 0;
 			return;
 		}
 		this._ducking = false;
+	}
+
+	this.gravityUpdate = function(){
+		if(GM.main.collisionDebug){
+			if(this._curPlatform == null){
+				this._curPlatform = GM.platformList.getRoot();
+			}
+			var first = null;//first possible platform found
+			for(var p = this._curPlatform; p != null; p = p.next){
+				var r = GM.platformList.collPossibleX(this, p);
+				if(r == 0){
+					//possible, check collision
+					if(first == null){
+						first = p;
+					}
+					if(GM.platformList.collPossibleY(this,p) == 0){ //also check y because most of the time you will be jumping
+						p.color = "#F00";
+						var coll = this.collMovingStatic(this, p, true);
+					}
+					else{
+						p.color = "#00F";
+					}
+				}
+				else{
+					p.color = "#00F";
+				}
+				if(r < 0){
+					break;//too far
+				}
+			}
+			
+			var last = null;
+			for(var p = this._curPlatform; p != null; p = p.prev){
+				var r = GM.platformList.collPossibleX(this, p);
+				if(r == 0){
+					//possible, check collision
+					last = p;
+					if(GM.platformList.collPossibleY(this,p) == 0){ //also check y because most of the time you will be jumping
+						p.color = "#F00";
+						var coll = this.collMovingStatic(this, p, true);
+					}
+					else{
+						p.color = "#00F";
+					}
+				}
+				else{
+					p.color = "#00F";
+				}
+				if(r > 0){
+					break;//too far
+				}
+			}
+
+			if(last != null){
+				this._curPlatform = last;
+			}
+			else if(first != null){
+				this._curPlatform = first;
+			}
+
+		}
+		Mob.prototype.gravityUpdate.call(this);
 	}
 }
 

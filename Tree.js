@@ -47,7 +47,7 @@ function Tree(x){
 		leaves.splice(index,1);//gotta change
 	}
 	this.paint = function(ctx){
-		var xOff = GM.logic.getXOffset();
+		var xOff = GM.main.getXOffset();
 		//paint trunk
 		ctx.fillStyle = "#503000";
 		ctx.fillRect(this._x - xOff, this._y, this._width, this._height);

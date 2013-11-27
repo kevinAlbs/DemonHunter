@@ -13,9 +13,9 @@ function Enemy(){
 		Enemy.prototype.update.apply(this);
 
 		//check whether it is on screen
-		var inScreen = GM.logic.inScreen(this);
-		var playerX = GM.logic.getPlayerX();
-		var playerWidth = GM.logic.getPlayerWidth();
+		var inScreen = GM.main.inScreen(this);
+		var playerX = GM.main.getPlayerX();
+		var playerWidth = GM.main.getPlayerWidth();
 		var leftDisp = (playerX + playerWidth) - this._x; //players displacement
 		var rightDisp = playerX - (this._x + this._width);
 		var disp, dist; //displacement and distance

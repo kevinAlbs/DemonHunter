@@ -21,20 +21,20 @@ Paintable.prototype.setWidth = function(val){this._width = val;}
 Paintable.prototype.setHeight = function(val){this._height = val;}
 Paintable.prototype.paint = function(ctx){
 	//default
-	ctx.fillRect(this._x - GM.logic.getXOffset(),this._y,this._width, this._height);
+	ctx.fillRect(this._x - GM.main.getXOffset(),this._y,this._width, this._height);
 	if(GM.debug){
-		//ctx.fillText(this._x + "," + this._y, this._x - GM.logic.getXOffset(), this._y - 10);
+		//ctx.fillText(this._x + "," + this._y, this._x - GM.main.getXOffset(), this._y - 10);
 		if(typeof this.getHealth == "function"){
-			ctx.fillText(this.getHealth(), this._x - GM.logic.getXOffset(), this._y - 20);
+			ctx.fillText(this.getHealth(), this._x - GM.main.getXOffset(), this._y - 20);
 		}
 	}
 };
 
 //set the y coordinate relative to ground so movable object can be placed directly on ground
 Paintable.prototype.setOnGround = function(){
-	ground = GM.logic.getGround(this._x, this._x+this._width);
+	ground = GM.main.getGround(this._x, this._x+this._width);
 	var highest = 0;
-	var c_height = GM.logic.getCHeight();
+	var c_height = GM.main.getCHeight();
 	for(var i = 0; i < ground.length; i++){
 		if(ground[i] > highest){
 			highest = ground[i];	

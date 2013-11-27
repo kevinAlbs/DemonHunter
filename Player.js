@@ -9,6 +9,7 @@ function Player(){
 
 	//"protected"
 	this._x = 80;
+	this._y = 20;
 	this._xSpeed = 5;
 	this._yVel = 0;
 	this._width = 22; 
@@ -67,12 +68,12 @@ function Player(){
 	};
 
 	this.paint = function(ctx){
-		//animation_set.drawFrame(this._x - GM.logic.getXOffset(), this._y, this._width, this._height, ctx, this._facing);
-		ctx.strokeRect(this._x - GM.logic.getXOffset(), this._y, this._width, this._height);
+		//animation_set.drawFrame(this._x - GM.main.getXOffset(), this._y, this._width, this._height, ctx, this._facing);
+		ctx.strokeRect(this._x - GM.main.getXOffset(), this._y, this._width, this._height);
 		ctx.fillStyle = "#000";
 		sword.paint(ctx);
 		if(GM.debug){
-			ctx.fillText(Math.round(this._x) + "," + Math.round(this._y), this._x - GM.logic.getXOffset(), this._y - 10);
+			ctx.fillText(Math.round(this._x) + "," + Math.round(this._y), this._x - GM.main.getXOffset(), this._y - 10);
 		}
 	};
 

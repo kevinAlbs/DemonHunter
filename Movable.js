@@ -23,7 +23,13 @@ function Movable(){
 
 GM.utils.inherits(Movable, Paintable);
 
+Movable.prototype.getXVel = function(){return this._xVel;};
+Movable.prototype.getYVel = function(){return this._yVel;};
 //default properties
+/**
+* A simple collision detecting method. It does not use information about which side was hit
+* @param Movable - the object you are checking with
+*/
 Movable.prototype.collidingWith = function(movable){
 	//returns true/false if colliding with other movable object
 	var left1 = this._x,
@@ -49,7 +55,7 @@ Movable.prototype.collidingWith = function(movable){
 * @param m Movable - the main object, which can be moved to the final collision point
 * @param s Movable - the static object which is treated as if xVel and yVel are 0
 * @param move Boolean - if true, move the Movable object to the final collision point
-* @return int - tell whether or not there is a collision: 0 for none, 1 for top, 2 for right, 3 for bottom, 4 for left
+* @return int - tell whether or not there is a collision: 0 for none, 1 for top, 2 for right, 3 for bottom, 4 for left, 11 for top left, 22 for top right, 33 for bottom right, 44 for bottom left
 */
 Movable.prototype.collMovingStatic = function(m, s, move){
 	var LEFT = Math.PI;
@@ -57,8 +63,6 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 	var UP = Math.PI * .5;
 	var DOWN = Math.PI * 3/2;
 
-	//get the test platform
-	var p = GM.logic.getPlatforms();
 	//now using vector math check if it will collide within t <= 1
 
 	//bottom and right sides 3pi/2 < angle < 2pi
@@ -71,7 +75,7 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 	var tx = 2; //time at which it would collide on x-axis (0<=tx<=1)
 	var ty = 2;
 	var projX, projY; //projected coordinate of other given the t
-	var ang = null;
+	var ang = null; //TODO: I just realized this is useless, as you can just simply check the signs of dx and dy lol
 	if(dx != 0 || dy != 0){
 		ang = Math.atan2(-1 * dy, dx);
 		if(ang < 0){
@@ -123,12 +127,28 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 				m._x += m._xVel * tx + xCorrect;
 				m._xVel = 0;
 			}
+			if(m._xVel < 0){
+				//left
+				return 4;
+			}
+			else{
+				//right
+				return 2;
+			}
 		}
 		else if(ty < tx){
 			console.log("Collision on y");
 			if(move){
 				m._y += m._yVel * ty + yCorrect;
 				m._yVel = 0;
+			}
+			if(m._yVel < 0){
+				//top
+				return 1;
+			}
+			else{
+				//bottom
+				return 3;
 			}
 		}
 		else{
@@ -139,55 +159,39 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 				m._yVel = 0;
 				m._xVel = 0;
 			}
+			if(m._xVel < 0){
+				//left
+				if(m._yVel < 0){
+					//top
+					return 11;
+				}
+				else{
+					//bottom
+					return 44;
+				}
+			}
+			else{
+				//right
+				if(m._yVel < 0){
+					//top
+					return 22;
+				}
+				else{
+					//bottom
+					return 33;
+				}
+			}
 		}
 	}
+	return 0;
 }
 //updates gravity, checks for collision with platforms
 Movable.prototype.gravityUpdate = function(){
-		var ground;
-		if(this._xVel > 0){
-			//add x velocity to 'to' parameter
-			ground = GM.logic.getGround(this._x, this._x+this._width+this._xVel);
-		}
-		else{
-			//add x velocity to 'from' parameter
-			ground = GM.logic.getGround(this._x+this._xVel, this._x+this._width);
-		}
-		var c_height = GM.logic.getCHeight();
 
-		//check if about to hit ground xwise
-		if(this._xVel > 0){
-			//check right side
-			//do I only have to check the last ground block?
-			//we know that getGround will get the last block which x is moving to
-			//or that the first block will be the block which x is moving to
-			actual_height = c_height - ground[ground.length-1] * 10;
-			if(this._y + this._height > actual_height){
-				//move up to just before the block they are about to hit
-				this._x = (this._x + this._xVel + this._width) - ((this._x + this._xVel + this._width) % 10) - this._width;
-				this._xVel = 0;
-				//remove the last block from y checking, since it will not be moving there
-				ground.splice(ground.length-1, 1);
-			}
-		}
-		else if(this._xVel < 0){
-			//check left side
-			actual_height = c_height - ground[0] * 10;
-			if(this._y + this._height > actual_height){
-				//move up to just before the block they are about to hit
-				this._x = (this._x + this._xVel) + (10 - ((this._x + this._xVel) % 10));
-				this._xVel = 0;
-				//remove the last block from y checking, since it will not be moving there
-				ground.splice(0, 1);
-			}
-		}
 
-		if(GM.logic.collisionDebug){
-			this.collMovingStatic(this, GM.logic.getPlatforms(), true);
-		}
 		this._x += this._xVel;
 
-		if(!GM.logic.collisionDebug){
+		if(!GM.main.collisionDebug){
 			//see if about to hit ground or if off of ground
 			var highest = 0; 
 			for(var i = 0; i < ground.length; i++){
@@ -233,8 +237,8 @@ Movable.prototype.gravityUpdate = function(){
 		if(this._x < 0){
 			this._x = 0;
 		}
-		if(this._x + this._width > GM.logic.getMapWidth()){
-			this._x = GM.logic.getMapWidth() - this._width;
+		if(this._x + this._width > GM.main.getMapWidth()){
+			this._x = GM.main.getMapWidth() - this._width;
 		}
 	};
 
