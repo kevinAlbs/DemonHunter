@@ -67,7 +67,7 @@ function Enemy(){
 			break;
 		}
 
-		this.gravityUpdate();
+		this.movementUpdate();
 		//check after gravityUpdate if trying to move but stuck
 		if(this._state == "follow_player" && this._xVel == 0){
 			this.jump();

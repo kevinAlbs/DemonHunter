@@ -7,15 +7,21 @@ GM.platformList = (function(){
 	that.getRoot = function(){
 		return root;//will probably change
 	}
-
+	/*
+	From experimentation, seems like maximum y difference is 119 away (up) in exactly 11 frames (I think)
+	The maximum x will depend on y. I will have to figure this out later.
+	*/
 	that.generatePlatforms = function(num){
 		if(num <= 0){
 			return;
 		}
+		var curX = 10;
+		var curWidth = 500;
+		var curY = 300;
 		root = new Movable();
-		root.setX(10);
-		root.setY(200);
-		root.setWidth(100);
+		root.setX(curX);
+		root.setY(curY);
+		root.setWidth(curWidth);
 		root.setHeight(10);
 		root.next = null;
 		root.prev = null;
@@ -23,9 +29,13 @@ GM.platformList = (function(){
 		num--;
 		for(var i = 1; i < num; i++){
 			var newObj = new Movable();
-			newObj.setX(70 * i);
-			newObj.setY(200 + Math.floor(Math.random() * 100) - 50);
-			newObj.setWidth(100);
+			curX = curX + curWidth + (88*2);
+			//curX += curWidth + 10 + Math.floor(Math.random() * 200);
+			newObj.setX(curX);
+			//curY = 300 + Math.floor(Math.random() * 200) - 50;
+			newObj.setY(curY);
+			curWidth = 200 + (Math.random() * 100) - 25;
+			newObj.setWidth(curWidth);
 			newObj.setHeight(10);
 			rear.next = newObj;
 			newObj.prev = rear;

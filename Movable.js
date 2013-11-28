@@ -185,51 +185,9 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 	}
 	return 0;
 }
-//updates gravity, checks for collision with platforms
-Movable.prototype.gravityUpdate = function(){
-
-
+//updates movement, checks for collision with platforms
+Movable.prototype.movementUpdate = function(){
 		this._x += this._xVel;
-
-		if(!GM.main.collisionDebug){
-			//see if about to hit ground or if off of ground
-			var highest = 0; 
-			for(var i = 0; i < ground.length; i++){
-				if(ground[i] > highest){
-					highest = ground[i];	
-				}
-			}
-			var actual_height = c_height - highest * 10;
-
-			if(this._onGround == false){
-				if(this._yVel < this._terminalVelocity){
-					//apply gravity
-					this._yVel += this._gravity;
-					this._gravity += this._gravAcc;
-					if(this._gravity > this._gravityMax){
-						this._gravity = this._gravityMax;
-					}
-				}
-			}
-			//if the player is already on the ground, check if they are no longer on the ground by checking one pixel below them
-			if(this._onGround && this._y + 1 + this._height < actual_height){
-				//this._gravity = this._origGrav;
-				//no longer on ground
-
-				this._yVel += this._gravity;
-				this._gravity += this._gravAcc;
-				this._onGround = false;
-			}
-
-			//else check if they are mid air and falling and about to hit the ground
-			if(this._y + this._yVel + this._height > actual_height){
-				this._y = actual_height - this._height;
-				this._yVel = 0;
-				this._gravity = this._origGrav;
-				console.log(this._gravity);
-				this._onGround = true;
-			}
-		}
 		this._y += this._yVel;
 
 
@@ -240,7 +198,16 @@ Movable.prototype.gravityUpdate = function(){
 		if(this._x + this._width > GM.main.getMapWidth()){
 			this._x = GM.main.getMapWidth() - this._width;
 		}
-	};
+};
 
 
-
+Movable.prototype.applyGravity = function(){
+	if(this._yVel < this._terminalVelocity){
+		//apply gravity
+		this._yVel += this._gravity;
+		this._gravity += this._gravAcc;
+		if(this._gravity > this._gravityMax){
+			this._gravity = this._gravityMax;
+		}
+	}
+};

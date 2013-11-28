@@ -37,20 +37,11 @@ function Mob(){
 		}
 	}
 	this.jump = function(){
-		if(GM.main.collisionDebug){
-			this._yVel = -3;
-			return;
-		}
-		if(this._onGround && !this._ducking){
-			this._onGround = false;
+		if(this.onPlatform() && !this._ducking){
 			this._yVel = this._jumpSpeed;
 		}
 	}	
 	this.unjump = function(){
-		if(GM.main.collisionDebug){
-			this._yVel = 0;
-			return;
-		}
 		if(this._hasLongJump){
 			if(this._yVel < -8){
 				this._yVel = -8;
@@ -59,24 +50,51 @@ function Mob(){
 
 	}
 	this.duck = function(){
-		if(GM.main.collisionDebug){
-			this._yVel = 3;
-			return;
-		}
 		if(this._onGround){
 			this._xVel = 0;
 			this._ducking = true;
 		}
 	}
 	this.unduck = function(){
-		if(GM.main.collisionDebug){
-			this._yVel = 0;
-			return;
-		}
 		this._ducking = false;
 	}
 
-	this.gravityUpdate = function(){
+	this.onPlatform = function(){
+		if(this._curPlatform == null){
+			this._curPlatform = GM.platformList.getRoot();
+		}
+		for(var p = this._curPlatform; p != null; p = p.next){
+			var r = GM.platformList.collPossibleX(this, p);
+			if(r == 0){
+				//possible, check if player is on top
+				if(this._y + this._height + 1 == p._y){ //also check y because most of the time you will be jumping
+					return true;
+				}
+			}
+			if(r < 0){
+				break;//too far
+			}
+		}
+		for(var p = this._curPlatform; p != null; p = p.prev){
+			var r = GM.platformList.collPossibleX(this, p);
+			if(r == 0){
+				//possible, check collision
+				if(this._y + this._height + 1 == p._y){ //also check y because most of the time you will be jumping
+					return true;
+				}
+			}
+			if(r > 0){
+				break;//too far
+			}
+		}
+		return false;
+	}
+
+	/* Extends the movable gravityUpdate to include platform collisions */
+	this.movementUpdate = function(){
+		if(!this.onPlatform()){
+			this.applyGravity();
+		}
 		if(GM.main.collisionDebug){
 			if(this._curPlatform == null){
 				this._curPlatform = GM.platformList.getRoot();
@@ -135,7 +153,7 @@ function Mob(){
 			}
 
 		}
-		Mob.prototype.gravityUpdate.call(this);
+		Mob.prototype.movementUpdate.call(this);
 	}
 }
 

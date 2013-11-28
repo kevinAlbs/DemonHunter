@@ -37,20 +37,25 @@ GM.main = (function(){
 
 
 	function handleKeyDown(e){
+		console.log(e.which);
 		switch(e.which){
 			case 39:
+			case 68:
 			keys.r = true;
 			e.preventDefault();
 			break;
 			case 37:
+			case 65:
 			keys.l = true;
 			e.preventDefault();
 			break;
 			case 38:
+			case 87:
 			keys.u = true;
 			e.preventDefault();
 			break;
 			case 40:
+			case 83:
 			keys.d = true;
 			e.preventDefault();
 			break;
@@ -69,15 +74,19 @@ GM.main = (function(){
 	function handleKeyUp(e){
 		switch(e.which){
 			case 39:
+			case 68:
 			keys.r = false;
 			break;
 			case 37:
+			case 65:
 			keys.l = false;
 			break;
 			case 38:
+			case 87:
 			keys.u = false;
 			break;
 			case 40:
+			case 83:
 			keys.d = false;
 			break;
 			case 90:
@@ -102,10 +111,10 @@ GM.main = (function(){
 		ctxout = cnv.getContext("2d");
 		cWidth = cnv.width;
 		cHeight = cnv.height;
-		mapWidth = 150;//in blocks
+		mapWidth = 500;//in blocks
 		document.addEventListener("keydown",handleKeyDown, false);
 		document.addEventListener("keyup",handleKeyUp, false);
-		GM.platformList.generatePlatforms(10);
+		GM.platformList.generatePlatforms(200);
 		GM.viewport.init(cWidth, cHeight, mapWidth);
 		var ground = GM.viewport.getGround();
 	

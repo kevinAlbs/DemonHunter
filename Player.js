@@ -10,11 +10,11 @@ function Player(){
 	//"protected"
 	this._x = 80;
 	this._y = 20;
-	this._xSpeed = 5;
+	this._xSpeed = 8;
 	this._yVel = 0;
 	this._width = 22; 
 	this._height = 60;
-	this._jumpSpeed = -20;
+	this._jumpSpeed = -19.8;
 	this._ducking = false;
 	this._hasLongJump = true;
 
@@ -47,7 +47,7 @@ function Player(){
 			}
 		}
 
-		this.gravityUpdate();
+		this.movementUpdate();
 		//this._y = 50;
 		//this._x += 6;
 

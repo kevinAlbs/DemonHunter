@@ -63,12 +63,14 @@ GM.viewport = (function(){
 	that.paint = function(ctx){
 		ctx.fillStyle = "#3cbcfc";
 		ctx.fillRect(0,0, cWidth, cHeight);
+		/*ctx.fillStyle = "#3cbcfc";
+		ctx.fillRect(0,0, cWidth, cHeight);
 		var firstBlock = Math.floor(xOffset / 10);
 		var totalBlocks = cWidth / 10 + 1;
 		ctx.fillStyle = "#009800";
 		for(var i = 0; i < totalBlocks; i++){
 			ctx.fillRect(-1 * xOffset % 10 + i * 10, (cHeight/10 - ground[i + firstBlock]) * 10, 10 , cHeight - (10 * ground[i + firstBlock]));
-		}
+		}*/
 	}
 
 	that.getGround = function(){
