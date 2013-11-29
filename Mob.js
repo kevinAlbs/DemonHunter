@@ -42,6 +42,7 @@ function Mob(){
 		}
 	}	
 	this.unjump = function(){
+		this._yVel = 0;
 		if(this._hasLongJump){
 			if(this._yVel < -8){
 				this._yVel = -8;
@@ -60,6 +61,11 @@ function Mob(){
 	}
 
 	this.onPlatform = function(){
+		if(this.whichPlatform() != null){return true;}
+		else{return false;}
+	}
+	//returns which platform the mob is on (or null if nothing)
+	this.whichPlatform = function(){
 		if(this._curPlatform == null){
 			this._curPlatform = GM.platformList.getRoot();
 		}
@@ -68,7 +74,7 @@ function Mob(){
 			if(r == 0){
 				//possible, check if player is on top
 				if(this._y + this._height + 1 == p._y){ //also check y because most of the time you will be jumping
-					return true;
+					return p;
 				}
 			}
 			if(r < 0){
@@ -80,20 +86,20 @@ function Mob(){
 			if(r == 0){
 				//possible, check collision
 				if(this._y + this._height + 1 == p._y){ //also check y because most of the time you will be jumping
-					return true;
+					return p;
 				}
 			}
 			if(r > 0){
 				break;//too far
 			}
 		}
-		return false;
-	}
+		return null;
+	};
 
 	/* Extends the movable gravityUpdate to include platform collisions */
 	this.movementUpdate = function(){
 		if(!this.onPlatform()){
-			this.applyGravity();
+			//this.applyGravity();
 		}
 		if(GM.main.collisionDebug){
 			if(this._curPlatform == null){

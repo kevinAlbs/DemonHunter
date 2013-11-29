@@ -128,7 +128,7 @@ GM.main = (function(){
 		ctxout = cnv.getContext("2d");
 		cWidth = cnv.width;
 		cHeight = cnv.height;
-		mapWidth = 500;//in blocks
+		mapWidth = 50000;//in blocks
 		document.addEventListener("keydown",handleKeyDown, false);
 		document.addEventListener("keyup",handleKeyUp, false);
 		cnv.addEventListener("mousedown", handleMousedown, false);
@@ -140,11 +140,8 @@ GM.main = (function(){
 		cObs.player = new Player();
 
 		//test with an enemy
-		/*
-		cObs.enemyTest = new Enemy();
-		cObs.enemyTest.setX(200);
-		cObs.enemyTest.setOnGround();
-		*/
+		
+		cObs.enemyTest = new Enemy(GM.platformList.getRoot().next);
 	}
 	function checkCollisions(){
 		//check bullet collisions
@@ -196,7 +193,7 @@ GM.main = (function(){
 		cObs.player.update();
 		GM.viewport.update(cObs.player.getX(), cObs.player.getY());
 
-		//cObs.enemyTest.update();
+		cObs.enemyTest.update();
 		paint();
 
 		if(!paused){
@@ -226,7 +223,7 @@ GM.main = (function(){
 		//paint player
 		cObs.player.paint(ctx);
 		//paint enemies
-		//cObs.enemyTest.paint(ctx);
+		cObs.enemyTest.paint(ctx);
 		ctx.strokeStyle = "#00F";
 		ctx.font = "11px Arial";
 		ctx.fillText(curFPS + " fps", 5,10);
@@ -302,6 +299,7 @@ GM.main = (function(){
 		return GM.viewport.inScreen(obj);
 	}
 	that.getPlayerX = function(){return cObs.player.getX();};
+	that.getPlayerPlatform = function(){return cObs.player.whichPlatform();};
 	that.getPlayerWidth = function(){return cObs.player.getWidth();};
 	that.generateParticles = function(stg){
 		//to be implemented
@@ -320,8 +318,33 @@ GM.main = (function(){
 		GM.textOverlay.startCutscene(cutsceneData, cb);
 	};
 
-	that.shootGun = function(startX, startY, slope){
+	that.shootGun = function(startX, startY, dx, dy){
 		//calculate collisions, deal damage to enemies
+		//calculate time at which the x matches either side of the enemy, see if the y is within bounds
+		var ex = cObs.enemyTest.getX();
+		var ey = cObs.enemyTest.getY();
+		var ew = cObs.enemyTest.getWidth();
+		var eh = cObs.enemyTest.getHeight();
+		var tx = Math.abs((ex - startX)/dx);
+		var projY = startY + tx * dy;
+		if(ey < projY && projY < ey + eh){
+			console.log("HIT");
+			return;
+		}
+		tx = Math.abs(((ex + ew) - startX)/dx);
+		projY = startY + tx * dy;
+		if(ey < projY && projY < ey + eh){
+			console.log("HIT");
+			return;
+		}
+		//check just one other side (it must hit at least two sides), so checking all but one is fine
+		var ty = Math.abs((ey - startY)/dy);
+		var projX = startX + ty * dx;
+		if(ex < projX && projX < ex + ew){
+			console.log("HIT");
+			return;
+		}
+		console.log("MISS");
 	};
 	that.collisionDebug = true;
 	return that;

@@ -121,6 +121,11 @@ GM.platformList = (function(){
 			prev = ptr;
 			ptr = ptr.next;
 		}
+	};
+
+	that.attach = function(m, p){
+		m.setY(p.getY() - p.getHeight() - m.getHeight());
 	}
+	
 	return that;
 }());

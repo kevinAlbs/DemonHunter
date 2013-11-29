@@ -9,12 +9,12 @@ function Player(){
 
 	//"protected"
 	this._x = 80;
-	this._y = 20;
+	this._y = 239;
 	this._xSpeed = 10;
 	this._yVel = 0;
 	this._width = 22; 
 	this._height = 60;
-	this._jumpSpeed = -19.8;
+	this._jumpSpeed = -3;//-19.8;
 	this._ducking = false;
 	this._hasLongJump = true;
 
@@ -66,16 +66,24 @@ function Player(){
 
 	this.shoot = function(sx,sy){
 		if(shooting) return;
+
+		//this._yVel -= 2;
 		shooting = true;
 		var xOff = GM.main.getXOffset();
+		sx += xOff;
 		var newBullet = {
 			x1: this._x,
 			y1: this._y,
-			x2: sx + xOff,
+			x2: sx,
 			y2: sy,
 			t: 0,
 			next: null
 		};
+		var x1 = this._x;
+		var y1 = this._y;
+		var dy = (sy - y1);
+		var dx = (sx - x1);
+		GM.main.shootGun(x1, y1, dx, dy);
 		//check for collisions with enemies etc. call a GM.main function which handles this
 		if(bullets == null){
 			bullets = newBullet;

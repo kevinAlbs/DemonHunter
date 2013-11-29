@@ -1,13 +1,21 @@
-function Enemy(){
+function Enemy(p){
 	this._width = 30, 
 	this._height = 70;
 	this._xSpeed = 2;
 	this._xVel = 0;//prevent initial jump
 	this._state = "idle";
+	this._attachedPlatform = null;
+
+	if(p){
+		this._attachedPlatform = p;
+		this._x = p.getX() + p.getWidth() * 2/3;
+		this._y = p.getY() - this._height - 1;
+	}
 
 	function behave(){
 
 	};
+
 	this.update = function(){
 		//call super.update to update hurt state
 		Enemy.prototype.update.apply(this);
@@ -31,14 +39,14 @@ function Enemy(){
 			disp = 0;
 		}
 		dist = Math.abs(disp);
-		
-		if(!inScreen){
+		var pp = GM.main.getPlayerPlatform();
+		if(!inScreen || pp != this._attachedPlatform){
 			this._state = "idle";
 			this.moveX(0);
 		}
 		switch(this._state){
 			case "idle":
-				if(inScreen){
+				if(inScreen && pp == this._attachedPlatform){
 					this._state = "follow_player";
 					this.moveX(disp/dist);//move towards player (no need to check threshold since enemy will idle during off screen
 				}

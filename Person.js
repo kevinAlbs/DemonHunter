@@ -35,18 +35,23 @@ Person.prototype.update = function(){
 		}
 	}
 };
-//returns true if damage was inflicted
+/*
+returns 0 if could not inflict since already in hurt state
+returns 1 if could hurt but not dead
+returns 2 if dead
+*/
 Person.prototype.hurt = function(amt){
 	if(this._hurt){
-		return false;//already hurt, cannot be hurt while in hurt state
+		return 0;//already hurt, cannot be hurt while in hurt state
 	}
 
 	this._hurt = true;
 	if(this._health <= amt){
 		this._die();
+		return 2;
 	}
 	this._health -= amt;
-	return true;
+	return 1;
 };
 
 Person.prototype.isHurt = function(){
