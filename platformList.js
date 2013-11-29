@@ -2,6 +2,7 @@
 GM.platformList = (function(){
 	var that = {};
 	var root = null;//since platforms only have the extra next/prev properties, I'm going to use Movable objects
+	var rear = null;
 	var cur = null;
 
 	that.getRoot = function(){
@@ -10,6 +11,8 @@ GM.platformList = (function(){
 	/*
 	From experimentation, seems like maximum y difference is 119 away (up) in exactly 11 frames (I think)
 	The maximum x will depend on y. I will have to figure this out later.
+
+	This will generate platforms on the end of the linked list
 	*/
 	that.generatePlatforms = function(num){
 		if(num <= 0){
@@ -18,23 +21,30 @@ GM.platformList = (function(){
 		var curX = 10;
 		var curWidth = 500;
 		var curY = 300;
-		root = new Movable();
-		root.setX(curX);
-		root.setY(curY);
-		root.setWidth(curWidth);
-		root.setHeight(10);
-		root.next = null;
-		root.prev = null;
-		var rear = root;
-		num--;
-		for(var i = 1; i < num; i++){
+		if(root == null){
+			root = new Movable();
+			root.setX(curX);
+			root.setY(curY);
+			root.setWidth(curWidth);
+			root.setHeight(10);
+			root.next = null;
+			root.prev = null;
+			rear = root;
+			num--;
+		}
+		else{
+			curX = rear.getX();
+			curWidth = rear.getWidth();
+			curY = rear.getY();
+		}
+		for(var i = 0; i < num; i++){
 			var newObj = new Movable();
 			curX = curX + curWidth + (88*2);
 			//curX += curWidth + 10 + Math.floor(Math.random() * 200);
 			newObj.setX(curX);
 			//curY = 300 + Math.floor(Math.random() * 200) - 50;
 			newObj.setY(curY);
-			curWidth = 200 + (Math.random() * 100) - 25;
+			curWidth = 500 + (Math.random() * 100) - 25;
 			newObj.setWidth(curWidth);
 			newObj.setHeight(10);
 			rear.next = newObj;
@@ -85,5 +95,32 @@ GM.platformList = (function(){
 			}
 		}
 	};
+
+	that.cleanUp = function(){
+		//cleans up old platforms
+		var prev = null;
+		var ptr = root;
+		while(ptr != null){
+			if(ptr.getX() + ptr.getWidth() - GM.viewport.getXOffset() < 0){
+				console.log("Removing");
+				//remove
+				if(prev == null){
+					root = ptr.next;
+					ptr.next.prev = null;
+					ptr = ptr.next;
+				}
+				else{
+					prev.next = ptr.next;
+					ptr.next.prev = prev;
+					ptr = prev;
+				}
+			}
+			else{
+				break;//in order by x values, so break at point when no more are off screen
+			}
+			prev = ptr;
+			ptr = ptr.next;
+		}
+	}
 	return that;
 }());

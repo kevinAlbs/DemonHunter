@@ -30,7 +30,7 @@ GM.viewport = (function(){
 	*/
 	function updateOffsets(x,y){
 		//to center x:
-		xOffset = (x - cWidth / 2);
+		xOffset = (x - cWidth / 5);
 		if(xOffset < leftMin){
 			xOffset = leftMin;
 		}

@@ -28,6 +28,11 @@ GM.main = (function(){
 			zp: false, //true when z is PRESSED ONCE!
 			s: false //space
 		},
+		mouse = {
+			pressed: false,
+			x: -1,
+			y: -1
+		},
 		//collidable objects, categorized for ease of use
 		//make into linked lists
 		cObs = {
@@ -69,7 +74,7 @@ GM.main = (function(){
 			e.preventDefault();
 			break;
 		}
-	};
+	}
 
 	function handleKeyUp(e){
 		switch(e.which){
@@ -100,7 +105,19 @@ GM.main = (function(){
 		}
 		e.preventDefault();
 		return false;
-	};
+	}
+	function handleMousemove(e){
+		mouse.x = e.offsetX;
+		mouse.y = e.offsetY;
+	}
+	function handleMousedown(e){
+		mouse.pressed = true;
+		mouse.x = e.offsetX;
+		mouse.y = e.offsetY;
+	}
+	function handleMouseup(){
+		mouse.pressed = false;
+	}
 
 	function init(){
 		buffer = document.createElement("canvas");
@@ -114,12 +131,13 @@ GM.main = (function(){
 		mapWidth = 500;//in blocks
 		document.addEventListener("keydown",handleKeyDown, false);
 		document.addEventListener("keyup",handleKeyUp, false);
+		cnv.addEventListener("mousedown", handleMousedown, false);
+		cnv.addEventListener("mouseup", handleMouseup, false);
+		cnv.addEventListener("mousemove", handleMousemove, false);
 		GM.platformList.generatePlatforms(200);
 		GM.viewport.init(cWidth, cHeight, mapWidth);
-		var ground = GM.viewport.getGround();
 	
 		cObs.player = new Player();
-		//cObs.player.setOnGround();//put player on ground
 
 		//test with an enemy
 		/*
@@ -160,9 +178,12 @@ GM.main = (function(){
 			else{
 				cObs.player.unduck();
 			}
-			if(keys.zp){
-				cObs.player.swingSword();
-			}	
+			if(mouse.pressed){
+				cObs.player.shoot(mouse.x,mouse.y);
+			}
+			else{
+				cObs.player.unshoot();
+			}
 		}
 		else{
 			cObs.player.moveX(0);//no moving during cutscenes!
@@ -194,6 +215,8 @@ GM.main = (function(){
 			ticks = 0;
 			startTime = d.getTime();
 		}
+		/* TODO I could call this infrequently */
+		GM.platformList.cleanUp();
 	};
 
 	function paint(){
@@ -295,6 +318,10 @@ GM.main = (function(){
 			}
 		};
 		GM.textOverlay.startCutscene(cutsceneData, cb);
+	};
+
+	that.shootGun = function(startX, startY, slope){
+		//calculate collisions, deal damage to enemies
 	};
 	that.collisionDebug = true;
 	return that;

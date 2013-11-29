@@ -50,8 +50,8 @@ function Mob(){
 
 	}
 	this.duck = function(){
-		if(this._onGround){
-			this._xVel = 0;
+		if(this.onPlatform()){
+			this.unMoveX();
 			this._ducking = true;
 		}
 	}
