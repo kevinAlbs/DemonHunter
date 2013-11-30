@@ -11,13 +11,13 @@
 - Remove platforms as they go offscreen to the left (unless reconsidering game) [done]
 - optimizations (no floating point painting, read article)
 - Sun sets as you are playing (more demons come out at night)
-
+- At maximum gun angle you should still be able to shoot, only at that angle though
 At this point, the basic wireframe running should be nearly complete
 
 Guns + enemies:
 - Possible Enemy types:
 	+ Zombie (only walks on platform)
-	+ Platform Demon (on platform, jumps at you)
+	+ Centaur (on platform, jumps at you)
 	+ Fire Demon (on platform, shoots fire)
 	+ Air Demon (in sky, either shoots down at you or flies down to get you. It could also potentially follow you until you kill it)
 

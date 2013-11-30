@@ -30,8 +30,8 @@ GM.main = (function(){
 		},
 		mouse = {
 			pressed: false,
-			x: -1,
-			y: -1
+			x: cWidth,
+			y: cHeight/2
 		},
 		//collidable objects, categorized for ease of use
 		//make into linked lists
@@ -176,10 +176,12 @@ GM.main = (function(){
 				cObs.player.unduck();
 			}
 			if(mouse.pressed){
+				cObs.player.mouseUpdate(mouse.x, mouse.y);
 				cObs.player.shoot(mouse.x,mouse.y);
 			}
 			else{
 				cObs.player.unshoot();
+				cObs.player.mouseUpdate(mouse.x, mouse.y);
 			}
 		}
 		else{

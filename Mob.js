@@ -42,7 +42,6 @@ function Mob(){
 		}
 	}	
 	this.unjump = function(){
-		this._yVel = 0;
 		if(this._hasLongJump){
 			if(this._yVel < -8){
 				this._yVel = -8;
@@ -99,7 +98,7 @@ function Mob(){
 	/* Extends the movable gravityUpdate to include platform collisions */
 	this.movementUpdate = function(){
 		if(!this.onPlatform()){
-			//this.applyGravity();
+			this.applyGravity();
 		}
 		if(GM.main.collisionDebug){
 			if(this._curPlatform == null){

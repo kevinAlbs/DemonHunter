@@ -42,19 +42,27 @@ function Animation(frames){
 		the image will be centered around this rectangular area
 		dir - the direction the mob is facing (1 for right, -1 for left), image will be flipped to face that direction
 	*/
-	this.drawFrame = function(x,y,width,height,ctx, dir){
+	this.drawFrame = function(x,y,width,height,ctx, dir, rot, rx, ry){
 		var f = this._frames[this._curFrame];
 		var flip = 1, offset = 0;
+		ctx.save();
 		if(dir == -1){
-			ctx.save();
 			ctx.scale(-1, 1);
 			flip = -1;
 			offset = -1 * width;
 		}
-		ctx.drawImage(GM.deps.spritesheet, f.x, f.y, f.width, f.height, flip * x + offset, y,  f.width, f.height);
-		if(dir == -1){
-			ctx.restore();
+		
+		ctx.translate(flip * x + offset,y);
+		if(rot){
+			ctx.translate(rx, ry);
+			ctx.rotate(rot);
+			ctx.translate(-1 * rx, -1 * ry);
 		}
+		ctx.drawImage(GM.deps.spritesheet, f.x, f.y, f.width, f.height, 0, 0,  f.width, f.height);
+		if(dir == -1){
+			
+		}
+		ctx.restore();
 		this._updateFrame();
 	};
 

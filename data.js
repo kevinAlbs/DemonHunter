@@ -5,62 +5,171 @@ GM.data = {
 		{
 			type: 'img',
 			name: 'spritesheet',
-			src: 'spritesheet.gif?v3'
+			src: 'spritesheet.gif?v2'
 		}
 	],
 	//all of the animation data for the locations/times on spritesheet
 	animation_sets:{
+		Player_arms:{
+			arms: [{
+				x: 54,
+				y: 162,
+				width: 36,
+				height: 14,
+				time: 1
+			}]
+		},
+		Player_head:{
+			head1:[{
+				x: 54,
+				y: 140,
+				width: 22,
+				height: 22,
+				time: 1
+			}],
+			head2: [{
+				x: 76,
+				y: 140,
+				width: 22,
+				height: 22,
+				time: 1
+			}],
+			head3: [{
+				x: 98,
+				y: 140,
+				width: 22,
+				height: 22,
+				time: 1
+			}],
+			head4: [{
+				x: 120,
+				y: 140,
+				width: 22,
+				height: 22,
+				time: 1
+			}]
+		},
 		Player:{
 			walking: [
-			{
+			/*{
 				x: 0,
 				y: 0,
-				width: 22,
-				height: 60,
-				time: 10
-			},
-			{
-				x: 22,
-				y: 0,
-				width: 22,
-				height: 60,
-				time: 10
-			},
-			{
-				x: 44,
-				y: 0,
-				width: 22,
-				height: 60,
-				time: 10
-			},
-			{
-				x: 66,
-				y: 0,
-				width: 22,
-				height: 60,
-				time: 10
-			},
-			{
-				x: 88,
-				y: 0,
-				width: 22,
-				height: 60,
-				time: 10
-			},
-			{
-				x: 110,
-				y: 0,
-				width: 22,
-				height: 60,
+				width: 54,
+				height: 70,
 				time: 1
-			}
+			},*/
+			{
+				x: 54,
+				y: 0,
+				width: 54,
+				height: 70,
+				time: 1
+			},
+			{
+				x: 108,
+				y: 0,
+				width: 54,
+				height: 70,
+				time: 1
+			},
+			{
+				x: 162,
+				y: 0,
+				width: 54,
+				height: 70,
+				time: 1
+			},
+			{
+				x: 216,
+				y: 0,
+				width: 54,
+				height: 70,
+				time: 1
+			},
+			{
+				x: 270,
+				y: 0,
+				width: 54,
+				height: 70,
+				time: 1
+			},
+			{
+				x: 324,
+				y: 0,
+				width: 54,
+				height: 70,
+				time: 1
+			},
+			{
+				x: 378,
+				y: 0,
+				width: 54,
+				height: 70,
+				time: 1
+			},
+			/*{
+				x: 0,
+				y: 70,
+				width: 54,
+				height: 70,
+				time: 1
+			},*/
+			{
+				x: 54,
+				y: 70,
+				width: 54,
+				height: 70,
+				time: 1
+			},
+			{
+				x: 108,
+				y: 70,
+				width: 54,
+				height: 70,
+				time: 1
+			},
+			{
+				x: 162,
+				y: 70,
+				width: 54,
+				height: 70,
+				time: 1
+			},
+			{
+				x: 216,
+				y: 70,
+				width: 54,
+				height: 70,
+				time: 1
+			},
+			{
+				x: 270,
+				y: 70,
+				width: 54,
+				height: 70,
+				time: 1
+			},
+			{
+				x: 324,
+				y: 70,
+				width: 54,
+				height: 70,
+				time: 1
+			},
+			{
+				x: 378,
+				y: 70,
+				width: 54,
+				height: 70,
+				time: 1
+			},
 			],
 			standing: [
 				{
 					x:0,
-					y:0,
-					width: 22,
-					height: 60,
+					y:140,
+					width: 54,
+					height: 70,
 					time: 1
 				}
 			],
@@ -77,74 +186,21 @@ GM.data = {
 					y:60,
 					width: 44,
 					height: 60,
-					time: 5
+					time: 1
 				},
 				{
 					x:88,
 					y:60,
 					width: 44,
 					height: 60,
-					time: 2
+					time: 1
 				},
 			]
-		},
-		Professor:{
-			injured: [
-				{
-					x:0,
-					y:120,
-					width: 60,
-					height: 22,
-					time: 1
-				}
-			],
 		}
 	},
 
 	cutscenes: {
 		firstMeeting: [
-		{
-			name: "Kaitlin",
-			text: "Wha... where am I\n"
-		},
-		{
-			text: "I was just walking down a sidewalk, and then the next thing I know I end up here\n"
-		},
-		{
-			text: "I feel dizzy...\n"
-		},
-		{
-			text: "I guess I should figure out where I am\n"
-		}
-		],
-		//when kaitlin meets prof.
-		meet:[
-		{
-			name: "Man",
-			text: "Hello? Is someone there?\n"
-		},
-		/*{
-			name: "Kaitlin",
-			text: "Yes yes! You look injured, are you alright?!\n"
-		},
-		{
-			name: "Man",
-			text: "I'm very weak... I'm losing a lot of blood\n"
-		},
-		{
-			text: "I need some kind of bandage, and some nutrition... I..\n"
-		},
-		{
-			text: "take this weapon, it may help you\n"
-		},
-		{
-			name: "Kaitln",
-			text: "I know you're in pain but can you tell me where I am?\n"
-		},
-		{
-			name: "Man",
-			text: "I'll tell you everything, just get me something to bandage this wound\n"
-		}*/
 		]
 	}
 }
