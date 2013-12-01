@@ -5,6 +5,8 @@ function Enemy(p){
 	this._xVel = 0;//prevent initial jump
 	this._state = "idle";
 	this._attachedPlatform = null;
+	this._activated = false;
+	this._maxHurtTicks = 0;
 
 	if(p){
 		this._attachedPlatform = p;
@@ -15,11 +17,23 @@ function Enemy(p){
 	function behave(){
 
 	};
-
+	this._die = function(){
+		Enemy.prototype._die.call(this);
+		this._width = 50;
+		this._height = 20;
+	}
+	this.isActivated = function(){
+		if(GM.viewport.inScreen(this) && !this._activated){
+			this._activated = true;
+		}
+		return this._activated;
+	}
 	this.update = function(){
+		if(!this._activated){
+			return;
+		}
 		//call super.update to update hurt state
 		Enemy.prototype.update.apply(this);
-
 		//check whether it is on screen
 		var inScreen = GM.main.inScreen(this);
 		var playerX = GM.main.getPlayerX();
@@ -40,6 +54,15 @@ function Enemy(p){
 		}
 		dist = Math.abs(disp);
 		var pp = GM.main.getPlayerPlatform();
+		if(this._dead){
+			if(this._dying){
+				//show death animation
+				this._state = "dying";
+			}
+			else{
+				this._state = "dead";
+			}
+		}
 		if(!inScreen || pp != this._attachedPlatform){
 			this._state = "idle";
 			this.moveX(0);
@@ -48,7 +71,9 @@ function Enemy(p){
 			case "idle":
 				if(inScreen && pp == this._attachedPlatform){
 					this._state = "follow_player";
-					this.moveX(disp/dist);//move towards player (no need to check threshold since enemy will idle during off screen
+					if(dist > threshold){
+						this.moveX(disp/dist);//move towards player (no need to check threshold since enemy will idle during off screen
+					}
 				}
 			break;
 			case "follow_player":
@@ -72,6 +97,9 @@ function Enemy(p){
 					//console.log("ATTACK!");
 					break;
 				}
+			break;
+			case "dying":
+				//show dying animation
 			break;
 		}
 

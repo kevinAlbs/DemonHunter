@@ -91,6 +91,7 @@ GM.viewport = (function(){
 				return true;
 			}	
 		}
+		return false;
 	}
 
 	return that;

@@ -135,6 +135,7 @@ GM.main = (function(){
 		cnv.addEventListener("mouseup", handleMouseup, false);
 		cnv.addEventListener("mousemove", handleMousemove, false);
 		GM.platformList.generatePlatforms(200);
+		GM.enemyList.generateEnemies(GM.platformList.getRoot().next);
 		GM.viewport.init(cWidth, cHeight, mapWidth);
 	
 		cObs.player = new Player();
@@ -144,7 +145,17 @@ GM.main = (function(){
 		cObs.enemyTest = new Enemy(GM.platformList.getRoot().next);
 	}
 	function checkCollisions(){
-		//check bullet collisions
+		for(var e = GM.enemyList.getRoot(); e != null; e = e.next){
+			if(e.isActivated()){
+				//check collisions between player and enemies
+				if(!e.isDead() && e.collidingWith(cObs.player)){
+					cObs.player.hurt(10);
+				}
+			}
+			else{
+				break;
+			}
+		}
 	}
 	var d = new Date();
 	var startTime = d.getTime();
@@ -194,8 +205,15 @@ GM.main = (function(){
 		//update everything
 		cObs.player.update();
 		GM.viewport.update(cObs.player.getX(), cObs.player.getY());
+		for(var e = GM.enemyList.getRoot(); e != null; e = e.next){
+			if(e.isActivated()){
+				e.update();	
+			}
+			else{
+				break;
+			}
+		}
 
-		cObs.enemyTest.update();
 		paint();
 
 		if(!paused){
@@ -216,6 +234,7 @@ GM.main = (function(){
 		}
 		/* TODO I could call this infrequently */
 		GM.platformList.cleanUp();
+		GM.enemyList.cleanUp();
 	};
 
 	function paint(){
@@ -225,7 +244,9 @@ GM.main = (function(){
 		//paint player
 		cObs.player.paint(ctx);
 		//paint enemies
-		cObs.enemyTest.paint(ctx);
+		for(var p = GM.enemyList.getRoot(); p != null; p = p.next){
+			p.paint(ctx);
+		}
 		ctx.strokeStyle = "#00F";
 		ctx.font = "11px Arial";
 		ctx.fillText(curFPS + " fps", 5,10);
@@ -321,33 +342,56 @@ GM.main = (function(){
 	};
 
 	that.shootGun = function(startX, startY, dx, dy){
-		//calculate collisions, deal damage to enemies
-		//calculate time at which the x matches either side of the enemy, see if the y is within bounds
-		var ex = cObs.enemyTest.getX();
-		var ey = cObs.enemyTest.getY();
-		var ew = cObs.enemyTest.getWidth();
-		var eh = cObs.enemyTest.getHeight();
-		var tx = Math.abs((ex - startX)/dx);
-		var projY = startY + tx * dy;
-		if(ey < projY && projY < ey + eh){
-			console.log("HIT");
-			return;
+		var closestE = null;
+		var closestT = cWidth + cHeight; //cWidth + cHeight is always larger than longest possible distance
+		for(var e = GM.enemyList.getRoot(); e != null; e = e.next){
+			if(e.isActivated()){
+				//check collisions between player and enemies
+				if(!e.isDead()){
+					//calculate collisions, deal damage to enemies
+					//calculate time at which the x matches either side of the enemy, see if the y is within bounds
+					var ex = e.getX();
+					var ey = e.getY();
+					var ew = e.getWidth();
+					var eh = e.getHeight();
+					var tx = (ex - startX)/dx;
+					var projY = startY + tx * dy;
+					if(ey < projY && projY < ey + eh){
+						if(tx > 0 && tx < closestT){
+							closestT = tx;
+							closestE = e;
+						}
+					}
+					tx = ((ex + ew) - startX)/dx;
+					projY = startY + tx * dy;
+					if(ey < projY && projY < ey + eh){
+						if(tx > 0 && tx < closestT){
+							closestT = tx;
+							closestE = e;
+						}
+					}
+					//check just one other side (it must hit at least two sides), so checking all but one is fine
+					var ty = (ey - startY)/dy;
+					var projX = startX + ty * dx;
+					if(ex < projX && projX < ex + ew){
+						if(ty > 0 && ty < closestT){
+							closestT = tx;
+							closestE = e;
+						}
+					}
+				}
+			}
+			else{
+				break;
+			}
 		}
-		tx = Math.abs(((ex + ew) - startX)/dx);
-		projY = startY + tx * dy;
-		if(ey < projY && projY < ey + eh){
-			console.log("HIT");
-			return;
+		if(closestE != null){
+			console.log(closestT);
+			closestE.hurt(35);
 		}
-		//check just one other side (it must hit at least two sides), so checking all but one is fine
-		var ty = Math.abs((ey - startY)/dy);
-		var projX = startX + ty * dx;
-		if(ex < projX && projX < ex + ew){
-			console.log("HIT");
-			return;
-		}
-		console.log("MISS");
+		
 	};
 	that.collisionDebug = true;
+	that.cObs = cObs;
 	return that;
 }());

@@ -2,6 +2,8 @@ function Person(){
 	if(this == window){
 		return new Person();
 	}
+	this._dead = false;
+	this._dying = false;//true when in process of dying (show animation, etc.)
 	this._health = 100;
 	this._hurt = false;//true when person gets hurt, true during entire hurt state (TODO: decide if I should use _state for this)
 //	this._justHurt = false;//true when person gets hurt for ONE UPDATE
@@ -13,20 +15,15 @@ function Person(){
 GM.utils.inherits(Person, Mob);
 
 Person.prototype._die = function(){
-	this._x = -1000;//lol
+	this._dead = true;
+	this._dying = true;
+	this.moveX(0);
 };
 
 //public
 Person.prototype.update = function(){
+	if(this._dead){return;}
 	if(this._hurt){
-		/*
-		if(this._hurtTicks == 0){
-			this._justHurt = true;
-		}
-		else{
-			this._justHurt = false;
-		}
-		*/
 		this._hurtTicks++;
 		if(this._hurtTicks > this._maxHurtTicks){
 			//done with hurt state
@@ -41,12 +38,14 @@ returns 1 if could hurt but not dead
 returns 2 if dead
 */
 Person.prototype.hurt = function(amt){
+	if(this._dead){return;}
 	if(this._hurt){
 		return 0;//already hurt, cannot be hurt while in hurt state
 	}
 
 	this._hurt = true;
 	if(this._health <= amt){
+		this._health = 0;
 		this._die();
 		return 2;
 	}

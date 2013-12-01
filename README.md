@@ -12,6 +12,8 @@
 - optimizations (no floating point painting, read article)
 - Sun sets as you are playing (more demons come out at night)
 - At maximum gun angle you should still be able to shoot, only at that angle though
+- implement enemy and player death (enemies need not be removed from the linked list since they can just be removed after they are offscreen)
+- add support for multiple enemies [done]
 At this point, the basic wireframe running should be nearly complete
 
 Guns + enemies:

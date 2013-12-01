@@ -85,6 +85,9 @@ function Player(){
 		var xOff = GM.main.getXOffset();
 		var ax = this.getArmX() - xOff;
 		var ay = this.getArmY();
+		if(this._hurt){
+			ctx.globalAlpha = .5;
+		}
 		animation_set.drawFrame(this._x - xOff - (14 * this._facing), this._y + 19, this._width, this._height, ctx, this._facing);
 		head_anim.drawFrame(this._x - xOff - (4 * this._facing), this._y + 2, this._width, this._height, ctx, this._facing);
 		arm_anim.drawFrame(ax, ay, this._width, this._height, ctx, this._facing, this._armAngle, 3, 3);
@@ -99,6 +102,9 @@ function Player(){
 		}
 		if(GM.debug){
 			ctx.fillText(Math.round(this._x) + "," + Math.round(this._y), this._x - GM.main.getXOffset(), this._y - 10);
+		}
+		if(this._hurt){
+			ctx.globalAlpha = 1;
 		}
 	};
 
