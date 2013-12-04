@@ -14,10 +14,8 @@ function Movable(){
 	this._height = 0;
 	this._xVel = 0;
 	this._yVel = 0;
-	this._origGrav = 1.8;
-	this._gravAcc = 0;
-	this._gravity = this._origGrav;
-	this._terminalVelocity = 100;
+	this._gravity = .025;
+	this._terminalVelocity = 10;
 	this._onGround = false;
 }
 
@@ -204,10 +202,6 @@ Movable.prototype.movementUpdate = function(){
 Movable.prototype.applyGravity = function(){
 	if(this._yVel < this._terminalVelocity){
 		//apply gravity
-		this._yVel += this._gravity;
-		this._gravity += this._gravAcc;
-		if(this._gravity > this._gravityMax){
-			this._gravity = this._gravityMax;
-		}
+		this._yVel += this._gravity * GM.main.delta;
 	}
 };

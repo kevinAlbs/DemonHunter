@@ -1,6 +1,6 @@
 function Mob(){
 	this._state = "";//describing the higher behavior of a mob, eg. attacking_player, or follow_player
-	this._jumpSpeed = -9;
+	this._jumpSpeed = -.61;
 	this._xSpeed = 5;//walking speed
 	this._walking = false;
 	this._ducking = false;
@@ -11,19 +11,19 @@ function Mob(){
 
 	//dir must be -1, 0, or 1
 	this.moveX = function(dir){
-		if(dir > 1 || dir < -1){return;}
+		//if(dir > 1 || dir < -1){return;}
 
 		if(dir != 0){
 			if(!this._ducking){
 				this._walking = true;
 			}
-			this._facing = dir;
+			this._facing = Math.abs(dir)/dir;
 		} 
 		else{
 			this._walking = false;
 		}
 		if(!this._ducking){
-			this._xVel = dir * this._xSpeed;
+			this._xVel = dir * this._xSpeed * GM.main.delta;
 		}
 	};
 	this.unMoveX = function(){
@@ -38,13 +38,13 @@ function Mob(){
 	}
 	this.jump = function(){
 		if(this.onPlatform() && !this._ducking){
-			this._yVel = this._jumpSpeed;
+			this._yVel = this._jumpSpeed * GM.main.delta;
 		}
 	}	
 	this.unjump = function(){
 		if(this._hasLongJump){
-			if(this._yVel < -8){
-				this._yVel = -8;
+			if(this._yVel < -.3){
+				this._yVel = -.3;
 			}
 		}
 

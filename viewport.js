@@ -61,8 +61,8 @@ GM.viewport = (function(){
 		}
 	};
 	that.paint = function(ctx){
-		ctx.fillStyle = "#3cbcfc";
-		ctx.fillRect(0,0, cWidth, cHeight);
+		//ctx.fillStyle = "#3cbcfc";
+		//ctx.fillRect(0,0, cWidth, cHeight);
 		/*ctx.fillStyle = "#3cbcfc";
 		ctx.fillRect(0,0, cWidth, cHeight);
 		var firstBlock = Math.floor(xOffset / 10);

@@ -45,13 +45,18 @@
 		display: none;
 		overflow: hidden;
 	}
-
+	#canvasContainer{
+		/* background: #0E0E87; */
+		background: #aaa;
+	}
 	</style>
 </head>
 <body>
 <div id="container">
 	<textarea id="textOverlay" disabled></textarea>
-	<canvas id="mycanvas" width="1000" height="600"></canvas>
+	<div id="canvasContainer">
+		<canvas id="mycanvas" width="1000" height="600"></canvas>
+	</div>
 </div>
 <script>
 	var GM = {};

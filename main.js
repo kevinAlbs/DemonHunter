@@ -120,12 +120,12 @@ GM.main = (function(){
 	}
 
 	function init(){
-		buffer = document.createElement("canvas");
+		//buffer = document.createElement("canvas");
 		var cnv = document.getElementById("mycanvas");
-		buffer.width = cnv.width;
-		buffer.height = cnv.height;
-		ctx = buffer.getContext("2d");
-		ctxout = cnv.getContext("2d");
+		//buffer.width = cnv.width;
+		//buffer.height = cnv.height;
+		//ctx = buffer.getContext("2d");
+		ctx = cnv.getContext("2d");
 		cWidth = cnv.width;
 		cHeight = cnv.height;
 		mapWidth = 50000;//in blocks
@@ -134,7 +134,7 @@ GM.main = (function(){
 		cnv.addEventListener("mousedown", handleMousedown, false);
 		cnv.addEventListener("mouseup", handleMouseup, false);
 		cnv.addEventListener("mousemove", handleMousemove, false);
-		GM.platformList.generatePlatforms(200);
+		GM.platformList.generatePlatforms(200, 1);
 		GM.enemyList.generateEnemies(GM.platformList.getRoot().next);
 		GM.viewport.init(cWidth, cHeight, mapWidth);
 	
@@ -160,19 +160,36 @@ GM.main = (function(){
 	var d = new Date();
 	var startTime = d.getTime();
 	var ticks = 0;
+	var prevTime = null;
 	//TODO calculate real time diff and account for slow fps with extra updates etc.
-	function update(){
-
+	function update(tm){
+		if(prevTime == null){
+			requestAnimationFrame(update);
+			prevTime = tm;
+			return;
+		}
+		GM.main.delta = tm - prevTime;
+		prevTime = tm;
 		checkCollisions();
+		var movementDebug = true;
 		if(!movementPaused){
 			if(keys.r){
-				cObs.player.moveX(1);
+				if(movementDebug)
+					cObs.player.moveX(1);
+				else
+					cObs.player.moveX(1.2);
 			}
 			else if(keys.l){
-				cObs.player.moveX(-1);
+				if(movementDebug)
+					cObs.player.moveX(-1);
+				else
+					cObs.player.moveX(.7);
 			}
 			else{
-				cObs.player.unMoveX();
+				if(movementDebug)
+					cObs.player.unMoveX();
+				else
+					cObs.player.moveX(1);
 			}
 			if(keys.u){
 				cObs.player.jump();
@@ -217,7 +234,8 @@ GM.main = (function(){
 		paint();
 
 		if(!paused){
-			timer = window.setTimeout(update, Math.floor(1000 / fps)); //TODO: change to requestAnimationKeyframe or something
+			requestAnimationFrame(update);
+			//timer = window.setTimeout(update, Math.floor(1000 / fps)); //TODO: change to requestAnimationKeyframe or something
 		}
 		//now that update has run, set all key presses to false
 		keys.zp = false;
@@ -238,19 +256,24 @@ GM.main = (function(){
 	};
 
 	function paint(){
-		//ctx.clearRect(0,0,cWidth, cHeight);
-		//ctxout.clearRect(0,0,cWidth, cHeight);
+		ctx.clearRect(0,0,cWidth, cHeight);
 		GM.viewport.paint(ctx);
 		//paint player
 		cObs.player.paint(ctx);
 		//paint enemies
 		for(var p = GM.enemyList.getRoot(); p != null; p = p.next){
+			if(!p.isActivated()){
+				break;
+			}
 			p.paint(ctx);
 		}
 		ctx.strokeStyle = "#00F";
 		ctx.font = "11px Arial";
 		ctx.fillText(curFPS + " fps", 5,10);
 		for(var p = GM.platformList.getRoot(); p != null; p = p.next){
+			if(p.getX() > cObs.player.getX() && !GM.viewport.inScreen(p)){ //beyond bounds stop drawing
+				break;
+			}
 			if(p.hasOwnProperty("color")){
 				ctx.strokeStyle = p.color;
 			}
@@ -259,7 +282,8 @@ GM.main = (function(){
 			}
 			ctx.strokeRect(p.getX() - GM.viewport.getXOffset(), p.getY(), p.getWidth(), p.getHeight());
 		}
-		ctxout.drawImage(buffer, 0, 0);
+		//ctxout.clearRect(0,0,cWidth,cHeight);
+		//ctxout.drawImage(buffer, 0, 0);
 	};
 
 	function toggleMovement(val){
@@ -393,5 +417,6 @@ GM.main = (function(){
 	};
 	that.collisionDebug = true;
 	that.cObs = cObs;
+	that.delta = 0;	
 	return that;
 }());

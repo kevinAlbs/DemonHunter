@@ -10,11 +10,12 @@ function Player(){
 	//"protected"
 	this._x = 80;
 	this._y = 210;
-	this._xSpeed = 10;
+	this._xSpeed = .3; //in pixels per ms
+	
 	this._yVel = 0;
 	this._width = 22; 
 	this._height = 89;
-	this._jumpSpeed = -19.8;
+	this._jumpSpeed = -.48;
 	this._ducking = false;
 	this._hasLongJump = true;
 	this._armAngle = 0;

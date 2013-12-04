@@ -56,112 +56,112 @@ GM.data = {
 				y: 0,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},*/
 			{
 				x: 54,
 				y: 0,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},
 			{
 				x: 108,
 				y: 0,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},
 			{
 				x: 162,
 				y: 0,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},
 			{
 				x: 216,
 				y: 0,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},
 			{
 				x: 270,
 				y: 0,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},
 			{
 				x: 324,
 				y: 0,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},
 			{
 				x: 378,
 				y: 0,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},
 			/*{
 				x: 0,
 				y: 70,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},*/
 			{
 				x: 54,
 				y: 70,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},
 			{
 				x: 108,
 				y: 70,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},
 			{
 				x: 162,
 				y: 70,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},
 			{
 				x: 216,
 				y: 70,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},
 			{
 				x: 270,
 				y: 70,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},
 			{
 				x: 324,
 				y: 70,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},
 			{
 				x: 378,
 				y: 70,
 				width: 54,
 				height: 70,
-				time: 1
+				time: 35
 			},
 			],
 			standing: [

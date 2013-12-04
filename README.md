@@ -31,3 +31,4 @@ Guns + enemies:
 - Possibly change duck to barrel roll
 - In the context of this game it is okay, but I would like to change the xOffset to reset periodically so we don't end up with large numbers for x/y coordinates. After a very very long time we could reach integer overflow. But I'm sure I'll end the game before that ;)
 - Possibly add bullet boost
+- Thoreau

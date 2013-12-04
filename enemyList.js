@@ -14,7 +14,7 @@ GM.enemyList = (function(){
 
 	This will generate platforms on the end of the linked list
 	*/
-	that.generateEnemies = function(platform){
+	that.generateEnemies = function(platform, difficulty){
 		var pNode = platform;
 		if(pNode == null){
 			return;
@@ -53,7 +53,7 @@ GM.enemyList = (function(){
 					ptr = prev;
 				}
 			}
-			else{
+			else if(!ptr.isActivated()){
 				break;//in order by x values, so break at point when no more are off screen
 			}
 			prev = ptr;

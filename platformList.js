@@ -14,7 +14,7 @@ GM.platformList = (function(){
 
 	This will generate platforms on the end of the linked list
 	*/
-	that.generatePlatforms = function(num){
+	that.generatePlatforms = function(num, difficulty){
 		if(num <= 0){
 			return;
 		}
@@ -39,10 +39,17 @@ GM.platformList = (function(){
 		}
 		for(var i = 0; i < num; i++){
 			var newObj = new Movable();
-			curX = curX + curWidth + (88*2);
+			curX = curX + curWidth + 100;
 			//curX += curWidth + 10 + Math.floor(Math.random() * 200);
 			newObj.setX(curX);
 			//curY = 300 + Math.floor(Math.random() * 200) - 50;
+			curY = curY + 5 * Math.floor(Math.random() * (20 * difficulty)) - 50;
+			if(curY < 100){
+				curY = 100;
+			}
+			if(curY > 590){
+				curY = 590;
+			}
 			newObj.setY(curY);
 			curWidth = 500 + (Math.random() * 100) - 25;
 			newObj.setWidth(curWidth);
