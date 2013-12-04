@@ -8,7 +8,7 @@ function Person(){
 	this._hurt = false;//true when person gets hurt, true during entire hurt state (TODO: decide if I should use _state for this)
 //	this._justHurt = false;//true when person gets hurt for ONE UPDATE
 	this._hurtTicks = 0;//hurt timer
-	this._maxHurtTicks = 10;//amount of time person is in hurt state
+	this._maxHurtTicks = 500;//amount of time person is in hurt state (in milliseconds)
 };
 
 //inheritance must go before any prototype additions (since it will set prototype to new object)
@@ -24,7 +24,7 @@ Person.prototype._die = function(){
 Person.prototype.update = function(){
 	if(this._dead){return;}
 	if(this._hurt){
-		this._hurtTicks++;
+		this._hurtTicks += GM.main.delta;
 		if(this._hurtTicks > this._maxHurtTicks){
 			//done with hurt state
 			this._hurt = false;
@@ -42,7 +42,6 @@ Person.prototype.hurt = function(amt){
 	if(this._hurt){
 		return 0;//already hurt, cannot be hurt while in hurt state
 	}
-
 	this._hurt = true;
 	if(this._health <= amt){
 		this._health = 0;

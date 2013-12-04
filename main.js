@@ -161,7 +161,7 @@ GM.main = (function(){
 	var startTime = d.getTime();
 	var ticks = 0;
 	var prevTime = null;
-	//TODO calculate real time diff and account for slow fps with extra updates etc.
+
 	function update(tm){
 		if(prevTime == null){
 			requestAnimationFrame(update);
@@ -170,6 +170,7 @@ GM.main = (function(){
 		}
 		GM.main.delta = tm - prevTime;
 		prevTime = tm;
+
 		checkCollisions();
 		var movementDebug = true;
 		if(!movementPaused){
@@ -233,10 +234,7 @@ GM.main = (function(){
 
 		paint();
 
-		if(!paused){
-			requestAnimationFrame(update);
-			//timer = window.setTimeout(update, Math.floor(1000 / fps)); //TODO: change to requestAnimationKeyframe or something
-		}
+		
 		//now that update has run, set all key presses to false
 		keys.zp = false;
 
@@ -253,6 +251,11 @@ GM.main = (function(){
 		/* TODO I could call this infrequently */
 		GM.platformList.cleanUp();
 		GM.enemyList.cleanUp();
+
+		if(!paused){
+			requestAnimationFrame(update);
+			//timer = window.setTimeout(update, Math.floor(1000 / fps)); //TODO: change to requestAnimationKeyframe or something
+		}
 	};
 
 	function paint(){
