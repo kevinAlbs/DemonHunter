@@ -158,18 +158,18 @@ GM.main = (function(){
 		}
 	}
 	var d = new Date();
-	var startTime = d.getTime();
 	var ticks = 0;
+	var timeCount = 0;
 	var prevTime = null;
 
-	function update(tm){
-		if(prevTime == null){
+	function update(){
+		if(prevTime == null || paused){
+			prevTime =  new Date().getTime();
 			requestAnimationFrame(update);
-			prevTime = tm;
 			return;
 		}
-		GM.main.delta = tm - prevTime;
-		prevTime = tm;
+		var newTime = new Date().getTime();
+		GM.main.delta = newTime - prevTime;
 
 		checkCollisions();
 		var movementDebug = true;
@@ -242,20 +242,21 @@ GM.main = (function(){
 
 		
 		ticks++;
-		d = new Date();
-		if(d.getTime() - startTime > 1000){
+		var now = new Date().getTime();
+		timeCount += now - prevTime;
+		if(timeCount > 1000){
 			curFPS = ticks;
 			ticks = 0;
-			startTime = d.getTime();
+			timeCount = 0;
 		}
+		prevTime = now;
 		/* TODO I could call this infrequently */
 		GM.platformList.cleanUp();
 		GM.enemyList.cleanUp();
 
-		if(!paused){
-			requestAnimationFrame(update);
-			//timer = window.setTimeout(update, Math.floor(1000 / fps)); //TODO: change to requestAnimationKeyframe or something
-		}
+		
+		requestAnimationFrame(update);
+		//timer = window.setTimeout(update, Math.floor(1000 / fps)); //TODO: change to requestAnimationKeyframe or something
 	};
 
 	function paint(){
@@ -421,5 +422,6 @@ GM.main = (function(){
 	that.collisionDebug = true;
 	that.cObs = cObs;
 	that.delta = 0;	
+	that.sJG = function(x,y){cObs.player._jumpSpeed = x; cObs.player._gravity = y;}
 	return that;
 }());

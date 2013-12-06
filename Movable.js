@@ -14,7 +14,7 @@ function Movable(){
 	this._height = 0;
 	this._xVel = 0;
 	this._yVel = 0;
-	this._gravity = .025;
+	this._gravity = .022;
 	this._terminalVelocity = 10;
 	this._onGround = false;
 }
@@ -69,7 +69,7 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 	var mx = m._x + mhw, sx = s._x + shw; //center of rectangle coordinates
 	var my = m._y + mhh, sy = s._y + shh;
 	var dx = m._xVel;
-	var dy = m._yVel;
+	var dy = m._yVel * GM.main.delta;
 	var tx = 2; //time at which it would collide on x-axis (0<=tx<=1)
 	var ty = 2;
 	var projX, projY; //projected coordinate of other given the t
@@ -122,7 +122,7 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 			//since tx is the time in which collision occurs, calculate final x position
 			console.log("Collision on x");
 			if(move){
-				m._x += m._xVel * tx + xCorrect;
+				m._x += dx * tx + xCorrect;
 				m._xVel = 0;
 			}
 			if(m._xVel < 0){
@@ -137,7 +137,7 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 		else if(ty < tx){
 			console.log("Collision on y");
 			if(move){
-				m._y += m._yVel * ty + yCorrect;
+				m._y += dy * ty + yCorrect;
 				m._yVel = 0;
 			}
 			if(m._yVel < 0){
@@ -152,8 +152,8 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 		else{
 			console.log("Collision on x,y");
 			if(move){
-				m._x += m._xVel * tx + xCorrect;
-				m._y += m._yVel * ty + yCorrect;
+				m._x += dx * tx + xCorrect;
+				m._y += dy * ty + yCorrect;
 				m._yVel = 0;
 				m._xVel = 0;
 			}
@@ -185,8 +185,8 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 }
 //updates movement, checks for collision with platforms
 Movable.prototype.movementUpdate = function(){
-		this._x += this._xVel;
-		this._y += this._yVel;
+		this._x += this._xVel * GM.main.delta;
+		this._y += this._yVel * GM.main.delta;
 
 
 		//check screen bounds
@@ -202,6 +202,6 @@ Movable.prototype.movementUpdate = function(){
 Movable.prototype.applyGravity = function(){
 	if(this._yVel < this._terminalVelocity){
 		//apply gravity
-		this._yVel += this._gravity * GM.main.delta;
+		this._yVel += this._gravity;
 	}
 };

@@ -1,7 +1,7 @@
 function Enemy(p){
 	this._width = 30, 
 	this._height = 70;
-	this._xSpeed = .04;
+	this._walkingSpeed = .04;
 	this._health = 30;
 	this._xVel = 0;//prevent initial jump
 	this._state = "idle";

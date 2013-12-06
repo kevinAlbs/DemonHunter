@@ -10,7 +10,7 @@ function Player(){
 	//"protected"
 	this._x = 80;
 	this._y = 210;
-	this._xSpeed = .3; //in pixels per ms
+	this._walkingSpeed = .3; //in pixels per ms
 	
 	this._yVel = 0;
 	this._width = 22; 
