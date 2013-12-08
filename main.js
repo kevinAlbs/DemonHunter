@@ -134,7 +134,7 @@ GM.main = (function(){
 		cnv.addEventListener("mousedown", handleMousedown, false);
 		cnv.addEventListener("mouseup", handleMouseup, false);
 		cnv.addEventListener("mousemove", handleMousemove, false);
-		GM.platformList.generatePlatforms(200, 1);
+		GM.platformList.generatePlatforms(200, 5);
 		GM.enemyList.generateEnemies(GM.platformList.getRoot().next);
 		GM.viewport.init(cWidth, cHeight, mapWidth);
 	

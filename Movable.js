@@ -12,9 +12,9 @@ function Movable(){
 	this._y = 0;
 	this._width = 0;
 	this._height = 0;
-	this._xVel = 0;
+	this._xVel = 0; //current velocity in pixels/ms
 	this._yVel = 0;
-	this._gravity = .022;
+	this._gravity = .00134; //acceleration of gravity in pixels/ms^2
 	this._terminalVelocity = 10;
 	this._onGround = false;
 }
@@ -68,7 +68,7 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 	var mhh = m._height/2, shh = s._height/2;
 	var mx = m._x + mhw, sx = s._x + shw; //center of rectangle coordinates
 	var my = m._y + mhh, sy = s._y + shh;
-	var dx = m._xVel;
+	var dx = m._xVel * GM.main.delta;
 	var dy = m._yVel * GM.main.delta;
 	var tx = 2; //time at which it would collide on x-axis (0<=tx<=1)
 	var ty = 2;
@@ -202,6 +202,6 @@ Movable.prototype.movementUpdate = function(){
 Movable.prototype.applyGravity = function(){
 	if(this._yVel < this._terminalVelocity){
 		//apply gravity
-		this._yVel += this._gravity;
+		this._yVel += this._gravity * GM.main.delta;
 	}
 };

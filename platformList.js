@@ -8,6 +8,24 @@ GM.platformList = (function(){
 	that.getRoot = function(){
 		return root;//will probably change
 	}
+
+	/*
+	passed array should be of form:
+	[range_start, range_end, prob, range_start, range_end, prob, ...]
+	Probabilities should sum to 1
+	*/
+	function pdf(arr){
+		var m = Math.random();
+		var totalProb = 0;
+		for(var i = 0; i < arr.length-2; i += 3){
+			totalProb += arr[i+2];
+			if(m < totalProb){
+				//random number between arr[i] and arr[i+1]
+				var diff = arr[i+1]-arr[i];
+				return parseInt(arr[i] + Math.random() * diff);
+			}
+		}
+	}
 	/*
 	From experimentation, seems like maximum y difference is 119 away (up) in exactly 11 frames (I think)
 	The maximum x will depend on y. I will have to figure this out later.
@@ -39,11 +57,19 @@ GM.platformList = (function(){
 		}
 		for(var i = 0; i < num; i++){
 			var newObj = new Movable();
-			curX = curX + curWidth + 100;
+			if(difficulty == 5){
+				var xDiff = pdf([50,60,.1, 61,80,.4, 81,100,.4, 101,120,.1]);
+				console.log(xDiff);
+				//TODO: make a probability distribution function
+				curX = curX + curWidth + xDiff;
+				curY = curY + (Math.random() * 90) - 45;
+				curWidth = 200 + (Math.random() * 50) - 25;
+			}
+			
 			//curX += curWidth + 10 + Math.floor(Math.random() * 200);
 			newObj.setX(curX);
 			//curY = 300 + Math.floor(Math.random() * 200) - 50;
-			curY = curY + 5 * Math.floor(Math.random() * (20 * difficulty)) - 50;
+			
 			if(curY < 100){
 				curY = 100;
 			}
@@ -51,7 +77,7 @@ GM.platformList = (function(){
 				curY = 590;
 			}
 			newObj.setY(curY);
-			curWidth = 500 + (Math.random() * 100) - 25;
+			
 			newObj.setWidth(curWidth);
 			newObj.setHeight(10);
 			rear.next = newObj;

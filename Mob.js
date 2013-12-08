@@ -29,7 +29,7 @@ function Mob(){
 	this.unMoveX = function(){
 		var ab = Math.abs(this._xVel)
 		this._walking = false;
-		if(ab < .1){
+		if(ab < .03){
 			this._xVel = 0;
 		}
 		else if(ab > 0){
@@ -43,8 +43,8 @@ function Mob(){
 	}	
 	this.unjump = function(){
 		if(this._hasLongJump){
-			if(this._yVel < -.15){
-				this._yVel = -.15;
+			if(this._yVel < -.20){
+				this._yVel = -.20;
 			}
 		}
 

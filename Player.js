@@ -11,8 +11,6 @@ function Player(){
 	this._x = 80;
 	this._y = 210;
 	this._walkingSpeed = .3; //in pixels per ms
-	
-	this._yVel = 0;
 	this._width = 22; 
 	this._height = 89;
 	this._jumpSpeed = -.48;
@@ -34,6 +32,9 @@ function Player(){
 	arm_anim.switchAnimation("arms");
 	animation_set.switchAnimation("standing");
 
+	var isJumping = false;
+	var jumpMin = 1000;
+	var timer = 0;
 	this.update = function(){
 		//call super.update to update hurt state
 		Player.prototype.update.apply(this);
@@ -50,6 +51,13 @@ function Player(){
 
 		if(shooting){
 			//paint the gun shooting
+		}
+
+		if(isJumping){
+			if(this._y < jumpMin){
+				jumpMin = this._y;
+				timer += GM.main.delta;
+			}
 		}
 
 	};
@@ -166,6 +174,15 @@ function Player(){
 		this._height += amt;
 		this._y -= amt;
 		//this.setOnGround();
+	}
+
+	this.jump = function(){
+		Player.prototype.jump.call(this);
+		if(this.onPlatform() && !this._ducking){	
+			isJumping = true;
+			jumpMin = 1000;
+			timer = 0;
+		}
 	}
 };
 
