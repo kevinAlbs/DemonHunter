@@ -10,6 +10,82 @@ GM.data = {
 	],
 	//all of the animation data for the locations/times on spritesheet
 	animation_sets:{
+		Zombie:{
+			idle: [
+			{
+				x: 0,
+				y: 210,
+				width: 35,
+				height: 87,
+				time: 500
+			},
+			{
+				x: 35,
+				y: 210,
+				width: 35,
+				height: 87,
+				time: 500
+			}
+			],
+			walking: [
+			{
+				x: 0,
+				y: 210,
+				width: 35,
+				height: 87,
+				time: 120
+			},
+			{
+				x: 35,
+				y: 210,
+				width: 35,
+				height: 87,
+				time: 120
+			},
+			{
+				x: 70,
+				y: 210,
+				width: 35,
+				height: 87,
+				time: 120
+			},
+			{
+				x: 105,
+				y: 210,
+				width: 35,
+				height: 87,
+				time: 120
+			},
+			{
+				x: 140,
+				y: 210,
+				width: 35,
+				height: 87,
+				time: 120
+			},
+			{
+				x: 175,
+				y: 210,
+				width: 35,
+				height: 87,
+				time: 120
+			},
+			{
+				x: 210,
+				y: 210,
+				width: 35,
+				height: 87,
+				time: 120
+			},
+			{
+				x: 245,
+				y: 210,
+				width: 35,
+				height: 87,
+				time: 120
+			},
+			]
+		},
 		Player_arms:{
 			arms: [{
 				x: 54,
@@ -27,10 +103,10 @@ GM.data = {
 				height: 22,
 				time: 1
 			}],
-			head2: [{
-				x: 76,
+			head2: [{ //down facing
+				x: 142,
 				y: 140,
-				width: 22,
+				width: 25,
 				height: 22,
 				time: 1
 			}],

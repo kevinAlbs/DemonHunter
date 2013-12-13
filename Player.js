@@ -13,7 +13,7 @@ function Player(){
 	this._walkingSpeed = .35; //in pixels per ms
 	this._width = 22; 
 	this._height = 89;
-	this._jumpSpeed = -.48;
+	this._jumpSpeed = -.5;
 	this._ducking = false;
 	this._hasLongJump = true;
 	this._armAngle = 0;
@@ -95,9 +95,13 @@ function Player(){
 			else if(this._armAngle < -1 * pi * .14 && this._armAngle > -1 * pi * .25){
 				head_anim.switchAnimation("head3");
 			}
-			else if(this._armAngle > -1 * pi * .1){
+			else if(this._armAngle > -1 * pi * .1 && this._armAngle < .29 * pi){
 				head_anim.switchAnimation("head1");
 			}
+			else if(this._armAngle > .31 * pi){
+				head_anim.switchAnimation("head2");
+			}
+
 		}
 	};
 	this.paint = function(ctx){

@@ -1,6 +1,6 @@
 function Enemy(p){
-	this._width = 30, 
-	this._height = 70;
+	this._width = 15, 
+	this._height = 87;
 	this._walkingSpeed = .04;
 	this._health = 30;
 	this._xVel = 0;//prevent initial jump
@@ -8,7 +8,9 @@ function Enemy(p){
 	this._attachedPlatform = null;
 	this._activated = false;
 	this._maxHurtTicks = 0;
-
+	var animation_set = new AnimationSet(GM.data.animation_sets.Zombie);
+	animation_set.switchAnimation("idle");
+	this._facing = -1;
 	if(p){
 		this._attachedPlatform = p;
 		this._x = p.getX() + p.getWidth() * 2/3;
@@ -28,6 +30,17 @@ function Enemy(p){
 			this._activated = true;
 		}
 		return this._activated;
+	}
+	this.paint = function(ctx){
+		var xOff = GM.main.getXOffset();
+		if(this._hurt){
+			ctx.globalAlpha = .5;
+		}
+		animation_set.drawFrame(this._x - xOff - (-15 * this._facing), this._y, this._width, this._height, ctx, -1 * this._facing);
+		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
+		if(this._hurt){
+			ctx.globalAlpha = 1;
+		}
 	}
 	this.update = function(){
 		if(!this._activated){
@@ -70,6 +83,7 @@ function Enemy(p){
 		}
 		switch(this._state){
 			case "idle":
+				animation_set.switchAnimation("idle");
 				if(inScreen && pp == this._attachedPlatform){
 					this._state = "follow_player";
 					if(dist > threshold){
@@ -78,25 +92,10 @@ function Enemy(p){
 				}
 			break;
 			case "follow_player":
+				animation_set.switchAnimation("walking");
 				if(dist > threshold){
 					//move towards the player
 					this.moveX(disp/dist);
-				}
-				else{
-					this._state = "attack";
-					this.moveX(0);
-				}
-			break;
-			case "attack":
-				if(dist > threshold){
-					//player has moved out of way, follow!
-					this._state = "follow_player";
-					//move towards the player
-					this.moveX(disp/dist);
-				}
-				else{
-					//console.log("ATTACK!");
-					break;
 				}
 			break;
 			case "dying":
