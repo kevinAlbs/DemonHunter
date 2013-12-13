@@ -1,7 +1,7 @@
 //singleton
 GM.platformList = (function(){
 	var that = {};
-	var root = null;//since platforms only have the extra next/prev properties, I'm going to use Movable objects
+	var root = null;//since platforms only have the extra next/prev properties + spikes, I'm going to use Movable objects
 	var rear = null;
 	var cur = null;
 
@@ -40,7 +40,7 @@ GM.platformList = (function(){
 		var curWidth = 500;
 		var curY = 300;
 		if(root == null){
-			root = new Movable();
+			root = new Platform();
 			root.setX(curX);
 			root.setY(curY);
 			root.setWidth(curWidth);
@@ -56,7 +56,7 @@ GM.platformList = (function(){
 			curY = rear.getY();
 		}
 		for(var i = 0; i < num; i++){
-			var newObj = new Movable();
+			var newObj = new Platform();
 			if(difficulty == 1){
 				var xDiff = 20 + pdf([50,60,.1, 61,80,.4, 81,100,.5]);
 				curX = curX + curWidth + xDiff;
@@ -93,9 +93,17 @@ GM.platformList = (function(){
 			rear.next = newObj;
 			newObj.prev = rear;
 			newObj.next = null;
+			//add spikes to large platforms
+			if(newObj.getWidth() > 100){
+				newObj.addSpikes(10);
+			}
 			rear =  newObj;
 		}
 	};
+
+	that.makeSpikes = function(p){
+		//returns spikes for a given platform
+	}
 	/** @param m Movable - the object
 	    @param p Movable - the platform
 	    @return Integer - -1 if m's x is less, 0 if possible, 1 if greater

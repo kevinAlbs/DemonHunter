@@ -156,6 +156,15 @@ GM.main = (function(){
 				break;
 			}
 		}
+		for(var p = GM.platformList.getRoot(); p != null; p = p.next){
+			if(p.getX() > cObs.player.getX()){ //beyond possibility of player
+				break;
+			}
+			//else
+			if(p.collisionWithSpikes(cObs.player) != null){
+				cObs.player.hurt(10);
+			}
+		}
 	}
 	var d = new Date();
 	var ticks = 0;
@@ -274,6 +283,8 @@ GM.main = (function(){
 		ctx.strokeStyle = "#00F";
 		ctx.font = "11px Arial";
 		ctx.fillText(curFPS + " fps", 5,10);
+		//I could potentially move the following block of code into platformList
+		//This works assuming the platformList is removing platforms to the left of the screen (so the root is in screen)
 		for(var p = GM.platformList.getRoot(); p != null; p = p.next){
 			if(p.getX() > cObs.player.getX() && !GM.viewport.inScreen(p)){ //beyond bounds stop drawing
 				break;
@@ -284,7 +295,8 @@ GM.main = (function(){
 			else{
 				ctx.strokeStyle = "#00F";
 			}
-			ctx.strokeRect(p.getX() - GM.viewport.getXOffset(), p.getY(), p.getWidth(), p.getHeight());
+			p.paint(ctx);
+			//ctx.strokeRect(p.getX() - GM.viewport.getXOffset(), p.getY(), p.getWidth(), p.getHeight());
 		}
 		//ctxout.clearRect(0,0,cWidth,cHeight);
 		//ctxout.drawImage(buffer, 0, 0);
