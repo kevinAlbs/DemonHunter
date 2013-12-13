@@ -134,7 +134,7 @@ GM.main = (function(){
 		cnv.addEventListener("mousedown", handleMousedown, false);
 		cnv.addEventListener("mouseup", handleMouseup, false);
 		cnv.addEventListener("mousemove", handleMousemove, false);
-		GM.platformList.generatePlatforms(200, 5);
+		GM.platformList.generatePlatforms(200, 1);
 		GM.enemyList.generateEnemies(GM.platformList.getRoot().next);
 		GM.viewport.init(cWidth, cHeight, mapWidth);
 	
@@ -369,9 +369,11 @@ GM.main = (function(){
 		GM.textOverlay.startCutscene(cutsceneData, cb);
 	};
 
-	that.shootGun = function(startX, startY, dx, dy){
+	that.shootGun = function(startX, startY, angle){
 		var closestE = null;
 		var closestT = cWidth + cHeight; //cWidth + cHeight is always larger than longest possible distance
+		var dx = Math.cos(angle);
+		var dy = Math.sin(angle);
 		for(var e = GM.enemyList.getRoot(); e != null; e = e.next){
 			if(e.isActivated()){
 				//check collisions between player and enemies

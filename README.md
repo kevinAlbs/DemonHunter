@@ -7,7 +7,7 @@
 - move generateTerrain into PlatformList class [done]
 - Add spikes on some platforms (which is why you need to do small jumps)
 - Make the x movement more precise?
-- Do not update enemies offscreen
+- Do not update enemies offscreen [done]
 - Remove platforms as they go offscreen to the left (unless reconsidering game) [done]
 - optimizations (no floating point painting, read article)
 - Sun sets as you are playing (more demons come out at night)

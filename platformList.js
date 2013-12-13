@@ -57,24 +57,34 @@ GM.platformList = (function(){
 		}
 		for(var i = 0; i < num; i++){
 			var newObj = new Movable();
-			if(difficulty == 5){
-				var xDiff = pdf([50,60,.1, 61,80,.4, 81,100,.4, 101,120,.1]);
-				console.log(xDiff);
-				//TODO: make a probability distribution function
+			if(difficulty == 1){
+				var xDiff = 20 + pdf([50,60,.1, 61,80,.4, 81,100,.5]);
 				curX = curX + curWidth + xDiff;
-				curY = curY + (Math.random() * 90) - 45;
-				curWidth = 200 + (Math.random() * 50) - 25;
+				var flip = 1;
+				if(Math.random() - .5 < 0){
+					flip = -1;
+				}
+				var yDiff = 40 + pdf([0,10,.3, 11,20,.3, 20,30,.3, 40,50,.1]);
+				curY = curY + yDiff * flip;
+				curWidth = 600 + (Math.random() * 50) - 25;
+
+				//small chance of weird platform
+				curWidth = pdf([100,100,.05, 1000,1000,.05, 550,650,.9]);
+
+				//depending on width, add spikes + enemies
+			}
+			else if(difficulty == 5){
 			}
 			
 			//curX += curWidth + 10 + Math.floor(Math.random() * 200);
 			newObj.setX(curX);
 			//curY = 300 + Math.floor(Math.random() * 200) - 50;
 			
-			if(curY < 100){
-				curY = 100;
+			if(curY < 150){
+				curY = 150;
 			}
-			if(curY > 590){
-				curY = 590;
+			if(curY > 550){
+				curY = 550;
 			}
 			newObj.setY(curY);
 			

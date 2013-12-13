@@ -10,7 +10,7 @@ function Player(){
 	//"protected"
 	this._x = 80;
 	this._y = 210;
-	this._walkingSpeed = .3; //in pixels per ms
+	this._walkingSpeed = .35; //in pixels per ms
 	this._width = 22; 
 	this._height = 89;
 	this._jumpSpeed = -.48;
@@ -72,7 +72,8 @@ function Player(){
 		var dist = GM.utils.dist(ax, ay, mx, my); //copied from paint method
 		if(dist > 10){
 			var ang = Math.atan2(my -  ay, mx - ax);
-			var max = Math.PI * 2/5;
+			var pi = Math.PI;
+			var max = pi * .4;
 			//this code only works facing right (for this game)
 			if(this._facing == 1){
 				if(ang > max){
@@ -88,6 +89,15 @@ function Player(){
 				}
 			}
 			this._armAngle = ang;
+			if(this._armAngle < -1 * .35 * pi){
+				head_anim.switchAnimation("head4");
+			}
+			else if(this._armAngle < -1 * pi * .14 && this._armAngle > -1 * pi * .25){
+				head_anim.switchAnimation("head3");
+			}
+			else if(this._armAngle > -1 * pi * .1){
+				head_anim.switchAnimation("head1");
+			}
 		}
 	};
 	this.paint = function(ctx){
@@ -102,13 +112,25 @@ function Player(){
 		arm_anim.drawFrame(ax, ay, this._width, this._height, ctx, this._facing, this._armAngle, 3, 3);
 		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
 		ctx.fillStyle = "#000";
+		var prev = null;
 		for(var b = bullets; b != null; b = b.next){
+			b.t--;
+			if(b.t <= 0){
+				if(prev == null){
+					bullets = bullets.next;
+				}
+				else{
+					prev.next = b.next;
+				}
+			}
 			ctx.beginPath();
-			ctx.moveTo(b.x1 - xOff, b.y1);
-			ctx.lineTo(b.x2 - xOff, b.y2);
+			ctx.moveTo(this.getArmX() - xOff, this.getArmY());
+			ctx.lineTo(this.getArmX() + b.xDiff - xOff, this.getArmY() + b.yDiff);
 			ctx.stroke();
 			ctx.closePath();
+			prev = b;
 		}
+		//bullets = null;
 		if(GM.debug){
 			ctx.fillText(Math.round(this._x) + "," + Math.round(this._y), this._x - GM.main.getXOffset(), this._y - 10);
 		}
@@ -117,29 +139,24 @@ function Player(){
 		}
 	};
 
-	this.shoot = function(sx,sy){
+	this.shoot = function(){
 		if(shooting) return;
-		if(!this._canShoot){return;}
 
 		//this._yVel -= 2;
 		shooting = true;
 		var xOff = GM.main.getXOffset();
 		var ax = this.getArmX();
 		var ay = this.getArmY();
-		sx += xOff;
+		var hyp = 1200;//approximate hypotenuse of canvas
 		var newBullet = {
-			x1: ax,
-			y1: ay,
-			x2: sx,
-			y2: sy,
-			t: 0,
+			xDiff:  Math.cos(this._armAngle) *  hyp,
+			yDiff:  Math.sin(this._armAngle) * hyp,
+			t: 4,
 			next: null
 		};
 		var x1 = ax;
 		var y1 = ay;
-		var dy = (sy - y1);
-		var dx = (sx - x1);
-		GM.main.shootGun(x1, y1, dx, dy);
+		GM.main.shootGun(x1, y1, this._armAngle);
 		//check for collisions with enemies etc. call a GM.main function which handles this
 		if(bullets == null){
 			bullets = newBullet;
