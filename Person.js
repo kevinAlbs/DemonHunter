@@ -17,12 +17,16 @@ GM.utils.inherits(Person, Mob);
 Person.prototype._die = function(){
 	this._dead = true;
 	this._dying = true;
-	this.moveX(0);
+	//this.moveX(0);
 };
 
 //public
 Person.prototype.update = function(){
-	if(this._dead){return;}
+	if(this._dead){
+		this._hurt = false;
+		this._xVel *= .95;
+		return;
+	}
 	if(this._hurt){
 		this._hurtTicks += GM.main.delta;
 		if(this._hurtTicks > this._maxHurtTicks){

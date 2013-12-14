@@ -95,7 +95,7 @@ GM.platformList = (function(){
 			newObj.next = null;
 			//add spikes to large platforms
 			if(newObj.getWidth() > 100){
-				newObj.addSpikes(10);
+				//newObj.addSpikes(10);
 			}
 			rear =  newObj;
 		}
@@ -157,12 +157,16 @@ GM.platformList = (function(){
 				//remove
 				if(prev == null){
 					root = ptr.next;
-					ptr.next.prev = null;
+					if(ptr.next){
+						ptr.next.prev = null;
+					}
 					ptr = ptr.next;
 				}
 				else{
 					prev.next = ptr.next;
-					ptr.next.prev = prev;
+					if(ptr.next){
+						ptr.next.prev = prev;
+					}
 					ptr = prev;
 				}
 			}
@@ -170,7 +174,9 @@ GM.platformList = (function(){
 				break;//in order by x values, so break at point when no more are off screen
 			}
 			prev = ptr;
-			ptr = ptr.next;
+			if(ptr){
+				ptr = ptr.next;
+			}
 		}
 	};
 

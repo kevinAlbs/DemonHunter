@@ -20,13 +20,13 @@ GM.enemyList = (function(){
 			return;
 		}
 		if(root == null){
-			root = new Enemy(pNode);
+			root = new Centaur(pNode);
 			root.next = null;
 			root.prev = null;
 			rear = root;
 		}
 		for(var p = pNode.next; p != null; p = p.next){
-			var newObj = new Enemy(p);
+			var newObj = new Centaur(p);
 			rear.next = newObj;
 			newObj.prev = rear;
 			newObj.next = null;
@@ -44,12 +44,16 @@ GM.enemyList = (function(){
 				//remove
 				if(prev == null){
 					root = ptr.next;
-					ptr.next.prev = null;
+					if(ptr.next){
+						ptr.next.prev = null;
+					}
 					ptr = ptr.next;
 				}
 				else{
 					prev.next = ptr.next;
-					ptr.next.prev = prev;
+					if(ptr.next){
+						ptr.next.prev = prev;
+					}
 					ptr = prev;
 				}
 			}
@@ -57,7 +61,9 @@ GM.enemyList = (function(){
 				break;//in order by x values, so break at point when no more are off screen
 			}
 			prev = ptr;
-			ptr = ptr.next;
+			if(ptr){
+				ptr = ptr.next;
+			}
 		}
 	};
 	

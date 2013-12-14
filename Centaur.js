@@ -1,38 +1,21 @@
-function Enemy(p){
+function Centaur(p){
 	this._width = 15, 
 	this._height = 87;
-	this._walkingSpeed = .04;
-	this._health = 30;
-	this._xVel = 0;//prevent initial jump
+	this._walkingSpeed = .2;
+	this._jumpSpeed = -.45;
+	this._health = 60;
 	this._state = "idle";
-	this._attachedPlatform = null;
-	this._activated = false;
-	this._maxHurtTicks = 0;
+	this._attachedPlatform = p;
+	
 	var animation_set = new AnimationSet(GM.data.animation_sets.Zombie);
 	animation_set.switchAnimation("idle");
-	this._facing = -1;
-	this._attachedPlatform = p;
-
-	this.initPos = function(){
-		if(this._attachedPlatform){
-			var p = this._attachedPlatform;
-			this._x = p.getX() + p.getWidth() * 2/3;
-			this._y = p.getY() - this._height - 1;
-		}
-	}
 
 	function behave(){
 
 	};
 
 	this._die = function(){
-		Enemy.prototype._die.call(this);
-	}
-	this.isActivated = function(){
-		if(GM.viewport.inScreen(this) && !this._activated){
-			this._activated = true;
-		}
-		return this._activated;
+		Centaur.prototype._die.call(this);
 	}
 	this.paint = function(ctx){
 		var xOff = GM.main.getXOffset();
@@ -51,14 +34,12 @@ function Enemy(p){
 		}
 		//call super.update to update hurt state
 		Enemy.prototype.update.apply(this);
-		//check whether it is on screen
-		var inScreen = GM.main.inScreen(this);
 		var playerX = GM.main.getPlayerX();
 		var playerWidth = GM.main.getPlayerWidth();
 		var leftDisp = (playerX + playerWidth) - this._x; //players displacement
 		var rightDisp = playerX - (this._x + this._width);
 		var disp, dist; //displacement and distance
-		var threshold = 10;//minimum distance to attack
+		var threshold = 150;//minimum distance to attack
 		if(leftDisp < 0){
 			//player is to left of enemy
 			disp = leftDisp;
@@ -80,17 +61,20 @@ function Enemy(p){
 				this._state = "dead";
 			}
 		}
-		if(!inScreen || pp != this._attachedPlatform){
+		if(pp != this._attachedPlatform){
 			this._state = "idle";
 			this.moveX(0);
 		}
 		switch(this._state){
 			case "idle":
 				animation_set.switchAnimation("idle");
-				if(inScreen && pp == this._attachedPlatform){
+				if(pp == this._attachedPlatform){
 					this._state = "follow_player";
 					if(dist > threshold){
 						this.moveX(disp/dist);//move towards player (no need to check threshold since enemy will idle during off screen
+					}
+					else{
+						this.jump();
 					}
 				}
 			break;
@@ -99,6 +83,9 @@ function Enemy(p){
 				if(dist > threshold){
 					//move towards the player
 					this.moveX(disp/dist);
+				}
+				else{
+					this.jump();
 				}
 			break;
 			case "dying":
@@ -112,6 +99,6 @@ function Enemy(p){
 			this.jump();
 		}
 	}
-	this.initPos();
+	Centaur.prototype.initPos.call(this);
 }
-GM.utils.inherits(Enemy, Person);
+GM.utils.inherits(Centaur, Enemy);

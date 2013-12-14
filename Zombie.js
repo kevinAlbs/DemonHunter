@@ -1,38 +1,22 @@
-function Enemy(p){
+function Zombie(p){
 	this._width = 15, 
 	this._height = 87;
 	this._walkingSpeed = .04;
 	this._health = 30;
-	this._xVel = 0;//prevent initial jump
 	this._state = "idle";
-	this._attachedPlatform = null;
-	this._activated = false;
-	this._maxHurtTicks = 0;
+	this._attachedPlatform = p;
+	
 	var animation_set = new AnimationSet(GM.data.animation_sets.Zombie);
 	animation_set.switchAnimation("idle");
-	this._facing = -1;
-	this._attachedPlatform = p;
-
-	this.initPos = function(){
-		if(this._attachedPlatform){
-			var p = this._attachedPlatform;
-			this._x = p.getX() + p.getWidth() * 2/3;
-			this._y = p.getY() - this._height - 1;
-		}
-	}
 
 	function behave(){
 
 	};
 
 	this._die = function(){
-		Enemy.prototype._die.call(this);
-	}
-	this.isActivated = function(){
-		if(GM.viewport.inScreen(this) && !this._activated){
-			this._activated = true;
-		}
-		return this._activated;
+		Zombie.prototype._die.call(this);
+		this._width = 50;
+		this._height = 20;
 	}
 	this.paint = function(ctx){
 		var xOff = GM.main.getXOffset();
@@ -112,6 +96,6 @@ function Enemy(p){
 			this.jump();
 		}
 	}
-	this.initPos();
+	Zombie.prototype.initPos.call(this);
 }
-GM.utils.inherits(Enemy, Person);
+GM.utils.inherits(Zombie, Enemy);

@@ -11,10 +11,11 @@
 - add support for multiple enemies [done]
 
 ### Technical ###
-- Add spikes
+- Add spikes [done]
 - implement enemy and player death (enemies need not be removed from the linked list since they can just be removed after they are offscreen)
 - Add other three enemies
 - Add barrel roll (dodges fire + jump)
+- Add particles
 - Add HUD
 - Add boss
 - Add screens and ability to restart game
@@ -25,6 +26,7 @@
 - Sun sets as you are playing (more demons come out at night)
 - sprites for deaths, spikes, platforms
 - background
+- change shirt color
 
 At this point, the basic wireframe running should be nearly complete
 

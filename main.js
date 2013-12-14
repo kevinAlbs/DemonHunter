@@ -139,10 +139,6 @@ GM.main = (function(){
 		GM.viewport.init(cWidth, cHeight, mapWidth);
 	
 		cObs.player = new Player();
-
-		//test with an enemy
-		
-		cObs.enemyTest = new Enemy(GM.platformList.getRoot().next);
 	}
 	function checkCollisions(){
 		for(var e = GM.enemyList.getRoot(); e != null; e = e.next){
