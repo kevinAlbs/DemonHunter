@@ -23,6 +23,8 @@ GM.utils.inherits(Movable, Paintable);
 
 Movable.prototype.getXVel = function(){return this._xVel;};
 Movable.prototype.getYVel = function(){return this._yVel;};
+Movable.prototype.setXVel = function(xv){this._xVel = xv;};
+Movable.prototype.setYVel = function(yv){this._yVel = yv;};
 //default properties
 /**
 * A simple collision detecting method. It does not use information about which side was hit

@@ -5,7 +5,7 @@ function Zombie(p){
 	this._health = 30;
 	this._state = "idle";
 	this._attachedPlatform = p;
-	
+	var shotFire =false;
 	var animation_set = new AnimationSet(GM.data.animation_sets.Zombie);
 	animation_set.switchAnimation("idle");
 
@@ -64,19 +64,16 @@ function Zombie(p){
 				this._state = "dead";
 			}
 		}
-		if(!inScreen || pp != this._attachedPlatform){
-			this._state = "idle";
-			this.moveX(0);
+		if(pp == this._attachedPlatform && !this._dead){
+			this._state = "follow_player";
+			if(!shotFire){
+				shotFire = true;
+				GM.main.addFireBall(this.getX() + this.getWidth()/2, this.getY() + 10, -.2, 0); 
+			}
 		}
 		switch(this._state){
 			case "idle":
 				animation_set.switchAnimation("idle");
-				if(inScreen && pp == this._attachedPlatform){
-					this._state = "follow_player";
-					if(dist > threshold){
-						this.moveX(disp/dist);//move towards player (no need to check threshold since enemy will idle during off screen
-					}
-				}
 			break;
 			case "follow_player":
 				animation_set.switchAnimation("walking");

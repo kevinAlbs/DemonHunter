@@ -1,10 +1,58 @@
-//singleton
+/*
+Singleton class for managing enemies and enemy fire
+*/
 GM.enemyList = (function(){
 	var that = {};
 	var root = null;//since platforms only have the extra next/prev properties, I'm going to use Movable objects
 	var rear = null;
 	var cur = null;
+	var fbRoot = null;
 
+	that.addFireBall = function(x,y,xVel,yVel){
+		var fb = new FireBall();
+		fb.setX(x);
+		fb.setY(y);
+		fb.setXVel(xVel);
+		fb.setYVel(yVel);
+		fb.next = fbRoot;
+		fbRoot = fb;
+	};
+
+	that.updateFireBalls = function(){
+		var prev = null;
+		var ptr = fbRoot;
+		while(ptr != null){
+			ptr.movementUpdate();
+			if(!GM.main.inScreen(ptr)){
+				if(prev == null){
+					fbRoot = fbRoot.next;
+					ptr = ptr.next;
+				}
+				else{
+					prev.next = ptr.next;
+					ptr = ptr.next;
+				}
+			}
+			else{
+				prev = ptr;
+				ptr = ptr.next;
+			}
+		}
+	}
+
+	that.checkFireBallCollisions = function(m){
+		for(var f = fbRoot; f != null; f = f.next){
+			if(f.explodingOn(m)){
+				f.explode();
+			}
+		}
+	}
+
+	that.paintFireBalls = function(ctx){
+		for(var f = fbRoot; f != null; f = f.next){
+			f.paint(ctx);
+		}
+	}
 	that.getRoot = function(){
 		return root;
 	}
@@ -26,7 +74,7 @@ GM.enemyList = (function(){
 			rear = root;
 		}
 		for(var p = pNode.next; p != null; p = p.next){
-			var newObj = new Centaur(p);
+			var newObj = new Zombie(p);
 			rear.next = newObj;
 			newObj.prev = rear;
 			newObj.next = null;

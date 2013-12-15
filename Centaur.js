@@ -1,6 +1,6 @@
 function Centaur(p){
-	this._width = 15, 
-	this._height = 87;
+	this._width = 20, 
+	this._height = 80;
 	this._walkingSpeed = .2;
 	this._jumpSpeed = -.45;
 	this._health = 60;
@@ -61,22 +61,12 @@ function Centaur(p){
 				this._state = "dead";
 			}
 		}
-		if(pp != this._attachedPlatform){
-			this._state = "idle";
-			this.moveX(0);
+		if(pp == this._attachedPlatform && !this._dead){
+			this._state = "follow_player";
 		}
 		switch(this._state){
 			case "idle":
 				animation_set.switchAnimation("idle");
-				if(pp == this._attachedPlatform){
-					this._state = "follow_player";
-					if(dist > threshold){
-						this.moveX(disp/dist);//move towards player (no need to check threshold since enemy will idle during off screen
-					}
-					else{
-						this.jump();
-					}
-				}
 			break;
 			case "follow_player":
 				animation_set.switchAnimation("walking");

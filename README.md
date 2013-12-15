@@ -35,7 +35,7 @@ Guns + enemies:
 	+ Zombie (only walks on platform) [done]
 	+ Centaur (on platform, jumps at you)
 	+ Fire Demon (on platform, shoots fire)
-	+ Air Demon (in sky, either shoots down at you or flies down to get you. It could also potentially follow you until you kill it)
+	+ Air Demon (in sky, flies down and shoots fire from right to left. Also tries to ram into you (maybe). Stays in screen until you kill it)
 
 ## Issues ##
 - Since collisions are checked with all possible platforms (given the x) if two platforms happen to have the same x coordinates (with one below the other) and the mob's y velocity is greater than the height of the platform, if it checks the other platform first, it will collide with that (putting the player in the middle of the other platform). This could be fixed by checking all platforms before moving the player and then checking the minimum x and y time values and using that to update the position. However, since in this context I do not think I will be having two platforms on top of one another, this should not be a problem. If necessary I will change this.

@@ -141,6 +141,7 @@ GM.main = (function(){
 		cObs.player = new Player();
 	}
 	function checkCollisions(){
+		GM.enemyList.checkFireBallCollisions(cObs.player);
 		for(var e = GM.enemyList.getRoot(); e != null; e = e.next){
 			if(e.isActivated()){
 				//check collisions between player and enemies
@@ -228,6 +229,7 @@ GM.main = (function(){
 		//update everything
 		cObs.player.update();
 		GM.viewport.update(cObs.player.getX(), cObs.player.getY());
+		GM.enemyList.updateFireBalls();
 		for(var e = GM.enemyList.getRoot(); e != null; e = e.next){
 			if(e.isActivated()){
 				e.update();	
@@ -276,6 +278,7 @@ GM.main = (function(){
 			}
 			p.paint(ctx);
 		}
+		GM.enemyList.paintFireBalls(ctx);
 		ctx.strokeStyle = "#00F";
 		ctx.font = "11px Arial";
 		ctx.fillText(curFPS + " fps", 5,10);
@@ -364,6 +367,9 @@ GM.main = (function(){
 		//to be implemented
 		
 	};
+	that.addFireBall = function(x,y,xVel,yVel){
+		GM.enemyList.addFireBall(x,y,xVel,yVel);
+	}
 	that.cutscene = function(cutsceneData, additionalCallback){
 		toggleMovement(true); 
 		GM.textOverlay.show();
