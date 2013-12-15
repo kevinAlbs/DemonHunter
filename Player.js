@@ -6,7 +6,8 @@ function Player(){
 		return Player.instance;
 	}
 	Player.instance = this;
-
+	var snd = new Audio("sounds/shotgun.mp3"); // buffers automatically when created
+	var snd2 = new Audio("sounds/shotgun.mp3"); // buffers automatically when created
 	//"protected"
 	this._x = 80;
 	this._y = 210;
@@ -144,6 +145,16 @@ function Player(){
 		if(shooting) return;
 		if(this._rolling){return;}
 
+
+		if(snd.currentTime == 0 || snd.ended){
+			snd.play();
+			console.log("1");
+		}
+		else{
+			console.log("2");
+			snd2.play();
+			
+		}
 		//this._yVel -= 2;
 		shooting = true;
 		var xOff = GM.main.getXOffset();
