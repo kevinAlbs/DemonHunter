@@ -15,6 +15,7 @@ function Player(){
 	this._height = 89;
 	this._jumpSpeed = -.5;
 	this._ducking = false;
+	this._rolling = false;
 	this._hasLongJump = true;
 	this._armAngle = 0;
 	this._canShoot = true;
@@ -24,7 +25,10 @@ function Player(){
 
 	var bullets = null; //linked list of bullets for drawing
 	var shooting = false;
-
+	var rollHeightDiff = 30;
+	var rollTimer = 0;
+	var ROLL_TIME = 500; //ms
+	var rollLocked = false;//enforces key press every time
 	var animation_set = new AnimationSet(GM.data.animation_sets.Player);
 	var head_anim = new AnimationSet(GM.data.animation_sets.Player_head);
 	var arm_anim = new AnimationSet(GM.data.animation_sets.Player_arms);
@@ -32,9 +36,6 @@ function Player(){
 	arm_anim.switchAnimation("arms");
 	animation_set.switchAnimation("standing");
 
-	var isJumping = false;
-	var jumpMin = 1000;
-	var timer = 0;
 	this.update = function(){
 		//call super.update to update hurt state
 		Player.prototype.update.apply(this);
@@ -49,14 +50,10 @@ function Player(){
 		//this._y = 50;
 		//this._x += 6;
 
-		if(shooting){
-			//paint the gun shooting
-		}
-
-		if(isJumping){
-			if(this._y < jumpMin){
-				jumpMin = this._y;
-				timer += GM.main.delta;
+		if(this._rolling){
+			rollTimer -= GM.main.delta;
+			if(rollTimer < 0){
+				this._stopRolling();
 			}
 		}
 
@@ -145,6 +142,7 @@ function Player(){
 
 	this.shoot = function(){
 		if(shooting) return;
+		if(this._rolling){return;}
 
 		//this._yVel -= 2;
 		shooting = true;
@@ -197,10 +195,31 @@ function Player(){
 		//this.setOnGround();
 	}
 
+	this.barrelRoll = function(){
+		if(this._rolling || !this.onPlatform() || rollLocked){return;}
+		this._rolling = true;
+		rollLocked = true;
+		rollTimer = ROLL_TIME;
+		this._height -= rollHeightDiff;
+		this._y += rollHeightDiff;
+	}
+	this.unBarrelRoll = function(){
+		if(!this._rolling){
+			rollLocked = false;
+		}
+	};
+
+	this._stopRolling = function(){
+		if(!this._rolling){return;}
+		rollTimer = 0;
+		this._rolling = false;
+		this._height += rollHeightDiff;
+		this._y -= rollHeightDiff;
+	}
+	
 	this.jump = function(){
-		Player.prototype.jump.call(this);
-		if(this.onPlatform() && !this._ducking){	
-			isJumping = true;
+		if(this.onPlatform() && !this._ducking && !this._rolling){	
+			Player.prototype.jump.call(this);
 			jumpMin = 1000;
 			timer = 0;
 		}

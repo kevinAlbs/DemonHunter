@@ -205,10 +205,10 @@ GM.main = (function(){
 				cObs.player.unjump();
 			}
 			if(keys.d){
-				cObs.player.duck();
+				cObs.player.barrelRoll();
 			}
 			else{
-				cObs.player.unduck();
+				cObs.player.unBarrelRoll();
 			}
 			if(mouse.pressed){
 				cObs.player.mouseUpdate(mouse.x, mouse.y);

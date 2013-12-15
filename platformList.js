@@ -27,7 +27,7 @@ GM.platformList = (function(){
 		}
 	}
 
-	function makePlatform(special, curX, curY, curWidth, difficulty){
+	function makePlatform(special, curX, curY, curWidth, difficulty, exactYAway){
 		var newObj = new Platform();
 		if(special == "first"){
 			newObj.setX(10);
@@ -39,12 +39,17 @@ GM.platformList = (function(){
 		else if(difficulty == 1){
 			var xDiff = 20 + pdf([50,60,.1, 61,80,.4, 81,100,.5]);
 			curX = curX + curWidth + xDiff;
-			var flip = 1;
-			if(Math.random() - .5 < 0){
-				flip = -1;
+			if(exactYAway){
+				curY += exactYAway;
 			}
-			var yDiff = 40 + pdf([0,10,.3, 11,20,.3, 20,30,.3, 40,50,.1]);
-			curY = curY + yDiff * flip;
+			else{
+				var flip = 1;
+				if(Math.random() - .5 < 0){
+					flip = -1;
+				}
+				var yDiff = 40 + pdf([0,10,.3, 11,20,.3, 20,30,.3, 40,50,.1]);
+				curY = curY + yDiff * flip;
+			}
 			curWidth = 600 + (Math.random() * 50) - 25;
 
 			//small chance of weird platform
@@ -98,11 +103,38 @@ GM.platformList = (function(){
 		}
 
 		for(var i = 0; i < num; i++){
-			var newObj = makePlatform("", rear.getX(), rear.getY(), rear.getWidth(), 1);
+			var curX = rear.getX();
+			var curY = rear.getY();
+			var curWidth = rear.getWidth();
+			var newObj = makePlatform("", curX, curY, curWidth, 1);
 			rear.next = newObj;
 			newObj.prev = rear;
 			newObj.next = null;				
 			rear =  newObj;
+			/*
+			if(Math.random() - .5 < 0){
+				//make another object at the same location at least 1.5 * height away
+				var targY = rear.getY();
+				var targX = rear.getX();
+				var targWidth = rear.getWidth();
+				if(targY < 550 - 80 && targY > 250){
+					//we don't want to make two platforms right on top of each other
+					var flip = 1;
+					if(Math.random() - .5 < 0){
+						flip = -1;
+					}
+					newObj = makePlatform("", curX, targY, curWidth, 1, flip * pdf([100,110,.5, 110,130,.5]));
+					newObj.setWidth(targWidth * 3/2);
+					if(newObj.getX() < targX){
+						newObj.setX(targX + 10);
+					}
+					rear.next = newObj;
+					newObj.prev = rear;
+					newObj.next = null;				
+					rear =  newObj;
+				}
+			}
+			*/
 		}
 	};
 	/** @param m Movable - the object
