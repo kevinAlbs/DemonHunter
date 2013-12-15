@@ -1,10 +1,11 @@
-function Zombie(p){
+function FireBreather(p){
 	this._width = 15, 
 	this._height = 87;
 	this._walkingSpeed = .04;
-	this._health = 30;
+	this._health = 60;
 	this._state = "idle";
 	this._attachedPlatform = p;
+	var shotFire =false;
 	var animation_set = new AnimationSet(GM.data.animation_sets.Zombie);
 	animation_set.switchAnimation("idle");
 
@@ -65,6 +66,10 @@ function Zombie(p){
 		}
 		if(pp == this._attachedPlatform && !this._dead){
 			this._state = "follow_player";
+			if(!shotFire){
+				shotFire = true;
+				GM.main.addFireBall(this.getX() + this.getWidth()/2, this.getY() + 10, -.2, 0); 
+			}
 		}
 		switch(this._state){
 			case "idle":
@@ -88,6 +93,6 @@ function Zombie(p){
 			this.jump();
 		}
 	}
-	Zombie.prototype.initPos.call(this);
+	FireBreather.prototype.initPos.call(this);
 }
-GM.utils.inherits(Zombie, Enemy);
+GM.utils.inherits(FireBreather, Enemy);

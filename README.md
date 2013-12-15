@@ -14,12 +14,13 @@
 - Add spikes [done]
 - implement enemy and player death (enemies need not be removed from the linked list since they can just be removed after they are offscreen)
 - Add other three enemies
-- Add barrel roll (dodges fire + jump)
+- Add barrel roll (dodges fire + jump) [done]
 - Add particles
 - Add HUD
 - Add boss
 - Add screens and ability to restart game
 - tweak difficulty of platforms, enemies, and spikes for optimal gameplay
+	+ I'm thinking my best plan of action is to continue trial-and-error to get basic difficulties of platforms THEN use hard coded patterns for more intricate designs which are placed randomly throughout the level
 - optimizations (no floating point painting, read article)
 
 ### Design ###

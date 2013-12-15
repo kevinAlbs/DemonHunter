@@ -56,22 +56,25 @@ GM.enemyList = (function(){
 	that.getRoot = function(){
 		return root;
 	}
-	/*
-	From experimentation, seems like maximum y difference is 119 away (up) in exactly 11 frames (I think)
-	The maximum x will depend on y. I will have to figure this out later.
-
-	This will generate platforms on the end of the linked list
-	*/
+	
 	that.generateEnemies = function(platform, difficulty){
 		var pNode = platform;
 		if(pNode == null){
 			return;
 		}
 		if(root == null){
-			root = new Centaur(pNode);
+			root = new FireBreather(pNode);
 			root.next = null;
 			root.prev = null;
 			rear = root;
+			//add flyers after
+			var f = new Flyer();
+			f.setX(root.getX() + 10);
+			f.setY(100);
+			rear.next = f;
+			f.next = null;
+			f.prev = rear;
+			rear = f;
 		}
 		for(var p = pNode.next; p != null; p = p.next){
 			var newObj = new Zombie(p);
@@ -80,6 +83,7 @@ GM.enemyList = (function(){
 			newObj.next = null;
 			rear = newObj;
 		}
+
 	};
 
 	that.cleanUp = function(){

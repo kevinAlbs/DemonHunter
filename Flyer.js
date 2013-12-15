@@ -1,12 +1,12 @@
-function Zombie(p){
+function Flyer(){
 	this._width = 15, 
 	this._height = 87;
 	this._walkingSpeed = .04;
-	this._health = 30;
+	this._health = 60;
 	this._state = "idle";
-	this._attachedPlatform = p;
 	var animation_set = new AnimationSet(GM.data.animation_sets.Zombie);
 	animation_set.switchAnimation("idle");
+	var flySpeed = -.00134;
 
 	function behave(){
 
@@ -16,6 +16,7 @@ function Zombie(p){
 		Zombie.prototype._die.call(this);
 		this._width = 50;
 		this._height = 20;
+		flySpeed = 0;
 	}
 	this.paint = function(ctx){
 		var xOff = GM.main.getXOffset();
@@ -34,6 +35,10 @@ function Zombie(p){
 		}
 		//call super.update to update hurt state
 		Enemy.prototype.update.apply(this);
+		if(!this._dead){
+			this._yVel = flySpeed * GM.main.delta;
+			this._xVel = .15;
+		}
 		//check whether it is on screen
 		var inScreen = GM.main.inScreen(this);
 		var playerX = GM.main.getPlayerX();
@@ -53,7 +58,6 @@ function Zombie(p){
 			disp = 0;
 		}
 		dist = Math.abs(disp);
-		var pp = GM.main.getPlayerPlatform();
 		if(this._dead){
 			if(this._dying){
 				//show death animation
@@ -62,9 +66,6 @@ function Zombie(p){
 			else{
 				this._state = "dead";
 			}
-		}
-		if(pp == this._attachedPlatform && !this._dead){
-			this._state = "follow_player";
 		}
 		switch(this._state){
 			case "idle":
@@ -83,11 +84,7 @@ function Zombie(p){
 		}
 
 		this.movementUpdate();
-		//check after gravityUpdate if trying to move but stuck
-		if(this._state == "follow_player" && this._xVel == 0){
-			this.jump();
-		}
 	}
-	Zombie.prototype.initPos.call(this);
+	Flyer.prototype.initPos.call(this);
 }
-GM.utils.inherits(Zombie, Enemy);
+GM.utils.inherits(Flyer, Enemy);

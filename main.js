@@ -360,6 +360,7 @@ GM.main = (function(){
 	that.inScreen = function(obj){
 		return GM.viewport.inScreen(obj);
 	}
+	that.getPlayerWalking = function(){return cObs.player.getWalkingSpeed();};
 	that.getPlayerX = function(){return cObs.player.getX();};
 	that.getPlayerPlatform = function(){return cObs.player.whichPlatform();};
 	that.getPlayerWidth = function(){return cObs.player.getWidth();};
