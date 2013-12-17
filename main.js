@@ -1,4 +1,4 @@
-
+	
 /*
  * @class main
  * singleton
@@ -126,6 +126,7 @@ GM.main = (function(){
 		//buffer.height = cnv.height;
 		//ctx = buffer.getContext("2d");
 		ctx = cnv.getContext("2d");
+		ctx.webkitImageSmoothingEnabled = false;
 		cWidth = cnv.width;
 		cHeight = cnv.height;
 		mapWidth = 50000;//in blocks
