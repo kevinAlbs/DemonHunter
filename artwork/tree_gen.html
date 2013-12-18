@@ -1,0 +1,244 @@
+<DOCTYPE html>
+<html>
+
+	<head>
+		<title>Tree</title>
+		<style>
+		body{
+			text-align: center;
+		}
+			canvas{
+				border-bottom: 1px black solid;
+				margin: 0px auto;
+			}
+
+		</style>
+	</head>
+	<body>
+		<canvas id="mycanvas" width="900" height="600"></canvas>
+		<script src="underscore.js"></script>
+		<script>
+			function make_tree(args){
+				var op = {
+					maximum: 2,	//max of 2 levels of branches
+					angle: Math.PI/2,	//initial angle (straight up)
+					x: 0,
+					y: 0,
+					initLength: 100,
+					divisionFactor: 2//factor that branches are divided each iteration
+				},
+				treeArray = {}, //arraylike object which contains levels with arrays of each branch
+				divFactor,
+				maximum,
+				n = 0,//current level
+				firstBranch,
+				endPoint;
+
+				_.extend(op, args);
+
+				divFactor = op.divisionFactor;
+				maximum = op.maximum;
+
+				treeArray.length = maximum;//maximum amount of levels
+				for(var i = 0; i <= maximum; i++){
+					//make 2d
+					treeArray[i] = [];
+				}
+
+
+				endPoint = findPoint(op.x, op.y, op.initLength, op.angle);
+				//push the first branch
+				firstBranch = {
+					x: op.x,
+					y: op.y,
+					x2: endPoint.x,
+					y2: endPoint.y,
+					angle: op.angle
+				};
+
+
+				treeArray[n] = [];
+				treeArray[n].push(firstBranch);
+
+				//branch off
+				branch(n + 1, firstBranch.x2, firstBranch.y2, op.angle, op.initLength/2);
+
+				//takes the initial point, angle, and length and finds the other point
+				function findPoint(x, y, length, angle){
+					var p = {};
+
+					p.x = x + length * Math.cos(angle);
+					p.y = y - length * Math.sin(angle);
+
+					return p;
+				}
+				//returns a random angle within a specified range, angle provided is in radians, returned in radians
+				function getRandAngle(angle, range){
+					if(range == null){
+						range = 90 * Math.PI / 180;
+					}
+					return (Math.random() * range) - (range/2) + angle; 
+				}
+				function branch(n, x, y, angle, length){
+					if(n > maximum){
+						return;//base case
+					}
+					var a1, a2, p1, p2, b1, b2;
+					//get two new angles within 45 degrees of the angle provided
+					a1 = angle + .2 + (Math.random() * .2 * Math.PI);
+					a2 = angle - .2 - (Math.random() * .2 * Math.PI);
+
+					b1 = {
+						x: x,
+						y: y,
+						angle: a1,
+						level: n
+					};
+					b2 = {
+						x: x,
+						y: y,
+						angle: a2,
+						level: n
+					}
+
+					p1 = findPoint(x,y,length, a1);
+					p2 = findPoint(x,y,length, a2);
+					b1.x2 = p1.x;
+					b1.y2 = p1.y;
+					b2.x2 = p2.x;
+					b2.y2 = p2.y;
+
+					treeArray[n].push(b1);
+					treeArray[n].push(b2);
+ 					
+ 					if(Math.random() - .5 < 0 && n != 0){
+ 						//branch off at half
+ 						var p = findPoint(x, y, length/2, Math.PI + angle);
+ 						var flip = Math.random() - .5 < 0 ? -1 : 1;
+ 						var splitAngle =  angle + flip * (.3 + (Math.random() * .2 * Math.PI));
+ 						var endPoint = findPoint(p.x,p.y,length, splitAngle);
+ 						treeArray[n].push({
+ 							x: p.x,
+ 							y: p.y,
+ 							x2: endPoint.x,
+ 							y2: endPoint.y,
+ 							level: n,
+ 							angle: splitAngle
+ 						});
+ 						branch(n+1, endPoint.x, endPoint.y, splitAngle, length/divFactor);
+ 					}
+					//branch off at new locations
+					branch(n+1, b1.x2, b1.y2, b1.angle, length/divFactor);
+					branch(n+1, b2.x2, b2.y2, b2.angle, length/divFactor);
+
+				}
+				return treeArray;
+			}
+
+			function draw_branch(branch, ctx, percentage){
+				if(percentage == undefined){
+					percentage = 1;
+				}
+				ctx.moveTo(branch.x, branch.y);
+				ctx.lineTo(branch.x + (branch.x2 - branch.x)*percentage , branch.y + (branch.y2 - branch.y)*percentage);
+			}
+
+			function draw_tree(tree, ctx, maxLevel){
+				var max = (maxLevel == undefined) ? tree.length : maxLevel;
+
+				for(var i = 0; i <= max; i++){
+					_.each(tree[i], function(branch, index){
+						draw_branch(branch, ctx);
+					});
+				}
+				ctx.stroke();
+			}
+
+			function draw_trapBranch(branch, ctx, percentage){
+				ctx.moveTo(branch.x, branch.y);
+				ctx.lineTo(branch.x + (branch.x2 - branch.x), branch.y + (branch.y2 - branch.y));
+			}
+
+			function draw_trapTree(tree, ctx, maxLevel){
+				var max = (maxLevel == undefined) ? tree.length : maxLevel;
+
+				for(var i = 0; i <= max; i++){
+					_.each(tree[i], function(branch, index){
+						draw_trapBranch(branch, ctx);
+					});
+				}
+				ctx.stroke();
+			}
+			
+			function animate_tree(tree, ctx, canvasWidth, canvasHeight){
+				var max = tree.length,
+					step = .05,	//amount of change of percentage per step
+					intervalTime = 10;
+
+				animate_level(0);
+
+				function animate_level(n){
+					var percentage = 0,//percentage drawn
+						timer = window.setInterval(inc, intervalTime);
+
+					function inc(){
+						ctx.clearRect(0,0,canvasWidth, canvasHeight);
+						ctx.beginPath();
+						//animate
+						for(var i = 0; i < tree[n].length; i++){
+							draw_branch(tree[n][i], ctx, percentage);
+						}
+						ctx.closePath();
+						if(n > 0){
+							//draw previous levels
+							draw_tree(tree, ctx, n - 1);
+						}
+						else{
+							//this is in the else clause since draw_tree also strokes
+							ctx.stroke();
+						}
+						
+
+						if(percentage >= 1){
+							//animation for this level is complete
+							n++;
+							percentage = 0;
+							if(n > max){
+								console.log("Done");
+								window.clearInterval(timer);
+								return;
+							}
+						}
+
+						//increase percentage
+						percentage += step;
+						
+
+					}
+				}
+
+
+			}
+
+			var mycanvas = document.querySelector("#mycanvas"),
+				ctx = mycanvas.getContext("2d"),
+				canvasWidth = mycanvas.width,
+				canvasHeight = mycanvas.height;
+
+				console.log(canvasWidth);
+			var treeOptions = {
+					initLength : 150,
+					maximum: 10,
+					divisionFactor: 1.2,
+					x: canvasWidth/2,
+					y: canvasHeight
+				},				
+				tree = make_tree(treeOptions);
+
+			console.log(tree);
+			draw_tree(tree, ctx, canvasWidth, canvasHeight);
+			
+		</script>
+	</body>
+
+</html>
