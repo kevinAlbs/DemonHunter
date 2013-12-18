@@ -53,7 +53,9 @@
 					y: op.y,
 					x2: endPoint.x,
 					y2: endPoint.y,
-					angle: op.angle
+					angle: op.angle,
+					level: 0,
+					length: op.initLength
 				};
 
 
@@ -92,12 +94,14 @@
 						x: x,
 						y: y,
 						angle: a1,
+						length: length,
 						level: n
 					};
 					b2 = {
 						x: x,
 						y: y,
 						angle: a2,
+						length: length,
 						level: n
 					}
 
@@ -122,6 +126,7 @@
  							y: p.y,
  							x2: endPoint.x,
  							y2: endPoint.y,
+ 							length: length,
  							level: n,
  							angle: splitAngle
  						});
@@ -154,10 +159,39 @@
 				ctx.stroke();
 			}
 
+			
+
+
 			function draw_trapBranch(branch, ctx, percentage){
-				ctx.moveTo(branch.x, branch.y);
-				ctx.lineTo(branch.x + (branch.x2 - branch.x), branch.y + (branch.y2 - branch.y));
+				ctx.beginPath();
+				ctx.save();
+
+				ctx.translate(branch.x, branch.y);
+				ctx.strokeStyle = "#3d351e";
+				ctx.fillStyle = pat;
+				//set size based on level
+				var size = 12 - 2 * branch.level;
+				ctx.moveTo(0,0);
+				ctx.rotate(Math.PI * 2 - branch.angle); //at 2pi it should be up, rotate goes clockwise (only god knows why)
+				//draw the branch like from angle 0, so it is on it's side facing right
+				ctx.moveTo(0, size);
+				ctx.lineTo(branch.length, size * 2/3);
+				ctx.lineTo(branch.length, size * -2/3);
+				ctx.lineTo(0, -1 * size);
+				ctx.lineTo(0, -1 * size);
+
+				ctx.fill();
+
+				//stroke left/right edges
+				ctx.stroke();
+				ctx.restore();
+				
 			}
+
+			var patImg = new Image();
+			patImg.onload = init;
+			patImg.src = "treepattern.png";
+			var pat;
 
 			function draw_trapTree(tree, ctx, maxLevel){
 				var max = (maxLevel == undefined) ? tree.length : maxLevel;
@@ -167,7 +201,7 @@
 						draw_trapBranch(branch, ctx);
 					});
 				}
-				ctx.stroke();
+				
 			}
 			
 			function animate_tree(tree, ctx, canvasWidth, canvasHeight){
@@ -220,24 +254,25 @@
 
 			}
 
-			var mycanvas = document.querySelector("#mycanvas"),
-				ctx = mycanvas.getContext("2d"),
-				canvasWidth = mycanvas.width,
-				canvasHeight = mycanvas.height;
+			function init(){
+				var mycanvas = document.querySelector("#mycanvas"),
+					ctx = mycanvas.getContext("2d"),
+					canvasWidth = mycanvas.width,
+					canvasHeight = mycanvas.height;
+				pat = ctx.createPattern(patImg, 'repeat');
+					console.log(canvasWidth);
+				var treeOptions = {
+						initLength : 150,
+						maximum: 5,
+						divisionFactor: 1.2,
+						x: canvasWidth/2,
+						y: canvasHeight
+					},				
+					tree = make_tree(treeOptions);
 
-				console.log(canvasWidth);
-			var treeOptions = {
-					initLength : 150,
-					maximum: 10,
-					divisionFactor: 1.2,
-					x: canvasWidth/2,
-					y: canvasHeight
-				},				
-				tree = make_tree(treeOptions);
-
-			console.log(tree);
-			draw_tree(tree, ctx, canvasWidth, canvasHeight);
-			
+				console.log(tree);
+				draw_trapTree(tree, ctx, canvasWidth, canvasHeight);
+			}
 		</script>
 	</body>
 
