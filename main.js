@@ -33,12 +33,7 @@ GM.main = (function(){
 			x: cWidth,
 			y: cHeight/2
 		},
-		//collidable objects, categorized for ease of use
-		//make into linked lists
-		cObs = {
-		};
-		cObsInScreen = { //updated with objects in screen
-		};
+		player = null;
 
 
 	function handleKeyDown(e){
@@ -119,36 +114,55 @@ GM.main = (function(){
 		mouse.pressed = false;
 	}
 
-	function init(){
-		//buffer = document.createElement("canvas");
+	//add or remove all listeners
+	function toggleListeners(val){
+		var fn = val + "EventListener";
 		var cnv = document.getElementById("mycanvas");
-		//buffer.width = cnv.width;
-		//buffer.height = cnv.height;
-		//ctx = buffer.getContext("2d");
+		document[fn]("keydown",handleKeyDown, false);
+		document[fn]("keyup",handleKeyUp, false);
+		cnv[fn]("mousedown", handleMousedown, false);
+		cnv[fn]("mouseup", handleMouseup, false);
+		cnv[fn]("mousemove", handleMousemove, false);
+	}
+
+	function init(){
+		var cnv = document.getElementById("mycanvas");
 		ctx = cnv.getContext("2d");
+
 		ctx.strokeStyle = "#00F";
+		toggleListeners("add");
+
 		//ctx.webkitImageSmoothingEnabled = false;
 		cWidth = cnv.width;
 		cHeight = cnv.height;
 		mapWidth = 50000;//in blocks
-		document.addEventListener("keydown",handleKeyDown, false);
-		document.addEventListener("keyup",handleKeyUp, false);
-		cnv.addEventListener("mousedown", handleMousedown, false);
-		cnv.addEventListener("mouseup", handleMouseup, false);
-		cnv.addEventListener("mousemove", handleMousemove, false);
+		
 		GM.platformList.generatePlatforms(200, 1);
 		GM.enemyList.generateEnemies(GM.platformList.getRoot().next);
 		GM.viewport.init(cWidth, cHeight, mapWidth);
-	
-		cObs.player = new Player();
+		player = new Player();
+		that.p = player;
+		paused = false;
+		requestAnimationFrame(update);
+	}
+
+	//called to clean up objects/listeners before restarting
+	//this can safely be called even if the game is already destroyed
+	function destroy(){
+		paused = true;
+		toggleListeners("remove");
+		player = null;
+		GM.platformList.destroy();
+		GM.enemyList.destroy();
+		
 	}
 	function checkCollisions(){
-		GM.enemyList.checkFireBallCollisions(cObs.player);
+		GM.enemyList.checkFireBallCollisions(player);
 		for(var e = GM.enemyList.getRoot(); e != null; e = e.next){
 			if(e.isActivated()){
 				//check collisions between player and enemies
-				if(!e.isDead() && e.collidingWith(cObs.player)){
-					cObs.player.hurt(10);
+				if(!e.isDead() && e.collidingWith(player)){
+					player.hurt(10);
 				}
 			}
 			else{
@@ -156,12 +170,12 @@ GM.main = (function(){
 			}
 		}
 		for(var p = GM.platformList.getRoot(); p != null; p = p.next){
-			if(p.getX() > cObs.player.getX()){ //beyond possibility of player
+			if(p.getX() > player.getX()){ //beyond possibility of player
 				break;
 			}
 			//else
-			if(p.collisionWithSpikes(cObs.player) != null){
-				cObs.player.hurt(10);
+			if(p.collisionWithSpikes(player) != null){
+				player.hurt(10);
 			}
 		}
 	}
@@ -178,62 +192,61 @@ GM.main = (function(){
 		}
 		
 		var newTime = timestamp;
-
 		GM.main.delta = newTime - prevTime;
-		
-		
+		prevTime = newTime;
+
 		checkCollisions();
 		var movementDebug = true;
 		if(!movementPaused){
 			if(keys.r){
 				if(movementDebug)
-					cObs.player.moveX(1);
+					player.moveX(1);
 				else
-					cObs.player.moveX(1.2);
+					player.moveX(1.2);
 			}
 			else if(keys.l){
 				if(movementDebug)
-					cObs.player.moveX(-1);
+					player.moveX(-1);
 				else
-					cObs.player.moveX(.7);
+					player.moveX(.7);
 			}
 			else{
 				if(movementDebug)
-					cObs.player.unMoveX();
+					player.unMoveX();
 				else
-					cObs.player.moveX(1);
+					player.moveX(1);
 			}
 			if(keys.u){
-				cObs.player.jump();
+				player.jump();
 			}
 			else{
-				cObs.player.unjump();
+				player.unjump();
 			}
 			if(keys.d){
-				cObs.player.barrelRoll();
+				player.barrelRoll();
 			}
 			else{
-				cObs.player.unBarrelRoll();
+				player.unBarrelRoll();
 			}
 			if(mouse.pressed){
-				cObs.player.mouseUpdate(mouse.x, mouse.y);
-				cObs.player.shoot(mouse.x,mouse.y);
+				player.mouseUpdate(mouse.x, mouse.y);
+				player.shoot(mouse.x,mouse.y);
 			}
 			else{
-				//cObs.player.unshoot();
-				cObs.player.mouseUpdate(mouse.x, mouse.y);
+				//player.unshoot();
+				player.mouseUpdate(mouse.x, mouse.y);
 			}
 		}
 		else{
-			cObs.player.moveX(0);//no moving during cutscenes!
+			player.moveX(0);//no moving during cutscenes!
 		}
 
 		if(keys.s || keys.zp){
 			GM.textOverlay.progress();//go to next line!
 		}
 		//update everything
-		cObs.player.update();
-		GM.viewport.update(cObs.player.getX(), cObs.player.getY());
+		player.update();
+		GM.viewport.update(player.getX(), player.getY());
 		GM.enemyList.updateFireBalls();
 		for(var e = GM.enemyList.getRoot(); e != null; e = e.next){
 			if(e.isActivated()){
@@ -262,21 +275,18 @@ GM.main = (function(){
 			timeCount = 0;
 		}
 		//prevTime = now;
-		/* TODO I could call this infrequently */
 		GM.platformList.cleanUp();
 		GM.enemyList.cleanUp();
-
 		
-		prevTime = newTime;
+		
 		requestAnimationFrame(update);
-		//timer = window.setTimeout(update, Math.floor(1000 / fps)); //TODO: change to requestAnimationKeyframe or something
 	};
 
 	function paint(){
 		ctx.clearRect(0,0,cWidth, cHeight);
 		GM.viewport.paint(ctx);
 		//paint player
-		cObs.player.paint(ctx);
+		player.paint(ctx);
 		//paint enemies
 		for(var p = GM.enemyList.getRoot(); p != null; p = p.next){
 			if(!p.isActivated()){
@@ -291,7 +301,7 @@ GM.main = (function(){
 		//I could potentially move the following block of code into platformList
 		//This works assuming the platformList is removing platforms to the left of the screen (so the root is in screen)
 		for(var p = GM.platformList.getRoot(); p != null; p = p.next){
-			if(p.getX() > cObs.player.getX() && !GM.viewport.inScreen(p)){ //beyond bounds stop drawing
+			if(p.getX() > player.getX() && !GM.viewport.inScreen(p)){ //beyond bounds stop drawing
 				break;
 			}
 			if(p.hasOwnProperty("color")){
@@ -314,8 +324,8 @@ GM.main = (function(){
 	/* public methods */
 	that.startGame = function(){
 		console.log("Game started");
+		destroy();
 		init();
-		update();
 	}
 
 	/* deps is defined as an array of objects describing media type:
@@ -349,15 +359,6 @@ GM.main = (function(){
 			}
 		}
 	}
-	//returns ground from x1 to x2
-	that.getGround = function(x1, x2){
-		var ground = GM.viewport.getGround();
-		var e1 = Math.floor(x1/10);
-		var e2 = Math.ceil(x2/10);
-		if(e1 < 0) e1 = 0;
-		if(e2 > ground.length) e2 = ground.length;
-		return ground.slice(e1, e2);
-	};
 	that.getXOffset = function(){
 		return GM.viewport.getXOffset();
 	}
@@ -367,10 +368,10 @@ GM.main = (function(){
 	that.inScreen = function(obj){
 		return GM.viewport.inScreen(obj);
 	}
-	that.getPlayerWalking = function(){return cObs.player.getWalkingSpeed();};
-	that.getPlayerX = function(){return cObs.player.getX();};
-	that.getPlayerPlatform = function(){return cObs.player.whichPlatform();};
-	that.getPlayerWidth = function(){return cObs.player.getWidth();};
+	that.getPlayerWalking = function(){return player.getWalkingSpeed();};
+	that.getPlayerX = function(){return player.getX();};
+	that.getPlayerPlatform = function(){return player.whichPlatform();};
+	that.getPlayerWidth = function(){return player.getWidth();};
 	that.generateParticles = function(stg){
 		//to be implemented
 		
@@ -444,8 +445,7 @@ GM.main = (function(){
 		
 	};
 	that.collisionDebug = true;
-	that.cObs = cObs;
 	that.delta = 0;	
-	that.sJG = function(x,y){cObs.player._jumpSpeed = x; cObs.player._gravity = y;}
+	that.sJG = function(x,y){player._jumpSpeed = x; player._gravity = y;}
 	return that;
 }());

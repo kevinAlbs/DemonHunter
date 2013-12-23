@@ -119,5 +119,9 @@ GM.enemyList = (function(){
 		}
 	};
 	
+	that.destroy = function(){
+		root = null;
+	};
+	
 	return that;
 }());

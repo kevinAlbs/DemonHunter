@@ -217,5 +217,9 @@ GM.platformList = (function(){
 		m.setY(p.getY() - p.getHeight() - m.getHeight());
 	}
 	
+	that.destroy = function(){
+		root = null;
+	};
+	
 	return that;
 }());

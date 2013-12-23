@@ -2,10 +2,6 @@ function Player(){
 	if(this == window){
 		return new Player();
 	}
-	if(Player.instance != null){
-		return Player.instance;
-	}
-	Player.instance = this;
 	var snd = new Audio("sounds/shotgun.mp3"); // buffers automatically when created
 	var snd2 = new Audio("sounds/shotgun.mp3"); // buffers automatically when created
 	//"protected"
