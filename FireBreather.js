@@ -68,7 +68,7 @@ function FireBreather(p){
 			this._state = "follow_player";
 			if(!shotFire){
 				shotFire = true;
-				GM.main.addFireBall(this.getX() + this.getWidth()/2, this.getY() + 10, -.2, 0); 
+				GM.main.addFireBall(this.getX() + this.getWidth()/2, this.getY() + 10, -.275, 0); 
 			}
 		}
 		switch(this._state){

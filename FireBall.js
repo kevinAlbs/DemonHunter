@@ -17,7 +17,7 @@ function FireBall(){
 	this.paint = function(ctx){
 		var xOff = GM.main.getXOffset();
 		if(this._exploded){
-			ctx.strokeStyle = "#000";
+			//ctx.strokeStyle = "#000";
 		}
 		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
 	};

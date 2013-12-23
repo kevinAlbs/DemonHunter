@@ -25,7 +25,7 @@ Paintable.prototype.paint = function(ctx){
 	if(GM.debug){
 		//ctx.fillText(this._x + "," + this._y, this._x - GM.main.getXOffset(), this._y - 10);
 		if(typeof this.getHealth == "function"){
-			ctx.fillText(this.getHealth(), this._x - GM.main.getXOffset(), this._y - 20);
+			//ctx.fillText(this.getHealth(), this._x - GM.main.getXOffset(), this._y - 20);
 		}
 	}
 };

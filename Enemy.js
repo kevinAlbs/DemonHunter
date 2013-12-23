@@ -16,7 +16,7 @@ function Enemy(p){
 	this.initPos = function(){
 		if(this._attachedPlatform){
 			var p = this._attachedPlatform;
-			this._x = p.getX() + p.getWidth() * 2/3;
+			this._x = p.getX() + p.getWidth() * 2/3 + Math.random() * 20;
 			this._y = p.getY() - this._height - 1;
 		}
 	}

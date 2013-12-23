@@ -52,13 +52,14 @@ function Animation(frames){
 			offset = -1 * width;
 		}
 		
-		ctx.translate(flip * x + offset,y);
+		ctx.translate(Math.round(flip * x + offset),Math.round(y));
 		if(rot){
-			ctx.translate(rx, ry);
+			ctx.translate(Math.round(rx), Math.round(ry));
 			ctx.rotate(rot);
-			ctx.translate(-1 * rx, -1 * ry);
+			ctx.translate(-1 * Math.round(rx), -1 * Math.round(ry));
 		}
-		ctx.drawImage(GM.deps.spritesheet, f.x, f.y, f.width, f.height, 0, 0,  f.width, f.height);
+		ctx.drawImage(GM.deps.spritesheet, Math.round(f.x),Math.round( f.y), Math.round(f.width), Math.round(f.height), 0, 0,  f.width, f.height);
+		//ctx.fillRect(0,0, Math.round(f.width), Math.round(f.height));
 		if(dir == -1){
 			
 		}

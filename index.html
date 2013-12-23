@@ -47,14 +47,36 @@
 	}
 	#canvasContainer{
 		background: url("background.gif") no-repeat; /* maybe it's just coincidence, but the painting seems to be less laggy with this background */
+		position: relative;
+		overflow: hidden;
+	}
+	.no-highlight{
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+	#canvasContainer #moon{
+		position: absolute;
+		top: -60px;
+		right: 50px;
+		z-index: 1;
+
+	}
+	#canvasContainer canvas{
+		position: relative;
+		z-index: 5;
 	}
 	</style>
 </head>
 <body>
 <div id="container">
 	<textarea id="textOverlay" disabled></textarea>
-	<div id="canvasContainer">
+	<div id="canvasContainer" class="no-highlight">
 		<canvas id="mycanvas" width="1000" height="600"></canvas>
+		<img id="moon"  src="images/moon.png" />
 	</div>
 </div>
 <script>

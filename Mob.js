@@ -39,6 +39,7 @@ function Mob(){
 	this.jump = function(){
 		if(this.onPlatform() && !this._ducking){
 			this._yVel = this._jumpSpeed;
+			this._jumping = true;
 		}
 	}	
 	this.unjump = function(){
@@ -100,6 +101,7 @@ function Mob(){
 		if(!this.onPlatform()){
 			this.applyGravity();
 		}
+
 		if(GM.main.collisionDebug){
 			if(this._curPlatform == null){
 				this._curPlatform = GM.platformList.getRoot();
@@ -159,6 +161,10 @@ function Mob(){
 
 		}
 		Mob.prototype.movementUpdate.call(this);
+
+		if(this.onPlatform()){
+			this._jumping = false;
+		}
 	}
 }
 

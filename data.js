@@ -90,10 +90,47 @@ GM.data = {
 			arms: [{
 				x: 54,
 				y: 162,
-				width: 36,
-				height: 14,
+				width: 50,
+				height: 18,
 				time: 1
-			}]
+			}],
+			shot: [
+			{
+				x: 54,
+				y: 180,
+				width: 50,
+				height: 18,
+				time: 50
+			},
+			{
+				x: 104,
+				y: 162,
+				width: 50,
+				height: 18,
+				time: 75
+			},
+			{
+				x: 104,
+				y: 180,
+				width: 50,
+				height: 18,
+				time: 40
+			},
+			{
+				x: 154,
+				y: 162,
+				width: 50,
+				height: 18,
+				time: 40
+			},
+			{
+				x: 54,
+				y: 162,
+				width: 50,
+				height: 18,
+				time: 40
+			},
+			]
 		},
 		Player_head:{
 			head1:[{
@@ -126,6 +163,89 @@ GM.data = {
 			}]
 		},
 		Player:{
+			rolling: [
+			{
+				x: 204,
+				y: 161,
+				width: 57,
+				height: 50,
+				time: 60
+			},
+			{
+				x: 261,
+				y: 161,
+				width: 57,
+				height: 50,
+				time: 60
+			},
+			{
+				x: 318,
+				y: 161,
+				width: 57,
+				height: 50,
+				time: 60
+			},
+			{
+				x: 375,
+				y: 161,
+				width: 57,
+				height: 50,
+				time: 60
+			},
+			{
+				x: 375,
+				y: 211,
+				width: 57,
+				height: 50,
+				time: 60
+			}
+			],
+			jumping: [
+			{
+				x: 54,
+				y: 0,
+				width: 54,
+				height: 70,
+				time: 70
+			},
+			{
+				x: 108,
+				y: 0,
+				width: 54,
+				height: 70,
+				time: 70
+			},
+			{
+				x: 162,
+				y: 0,
+				width: 54,
+				height: 70,
+				time: 10000
+			}
+			],
+			jumping2:[
+			{
+				x: 54,
+				y: 70,
+				width: 54,
+				height: 70,
+				time: 70
+			},
+			{
+				x: 108,
+				y: 70,
+				width: 54,
+				height: 70,
+				time: 70
+			},
+			{
+				x: 162,
+				y: 70,
+				width: 54,
+				height: 70,
+				time: 10000
+			}
+			],
 			walking: [
 			/*{
 				x: 0,

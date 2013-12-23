@@ -16,6 +16,7 @@
 	</head>
 	<body>
 		<canvas id="mycanvas" width="900" height="600"></canvas>
+		<img id="output" />
 		<script src="underscore.js"></script>
 		<script>
 			function make_tree(args){
@@ -167,10 +168,13 @@
 				ctx.save();
 
 				ctx.translate(branch.x, branch.y);
-				ctx.strokeStyle = "#3d351e";
+				ctx.strokeStyle = "#070601";
 				ctx.fillStyle = pat;
 				//set size based on level
 				var size = 12 - 2 * branch.level;
+				if(level == 0){
+					size = 18;
+				}
 				ctx.moveTo(0,0);
 				ctx.rotate(Math.PI * 2 - branch.angle); //at 2pi it should be up, rotate goes clockwise (only god knows why)
 				//draw the branch like from angle 0, so it is on it's side facing right
@@ -272,6 +276,7 @@
 
 				console.log(tree);
 				draw_trapTree(tree, ctx, canvasWidth, canvasHeight);
+				document.getElementById("output").src = mycanvas.toDataURL();
 			}
 		</script>
 	</body>

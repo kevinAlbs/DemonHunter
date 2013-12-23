@@ -30,7 +30,11 @@ function AnimationSet(set){
 			console.log(newAnim + "not in animation set");
 		}
 	}
-
+	this.reset = function(){
+		if(this._curAnimation != null){
+			this._set[this._curAnimation].reset();
+		}
+	}
 	this.drawFrame = function(x,y,width,height,ctx, dir, rot, rx, ry){
 		this._set[this._curAnimation].drawFrame(x,y,width,height,ctx,dir, rot, rx, ry);
 	}

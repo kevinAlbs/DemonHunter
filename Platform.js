@@ -31,7 +31,7 @@ function Platform(){
 	};
 	this.paint = function(ctx){
 		var xOff = GM.main.getXOffset();
-		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
+		ctx.strokeRect(Math.round(this._x - xOff), Math.round(this._y), this._width, this._height);
 		for(var node = this.spikes; node != null; node = node.next){
 			node.paint(ctx);
 		}

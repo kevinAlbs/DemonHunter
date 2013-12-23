@@ -126,7 +126,8 @@ GM.main = (function(){
 		//buffer.height = cnv.height;
 		//ctx = buffer.getContext("2d");
 		ctx = cnv.getContext("2d");
-		ctx.webkitImageSmoothingEnabled = false;
+		ctx.strokeStyle = "#00F";
+		//ctx.webkitImageSmoothingEnabled = false;
 		cWidth = cnv.width;
 		cHeight = cnv.height;
 		mapWidth = 50000;//in blocks
@@ -169,15 +170,18 @@ GM.main = (function(){
 	var timeCount = 0;
 	var prevTime = null;
 
-	function update(){
+	function update(timestamp){
 		if(prevTime == null || paused){
-			prevTime =  new Date().getTime();
+			prevTime =  timestamp;
 			requestAnimationFrame(update);
 			return;
 		}
-		var newTime = new Date().getTime();
-		GM.main.delta = newTime - prevTime;
+		
+		var newTime = timestamp;
 
+		GM.main.delta = newTime - prevTime;
+		
+		
 		checkCollisions();
 		var movementDebug = true;
 		if(!movementPaused){
@@ -216,7 +220,7 @@ GM.main = (function(){
 				cObs.player.shoot(mouse.x,mouse.y);
 			}
 			else{
-				cObs.player.unshoot();
+				//cObs.player.unshoot();
 				cObs.player.mouseUpdate(mouse.x, mouse.y);
 			}
 		}
@@ -257,12 +261,13 @@ GM.main = (function(){
 			ticks = 0;
 			timeCount = 0;
 		}
-		prevTime = now;
+		//prevTime = now;
 		/* TODO I could call this infrequently */
 		GM.platformList.cleanUp();
 		GM.enemyList.cleanUp();
 
 		
+		prevTime = newTime;
 		requestAnimationFrame(update);
 		//timer = window.setTimeout(update, Math.floor(1000 / fps)); //TODO: change to requestAnimationKeyframe or something
 	};
@@ -280,9 +285,9 @@ GM.main = (function(){
 			p.paint(ctx);
 		}
 		GM.enemyList.paintFireBalls(ctx);
-		ctx.strokeStyle = "#00F";
-		ctx.font = "11px Arial";
-		ctx.fillText(curFPS + " fps", 5,10);
+		//
+		//ctx.font = "11px Arial";
+		//ctx.fillText(curFPS + " fps", 5,10);
 		//I could potentially move the following block of code into platformList
 		//This works assuming the platformList is removing platforms to the left of the screen (so the root is in screen)
 		for(var p = GM.platformList.getRoot(); p != null; p = p.next){
@@ -290,14 +295,15 @@ GM.main = (function(){
 				break;
 			}
 			if(p.hasOwnProperty("color")){
-				ctx.strokeStyle = p.color;
+				//ctx.strokeStyle = p.color;
 			}
 			else{
-				ctx.strokeStyle = "#00F";
+				//ctx.strokeStyle = "#00F";
 			}
 			p.paint(ctx);
 			//ctx.strokeRect(p.getX() - GM.viewport.getXOffset(), p.getY(), p.getWidth(), p.getHeight());
 		}
+		
 		//ctxout.clearRect(0,0,cWidth,cHeight);
 		//ctxout.drawImage(buffer, 0, 0);
 	};
