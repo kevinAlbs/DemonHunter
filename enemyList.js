@@ -23,7 +23,7 @@ GM.enemyList = (function(){
 		var ptr = fbRoot;
 		while(ptr != null){
 			ptr.movementUpdate();
-			if(!GM.main.inScreen(ptr)){
+			if(!GM.game.inScreen(ptr)){
 				if(prev == null){
 					fbRoot = fbRoot.next;
 					ptr = ptr.next;

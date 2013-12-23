@@ -19,7 +19,7 @@ function FireBreather(p){
 		this._height = 20;
 	}
 	this.paint = function(ctx){
-		var xOff = GM.main.getXOffset();
+		var xOff = GM.game.getXOffset();
 		if(this._hurt){
 			ctx.globalAlpha = .5;
 		}
@@ -36,9 +36,9 @@ function FireBreather(p){
 		//call super.update to update hurt state
 		Enemy.prototype.update.apply(this);
 		//check whether it is on screen
-		var inScreen = GM.main.inScreen(this);
-		var playerX = GM.main.getPlayerX();
-		var playerWidth = GM.main.getPlayerWidth();
+		var inScreen = GM.game.inScreen(this);
+		var playerX = GM.game.getPlayerX();
+		var playerWidth = GM.game.getPlayerWidth();
 		var leftDisp = (playerX + playerWidth) - this._x; //players displacement
 		var rightDisp = playerX - (this._x + this._width);
 		var disp, dist; //displacement and distance
@@ -54,7 +54,7 @@ function FireBreather(p){
 			disp = 0;
 		}
 		dist = Math.abs(disp);
-		var pp = GM.main.getPlayerPlatform();
+		var pp = GM.game.getPlayerPlatform();
 		if(this._dead){
 			if(this._dying){
 				//show death animation
@@ -68,7 +68,7 @@ function FireBreather(p){
 			this._state = "follow_player";
 			if(!shotFire){
 				shotFire = true;
-				GM.main.addFireBall(this.getX() + this.getWidth()/2, this.getY() + 10, -.275, 0); 
+				GM.game.addFireBall(this.getX() + this.getWidth()/2, this.getY() + 10, -.275, 0); 
 			}
 		}
 		switch(this._state){

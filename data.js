@@ -6,6 +6,21 @@ GM.data = {
 			type: 'img',
 			name: 'spritesheet',
 			src: 'spritesheet.gif?v2'
+		},
+		{
+			type: 'sound',
+			name: 'shot1',
+			src: 'sounds/shotgun.mp3'
+		},
+		{
+			type: 'sound',
+			name: 'shot2',
+			src: 'sounds/shotgun.mp3'
+		},
+		{
+			type: 'sound',
+			name: 'bg',
+			src: 'sounds/recording.mp3'
 		}
 	],
 	//all of the animation data for the locations/times on spritesheet

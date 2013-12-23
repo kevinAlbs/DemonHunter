@@ -102,7 +102,7 @@ function Mob(){
 			this.applyGravity();
 		}
 
-		if(GM.main.collisionDebug){
+		if(GM.game.collisionDebug){
 			if(this._curPlatform == null){
 				this._curPlatform = GM.platformList.getRoot();
 			}

@@ -148,7 +148,7 @@ GM.platformList = (function(){
 		var pcx = p.getX() + phw;
 		var sDiff = mcx - pcx; //signed difference
 		var aDiff = Math.abs(sDiff);
-		if(aDiff < mhw + phw + (Math.abs(m.getXVel()) * GM.main.delta) + 2){
+		if(aDiff < mhw + phw + (Math.abs(m.getXVel()) * GM.game.delta) + 2){
 			return 0;
 		}
 		else{
@@ -167,7 +167,7 @@ GM.platformList = (function(){
 		var pcy = p.getY() + phh;
 		var sDiff = mcy - pcy; //signed difference
 		var aDiff = Math.abs(sDiff);
-		if(aDiff < mhh + phh + (Math.abs(m.getYVel()) * GM.main.delta) + 2){
+		if(aDiff < mhh + phh + (Math.abs(m.getYVel()) * GM.game.delta) + 2){
 			return 0;
 		}
 		else{

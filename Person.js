@@ -28,7 +28,7 @@ Person.prototype.update = function(){
 		return;
 	}
 	if(this._hurt){
-		this._hurtTicks += GM.main.delta;
+		this._hurtTicks += GM.game.delta;
 		if(this._hurtTicks > this._maxHurtTicks){
 			//done with hurt state
 			this._hurt = false;

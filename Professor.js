@@ -24,24 +24,24 @@ function Professor(){
 		//call super.update to update hurt state
 		Professor.prototype.update.apply(this);
 		if(!playerWidthDiv2){
-			playerWidthDiv2 = GM.main.getPlayerWidth() / 2;
+			playerWidthDiv2 = GM.game.getPlayerWidth() / 2;
 		}
-		playerX = GM.main.getPlayerX();
+		playerX = GM.game.getPlayerX();
 		if(Math.abs(playerX + playerWidthDiv2 - this._x + this._width / 2) < thresholdToSpeak){
 			switch(this._state){
 				case "unmet":
 					this._state = "waiting_for_vines";
-					GM.main.cutscene(GM.data.cutscenes.meet);
+					GM.game.cutscene(GM.data.cutscenes.meet);
 				break;
 			}
 		}
 	};
 
 	this.paint = function(ctx){
-		animation_set.drawFrame(this._x - GM.main.getXOffset(), this._y, this._width, this._height, ctx, this._facing);
-		ctx.strokeRect(this._x - GM.main.getXOffset(), this._y, this._width, this._height);
+		animation_set.drawFrame(this._x - GM.game.getXOffset(), this._y, this._width, this._height, ctx, this._facing);
+		ctx.strokeRect(this._x - GM.game.getXOffset(), this._y, this._width, this._height);
 		if(GM.debug){
-			ctx.fillText(this._x + "," + this._y, this._x - GM.main.getXOffset(), this._y - 10);
+			ctx.fillText(this._x + "," + this._y, this._x - GM.game.getXOffset(), this._y - 10);
 		}
 	};
 

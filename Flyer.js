@@ -19,7 +19,7 @@ function Flyer(){
 		flySpeed = 0;
 	}
 	this.paint = function(ctx){
-		var xOff = GM.main.getXOffset();
+		var xOff = GM.game.getXOffset();
 		if(this._hurt){
 			ctx.globalAlpha = .5;
 		}
@@ -36,13 +36,13 @@ function Flyer(){
 		//call super.update to update hurt state
 		Enemy.prototype.update.apply(this);
 		if(!this._dead){
-			this._yVel = flySpeed * GM.main.delta;
+			this._yVel = flySpeed * GM.game.delta;
 			this._xVel = .15;
 		}
 		//check whether it is on screen
-		var inScreen = GM.main.inScreen(this);
-		var playerX = GM.main.getPlayerX();
-		var playerWidth = GM.main.getPlayerWidth();
+		var inScreen = GM.game.inScreen(this);
+		var playerX = GM.game.getPlayerX();
+		var playerWidth = GM.game.getPlayerWidth();
 		var leftDisp = (playerX + playerWidth) - this._x; //players displacement
 		var rightDisp = playerX - (this._x + this._width);
 		var disp, dist; //displacement and distance

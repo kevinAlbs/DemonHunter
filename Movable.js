@@ -70,8 +70,8 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 	var mhh = m._height/2, shh = s._height/2;
 	var mx = m._x + mhw, sx = s._x + shw; //center of rectangle coordinates
 	var my = m._y + mhh, sy = s._y + shh;
-	var dx = m._xVel * GM.main.delta;
-	var dy = m._yVel * GM.main.delta;
+	var dx = m._xVel * GM.game.delta;
+	var dy = m._yVel * GM.game.delta;
 	var tx = 2; //time at which it would collide on x-axis (0<=tx<=1)
 	var ty = 2;
 	var projX, projY; //projected coordinate of other given the t
@@ -187,16 +187,16 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 }
 //updates movement, checks for collision with platforms
 Movable.prototype.movementUpdate = function(){
-		this._x += this._xVel * GM.main.delta;
-		this._y += this._yVel * GM.main.delta;
+		this._x += this._xVel * GM.game.delta;
+		this._y += this._yVel * GM.game.delta;
 
 
 		//check screen bounds
 		if(this._x < 0){
 			this._x = 0;
 		}
-		if(this._x + this._width > GM.main.getMapWidth()){
-			this._x = GM.main.getMapWidth() - this._width;
+		if(this._x + this._width > GM.game.getMapWidth()){
+			this._x = GM.game.getMapWidth() - this._width;
 		}
 };
 
@@ -204,6 +204,6 @@ Movable.prototype.movementUpdate = function(){
 Movable.prototype.applyGravity = function(){
 	if(this._yVel < this._terminalVelocity){
 		//apply gravity
-		this._yVel += this._gravity * GM.main.delta;
+		this._yVel += this._gravity * GM.game.delta;
 	}
 };

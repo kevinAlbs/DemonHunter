@@ -30,7 +30,7 @@ function Platform(){
 		return null;
 	};
 	this.paint = function(ctx){
-		var xOff = GM.main.getXOffset();
+		var xOff = GM.game.getXOffset();
 		ctx.strokeRect(Math.round(this._x - xOff), Math.round(this._y), this._width, this._height);
 		for(var node = this.spikes; node != null; node = node.next){
 			node.paint(ctx);

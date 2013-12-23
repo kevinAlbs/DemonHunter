@@ -2,8 +2,7 @@ function Player(){
 	if(this == window){
 		return new Player();
 	}
-	var snd = new Audio("sounds/shotgun.mp3"); // buffers automatically when created
-	var snd2 = new Audio("sounds/shotgun.mp3"); // buffers automatically when created
+	
 	//"protected"
 	this._x = 80;
 	this._y = 210;
@@ -57,7 +56,7 @@ function Player(){
 	this.getCenterArmY = function(){return this.getArmY() + 8;}
 
 	this.mouseUpdate = function(mx, my){
-		var xOff = GM.main.getXOffset();
+		var xOff = GM.game.getXOffset();
 		var ax = this.getArmX() - xOff;
 		var ay = this.getArmY();
 		var dist = GM.utils.dist(ax, ay, mx, my); //copied from paint method
@@ -96,7 +95,7 @@ function Player(){
 		}
 	};
 	this.paint = function(ctx){
-		var xOff = GM.main.getXOffset();
+		var xOff = GM.game.getXOffset();
 		var ax = this.getArmX() - xOff;
 		var ay = this.getArmY();
 		var cax = this.getCenterArmX() - xOff;
@@ -134,7 +133,7 @@ function Player(){
 		}
 		//bullets = null;
 		if(GM.debug){
-			//ctx.fillText(Math.round(this._x) + "," + Math.round(this._y), this._x - GM.main.getXOffset(), this._y - 10);
+			//ctx.fillText(Math.round(this._x) + "," + Math.round(this._y), this._x - GM.game.getXOffset(), this._y - 10);
 		}
 		if(this._hurt){
 			ctx.globalAlpha = 1;
@@ -146,18 +145,18 @@ function Player(){
 		if(this._rolling){return;}
 
 
-		if(snd.currentTime == 0 || snd.ended){
-			snd.play();
+		if(GM.deps.shot1.currentTime == 0 || GM.deps.shot1.ended){
+			GM.deps.shot1.play();
 			console.log("1");
 		}
 		else{
 			console.log("2");
-			snd2.play();
+			GM.deps.shot2.play();
 			
 		}
 		//this._yVel -= 2;
 		shooting = true;
-		var xOff = GM.main.getXOffset();
+		var xOff = GM.game.getXOffset();
 		var cax = this.getCenterArmX();
 		var cay = this.getCenterArmY();
 		var hyp = 1200;//approximate hypotenuse of canvas
@@ -169,8 +168,8 @@ function Player(){
 		};
 		var x1 = cax;
 		var y1 = cay;
-		GM.main.shootGun(x1, y1, this._armAngle);
-		//check for collisions with enemies etc. call a GM.main function which handles this
+		GM.game.shootGun(x1, y1, this._armAngle);
+		//check for collisions with enemies etc. call a GM.game function which handles this
 		if(bullets == null){
 			bullets = newBullet;
 		}

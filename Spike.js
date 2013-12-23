@@ -3,7 +3,7 @@ function Spike(){
 	this.setHeight(20);
 	this.setWidth(20);
 	this.paint = function(ctx){
-		var xOff = GM.main.getXOffset();
+		var xOff = GM.game.getXOffset();
 		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
 	};
 }

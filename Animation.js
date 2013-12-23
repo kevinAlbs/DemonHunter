@@ -24,7 +24,7 @@ function Animation(frames){
 	var callback = false;
 
 	this._updateFrame = function(){
-		this._ticks += GM.main.delta;
+		this._ticks += GM.game.delta;
 		if(this._ticks > this._frames[this._curFrame].time){
 			this._curFrame++;
 			if(this._curFrame >= this._frames.length){

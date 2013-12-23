@@ -18,7 +18,7 @@
 - Add particles
 - Add HUD
 - Add boss
-- Add screens and ability to restart game
+- Add screens and ability to restart game [dpne]
 - tweak difficulty of platforms, enemies, and spikes for optimal gameplay
 	+ I'm thinking my best plan of action is to continue trial-and-error to get basic difficulties of platforms THEN use hard coded patterns for more intricate designs which are placed randomly throughout the level
 - optimizations (no floating point painting, read article)
@@ -26,6 +26,7 @@
 ### Design ###
 - Sun sets as you are playing (more demons come out at night)
 - sprites for deaths, spikes, platforms
+- bullets are now limited
 - background
 - change shirt color
 
@@ -41,6 +42,7 @@ Guns + enemies:
 ## Issues ##
 - Since collisions are checked with all possible platforms (given the x) if two platforms happen to have the same x coordinates (with one below the other) and the mob's y velocity is greater than the height of the platform, if it checks the other platform first, it will collide with that (putting the player in the middle of the other platform). This could be fixed by checking all platforms before moving the player and then checking the minimum x and y time values and using that to update the position. However, since in this context I do not think I will be having two platforms on top of one another, this should not be a problem. If necessary I will change this.
 - In Linux, the canvas painting is a little blurry for a high speed. It looks fine in Windows though. Maybe optimizations will alleviate this.
+- There were problems with lag due to incorrect calculation of delta. There is still slight lag on linux but it's worth playing around with to try and minimize lag at the end.
 
 ## Remarks ##
 - Presently, I have all of the platform collision and gravity in Mob.js. This is under the assumption that Mobs will be the only objects interacting with platforms. In the future, if the need arises, I may want to put this in Movable.
