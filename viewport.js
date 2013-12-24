@@ -9,6 +9,11 @@ GM.viewport = (function(){
 	var timeFactor = 0;//for time of day (currently unused TODO	)	
 	var time = 1;
 
+	var moon = document.getElementById("moon");
+	var startMoonX = 720;
+	var endMoonX = -50;
+	var moonXSpeed = .00257; //takes ~5 minutes
+	var moonX;
 	/*
 	 this is the absolute x and y of the player
 	 changes offsets on viewport to follow player
@@ -34,6 +39,7 @@ GM.viewport = (function(){
 		cHeight = cH;
 		mapWidth = mW;
 		rightMax = mapWidth * 10;
+		moonX = startMoonX;
 	};
 	that.update = function(playerx, playery){
 		updateOffsets(playerx, playery);
@@ -44,6 +50,12 @@ GM.viewport = (function(){
 		else if(timeFactor <= 0){
 			time = 1;
 		}
+		
+		if(moonX > endMoonX){
+			moon.style.left = Math.round(moonX) + "px";
+			moonX -= moonXSpeed * GM.game.delta;
+		}
+
 	};
 	that.paint = function(ctx){
 
