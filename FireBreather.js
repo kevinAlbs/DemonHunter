@@ -34,7 +34,7 @@ function FireBreather(p){
 			return;
 		}
 		//call super.update to update hurt state
-		Enemy.prototype.update.apply(this);
+		FireBreather.prototype.update.apply(this);
 		//check whether it is on screen
 		var inScreen = GM.game.inScreen(this);
 		var playerX = GM.game.getPlayerX();
@@ -85,12 +85,6 @@ function FireBreather(p){
 			case "dying":
 				//show dying animation
 			break;
-		}
-
-		this.movementUpdate();
-		//check after gravityUpdate if trying to move but stuck
-		if(this._state == "follow_player" && this._xVel == 0){
-			this.jump();
 		}
 	}
 	FireBreather.prototype.initPos.call(this);

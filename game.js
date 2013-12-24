@@ -378,7 +378,9 @@ GM.game = (function(){
 		return GM.viewport.inScreen(obj);
 	}
 	that.getPlayerWalking = function(){return player.getWalkingSpeed();};
+	that.getPlayerXVel = function(){return player.getXVel();}
 	that.getPlayerX = function(){return player.getX();};
+	that.getPlayerY = function(){return player.getY();};
 	that.getPlayerPlatform = function(){return player.whichPlatform();};
 	that.getPlayerWidth = function(){return player.getWidth();};
 	that.generateParticles = function(stg){

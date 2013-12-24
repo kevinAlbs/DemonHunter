@@ -33,7 +33,7 @@ function Zombie(p){
 			return;
 		}
 		//call super.update to update hurt state
-		Enemy.prototype.update.apply(this);
+		Zombie.prototype.update.apply(this);
 		//check whether it is on screen
 		var inScreen = GM.game.inScreen(this);
 		var playerX = GM.game.getPlayerX();
@@ -82,7 +82,7 @@ function Zombie(p){
 			break;
 		}
 
-		this.movementUpdate();
+		//this.movementUpdate();
 		//check after gravityUpdate if trying to move but stuck
 		if(this._state == "follow_player" && this._xVel == 0){
 			this.jump();

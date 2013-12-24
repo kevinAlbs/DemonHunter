@@ -75,6 +75,22 @@ GM.enemyList = (function(){
 			f.next = null;
 			f.prev = rear;
 			rear = f;
+			//add flyers after
+			var f = new Flyer();
+			f.setX(root.getX() + 10);
+			f.setY(100);
+			rear.next = f;
+			f.next = null;
+			f.prev = rear;
+			rear = f;
+			//add flyers after
+			var f = new Flyer();
+			f.setX(root.getX() + 10);
+			f.setY(100);
+			rear.next = f;
+			f.next = null;
+			f.prev = rear;
+			rear = f;
 		}
 		for(var p = pNode.next; p != null; p = p.next){
 			var newObj = new Zombie(p);

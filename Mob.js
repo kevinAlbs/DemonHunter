@@ -7,6 +7,7 @@ function Mob(){
 	this._hasLongJump = false;
 	this._facing = 1;//-1 for facing left, 1 for facing right, NEVER 0
 	this._curPlatform = null;
+	this._noPlatformCollision = false;//true if this mob does not collide platforms
 	this.name = "";
 
 	//dir must be -1, 0, or 1
@@ -102,7 +103,7 @@ function Mob(){
 			this.applyGravity();
 		}
 
-		if(GM.game.collisionDebug){
+		if(GM.game.collisionDebug && !this._noPlatformCollision){
 			if(this._curPlatform == null){
 				this._curPlatform = GM.platformList.getRoot();
 			}

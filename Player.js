@@ -49,6 +49,7 @@ function Player(){
 
 	};
 
+	this.getWalkingSpeed = function(){return this._walkingSpeed;};
 	this.getArmX = function(){return this._x + (8 * this._facing)};
 	this.getArmY = function(){return this._y + 16;}
 

@@ -33,7 +33,7 @@ function Centaur(p){
 			return;
 		}
 		//call super.update to update hurt state
-		Enemy.prototype.update.apply(this);
+		Centaur.prototype.update.apply(this);
 		var playerX = GM.game.getPlayerX();
 		var playerWidth = GM.game.getPlayerWidth();
 		var leftDisp = (playerX + playerWidth) - this._x; //players displacement
@@ -81,12 +81,6 @@ function Centaur(p){
 			case "dying":
 				//show dying animation
 			break;
-		}
-
-		this.movementUpdate();
-		//check after gravityUpdate if trying to move but stuck
-		if(this._state == "follow_player" && this._xVel == 0){
-			this.jump();
 		}
 	}
 	Centaur.prototype.initPos.call(this);
