@@ -97,7 +97,7 @@ function BuilderScreen(){
 		}
 	}
 	function handleClick(e){
-		that.exportJson();
+		
 	}
 	function handleMousedown(e){
 
@@ -116,10 +116,10 @@ function BuilderScreen(){
 
 		//if x and y are not defined, put them in corner
 		if(!x){
-			x = 100;
+			x = 100 + (-1 * xOff());
 			y = 10;
 		}
-		x += (-1 * xOff());//account for offest
+		
 		//perform any immediate actions
 		container.draggable("disable");
 		switch(tool){
@@ -212,14 +212,15 @@ function BuilderScreen(){
 	this.exportJson = function(){
 		//sort platforms by x, give them spikes (sorting unnecessary), output
 		var ps = $(".platform");
+		console.log(ps.size() + " platforms");
 		//make list of objects
 		var platforms = [];
 		for(var i = 0; i < ps.size(); i++){
 			var p = $(ps.get(i));
 			var ss = getObjectsOn(p);
 			var spikes =[];
-			for(var i = 0; i < ss.length; i++){
-				var s = $(ss[i]);
+			for(var j = 0; j < ss.length; j++){
+				var s = $(ss[j]);
 				if(!s.hasClass("spike")) continue;
 				spikes.push({
 					x: s.position().left
