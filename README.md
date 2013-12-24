@@ -1,3 +1,7 @@
+## Highest Priority ##
+- Create world editor and hard code a lot of the level (platforms, enemies, and spikes)
+- Enemy sprites
+
 ## TODO ##
 - Add support for multiple platforms (doubly linked list, make a seperate PlatformList singleton class) [done]
 - Add back gravity (need methods to check if on platform) [done]
@@ -24,7 +28,8 @@
 - optimizations (no floating point painting, read article)
 
 ### Design ###
-- Sun sets as you are playing (more demons come out at night)
+- sprite for centaur, fire breather, flyer
+- trees and clouds in background
 - sprites for deaths, spikes, platforms
 - bullets are now limited
 - background
@@ -35,9 +40,9 @@ At this point, the basic wireframe running should be nearly complete
 Guns + enemies:
 - Possible Enemy types:
 	+ Zombie (only walks on platform) [done]
-	+ Centaur (on platform, jumps at you)
-	+ Fire Demon (on platform, shoots fire)
-	+ Air Demon (in sky, flies down and shoots fire from right to left. Also tries to ram into you (maybe). Stays in screen until you kill it)
+	+ Centaur (on platform, jumps at you) [done]
+	+ Fire Demon (on platform, shoots fire) [done]
+	+ Air Demon (in sky, flies down and shoots fire from right to left. Also tries to ram into you (maybe). Stays in screen until you kill it) [done]
 
 ## Issues ##
 - Since collisions are checked with all possible platforms (given the x) if two platforms happen to have the same x coordinates (with one below the other) and the mob's y velocity is greater than the height of the platform, if it checks the other platform first, it will collide with that (putting the player in the middle of the other platform). This could be fixed by checking all platforms before moving the player and then checking the minimum x and y time values and using that to update the position. However, since in this context I do not think I will be having two platforms on top of one another, this should not be a problem. If necessary I will change this.

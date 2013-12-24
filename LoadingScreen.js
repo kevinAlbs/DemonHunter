@@ -1,9 +1,14 @@
-function LoadingScreen(){
+function LoadingScreen(nextScreen){
 	/* screen methods */
 	this.init = function(){
 		GM.game.loadDependencies(GM.data.dependencies, function(){
 			GM.deps.bg.play();
-			GM.switchScreen(new GameScreen());
+			if(nextScreen){
+				GM.switchScreen(nextScreen);	
+			}
+			else{
+				GM.switchScreen(new GameScreen());	
+			}
 		});
 	};
 	this.show = function(){
