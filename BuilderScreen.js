@@ -4,6 +4,16 @@ function BuilderScreen(){
 	var that = this;
 	var tool = "cursor";
 	var firstInit = true;
+	var curX=0,curY=0;//x,y coordinates of mouse
+	var shortcuts = {
+		"c": "cursor",
+		"p": "platform",
+		"d": "delete",
+		"m": "move",
+		"z": "zombie",
+		"s": "spike",
+		"e": "export"
+	};
 
 	var container = $("#scroller");
 
@@ -58,19 +68,36 @@ function BuilderScreen(){
 
 	function selectObj(obj){
 		$(".object").removeClass("selected");
-		obj.addClass("selected");
+		if(obj){
+			obj.addClass("selected");
+		}
 	}
 	function handleObjectClick(e){
-		selectObj($(e.currentTarget));
+		if($(e.currentTarget).hasClass("selected")){
+			selectObj(null);//deselect
+		}
+		else{
+			selectObj($(e.currentTarget));
+		}
 		if(tool == "delete"){
 			$(e.currentTarget).detach();
 		}
 	}
 
+	function handleMousemove(e){
+		curX = e.offsetX;
+		curY = e.offsetY;
+
+	}
+	function handleKeypress(e){
+		var c = String.fromCharCode(e.keyCode);
+		console.log(c);
+		if(shortcuts.hasOwnProperty(c)){
+			switchTool(shortcuts[c], curX, curY);
+		}
+	}
 	function handleClick(e){
-		//console.log(e);
-		var objs = getObjectsOn($($(".platform").get(0)));
-		console.log(objs[0]);
+		that.exportJson();
 	}
 	function handleMousedown(e){
 
@@ -78,38 +105,69 @@ function BuilderScreen(){
 	function handleMouseup(e){
 
 	}
-	function handleToolbar(e){
-		var btn = $(e.currentTarget);
-		tool = btn.val();
+	function switchTool(t,x,y){
+		console.log(t);
+		tool = t;
+		$("#toolbar span").html("Tool: " + tool);
+		var btn = $("button[value=" + tool + "]");
 		container.css({
 			"cursor" : btn.attr("data-cursor")
 		});
-		console.log("HERE");
+
+		//if x and y are not defined, put them in corner
+		if(!x){
+			x = 100;
+			y = 10;
+		}
+		x += (-1 * xOff());//account for offest
 		//perform any immediate actions
 		container.draggable("disable");
 		switch(tool){
+			case "export":
+				that.exportJson();
+			break;
 			case "move":
 				container.draggable("enable");
 			break;
 			case "zombie":
 				var newObj = $("<div></div>").addClass("zombie object").css({
-					left: (-1 * xOff() + 100) + "px",
-					top: "10px"
+					left: x + "px",
+					top: y + "px"
 				});
 				newObj.draggable({containment: container, snap: ".platform", snapMode: "outer"});
 				selectObj(newObj);
 				container.append(newObj);
 			break;
+			case "spike":
+				var newObj = $("<div></div>").addClass("spike object").css({
+					left: x + "px",
+					top: y + "px"
+				});
+				newObj.draggable({containment: container, snap: ".platform", snapMode: "outer"});
+				selectObj(newObj);
+				container.append(newObj);
+			break;
+			case "firebreather":
+			//TODO: implement until sprites are finalized
+			break;
+			case "flyer":
+			break;
+			case "centaur":
+			break;
 			case "platform":
 				var newObj = $("<div></div>").addClass("platform object").css({
-					left: (-1 * xOff() + 100) + "px",
-					top: "10px"
+					left: x + "px",
+					top:  y + "px"
 				});
 				newObj.draggable({containment: container}).resizable({handles: "e,w", containment: container });
 				selectObj(newObj);
 				container.append(newObj);
 			break;
 		}
+	}
+	function handleToolbar(e){
+		var btn = $(e.currentTarget);
+		switchTool(btn.val());
 	}
 	//add or remove all listeners
 	//val is either on or off
@@ -118,6 +176,8 @@ function BuilderScreen(){
 		container[fn]("click", handleClick);
 		container[fn]("mousedown", handleMousedown);
 		container[fn]("mouseup", handleMouseup);
+		container[fn]("mousemove", handleMousemove);
+		$(document)[fn]("keypress", handleKeypress);
 		if(fn == "on"){
 			$("#toolbar").delegate("button", "click", handleToolbar);
 			container.delegate(".object", "click", handleObjectClick);
@@ -130,15 +190,80 @@ function BuilderScreen(){
 
 	};
 
+	//assumes arr is an array of objects, sorts ascending on x property
+	function sort(arr){
+		var sorted = [];
+		if(arr.length == 0){
+			return sorted;
+		}
+		var min;
+		while(arr.length > 0){
+			min = -1; 
+			for(var i = 0; i < arr.length; i++){
+				if(min == -1 || arr[i].x < arr[min].x){
+					min = i;
+				}
+			}
+			sorted.push(arr[min]);
+			arr.splice(min,1);
+		}
+		return sorted;
+	}
 	this.exportJson = function(){
-		//sort platforms
-		//sort enemies
+		//sort platforms by x, give them spikes (sorting unnecessary), output
+		var ps = $(".platform");
+		//make list of objects
+		var platforms = [];
+		for(var i = 0; i < ps.size(); i++){
+			var p = $(ps.get(i));
+			var ss = getObjectsOn(p);
+			var spikes =[];
+			for(var i = 0; i < ss.length; i++){
+				var s = $(ss[i]);
+				if(!s.hasClass("spike")) continue;
+				spikes.push({
+					x: s.position().left
+				});
+			}
+			spikes = sort(spikes);
+			platforms.push({
+				x: p.position().left,
+				y: p.position().top,
+				width: p.width(),
+				spikes: spikes
+			});
+		}
+		platforms = sort(platforms);
+
+		//sort enemies by x
+		var enemies = [];
+		var es = $(".zombie,.centaur,.firebreather,.flyer");
+		for(var i = 0; i < es.size(); i++){
+			var e = $(es.get(i));
+			enemies.push({
+				x: e.position().left,
+				y: e.position().top
+			});
+		}
+		enemies = sort(enemies);
+
+		var player = $(".player");
+		var output = {
+			platforms: platforms,
+			enemies: enemies,
+			playerX: player.position().left,
+			playerY: player.position().top
+		};
+		$("#output").html(JSON.stringify(output));
+		
 	}
 
 	/* screen methods */
 	this.init = function(){
 		//GM.switchScreen(new GameScreen());
 		container.draggable({axis: 'x'}).draggable("disable");
+		$(".player").draggable({containment: container, snap: ".platform", snapMode: "outer"});
+		$(".platform.init").draggable({containment: container}).resizable({handles: "e,w", containment: container });
 		
 	};
 	this.show = function(){

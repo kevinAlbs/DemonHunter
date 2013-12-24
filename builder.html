@@ -95,7 +95,10 @@
 		background: rgba(100,100,100,.8);
 	}
 	.object.selected{
-		outline: 1px red solid;
+		outline: 1px green dotted;
+		
+	}
+	.object:hover{
 		background: rgba(100,100,100,1);
 	}
 	.platform{
@@ -109,6 +112,30 @@
 		background: rgba(100,0,0,.8);
 	}
 
+	.spike{
+		width: 20px;
+		height: 20px;
+		background: rgba(200,100,200,.8);
+	}
+
+	.player{
+		width: 22px;
+		height: 89px;
+		top: 210px;
+		left: 80px;
+		background: rgba(100,100,200,.8);
+	}
+	.platform.init{
+		top: 299px;
+		left: 10px;
+		width: 200px;
+	}
+
+	#output{
+		width: 100%;
+		margin-top: 2em;
+		height: 10em;
+	}
 	</style>
 	<link href="jquery-ui/themes/base/jquery.ui.all.css" type="text/css" rel="stylesheet"/>
 </head>
@@ -121,10 +148,15 @@
 		<button value="move" data-cursor="move">Move</button>
 		<button value="platform" data-cursor="auto">Platform</button>
 		<button value="zombie" data-cursor="auto">Zombie</button>
+		<button value="spike" data-cursor="auto">Spike</button>
 		<button value="delete" data-cursor="url('images/delete.png'), auto">Delete</button>
+		<button value="export" data-cursor="auto">Export</button>
+		<span>Tool: cursor</span>
 	</div>
 	<div id="screen-builder" class="screen no-highlight">
 		<div id="scroller" class="">
+		<div class="object player"></div>
+		<div class="object platform init"></div>
 		</div>
 	</div>
 	<div id="screen-loading" class="screen no-highlight">
@@ -134,8 +166,10 @@
 		<canvas id="mycanvas" width="1000" height="600"></canvas>
 		<img id="moon"  src="images/moon.png" />
 	</div>
+	<textarea id="output"></textarea>
 </div>
 <p id="debug"></p>
+
 <script>
 	var GM = {}; //mediator for gameplay, screens, dependency loading
 	GM.debug = true;
