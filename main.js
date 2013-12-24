@@ -1,3 +1,4 @@
+//MAIN is a singleton handling screens, dependencies, and tying things together
 MAIN = (function(){
 var that = {};
 var curScreen = "";

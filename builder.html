@@ -89,7 +89,7 @@
 		left: 0px;
 	}
 	.object{
-		position: absolute;
+		position: absolute !important;
 		left: 0px;
 		top: 0px;
 		background: rgba(100,100,100,.8);
@@ -99,9 +99,14 @@
 		background: rgba(100,100,100,1);
 	}
 	.platform{
-		
 		width: 100px;
 		height: 10px;
+	}
+
+	.zombie{
+		width: 15px;
+		height: 87px;
+		background: rgba(100,0,0,.8);
 	}
 
 	</style>
@@ -116,6 +121,7 @@
 		<button value="move" data-cursor="move">Move</button>
 		<button value="platform" data-cursor="auto">Platform</button>
 		<button value="zombie" data-cursor="auto">Zombie</button>
+		<button value="delete" data-cursor="url('images/delete.png'), auto">Delete</button>
 	</div>
 	<div id="screen-builder" class="screen no-highlight">
 		<div id="scroller" class="">
