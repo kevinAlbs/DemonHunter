@@ -129,7 +129,7 @@ GM.game = (function(){
 		cWidth = cnv.width;
 		cHeight = cnv.height;
 		mapWidth = 50000;//in blocks
-
+		
 		if(GM.data.hasOwnProperty("builder")){
 			//builder debugging, import data
 			buildFromData(GM.data.builder.output);

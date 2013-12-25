@@ -190,6 +190,7 @@
 <script src="data.js"></script>
 <script src="utils.js"></script>
 <script src="GM.js"></script>
+<script src="testBuilder.js"></script>
 <script src="Screen.js"></script>
 <script src="GameScreen.js"></script>
 <script src="LoadingScreen.js"></script>
@@ -235,9 +236,20 @@ $(document).on("keypress", function(e){
 		toggleScreen();
 	}
 });
+
+function build(){
+	GM.switchScreen(new LoadingScreen(bScreen));
+}
+
+function test(){
+	GM.data.builder = {};
+	GM.data.builder.output = test1;
+	GM.switchScreen(new LoadingScreen(gScreen));
+}
+
 function pageLoaded(){
 	//onces deps are loaded, start game
-	GM.switchScreen(new LoadingScreen(bScreen));
+	test();
 }
 window.addEventListener("load", pageLoaded);
 </script>
