@@ -5,7 +5,6 @@ function Enemy(p){
 	this._health = 30;
 	this._xVel = 0;//prevent initial jump
 	this._state = "idle";
-	this._attachedPlatform = null;
 	this._activated = false;
 	this._maxHurtTicks = 0;
 	var animation_set = new AnimationSet(GM.data.animation_sets.Zombie);
@@ -19,6 +18,10 @@ function Enemy(p){
 			this._x = p.getX() + p.getWidth() * 2/3 + Math.random() * 20;
 			this._y = p.getY() - this._height - 1;
 		}
+	}
+
+	this.setPlatform = function(p){
+		this._attachedPlatform = p;
 	}
 
 	function behave(){

@@ -80,6 +80,51 @@ GM.platformList = (function(){
 
 		return newObj;
 	}
+
+	//WARNING: extremely inefficient and should only ever be used during start-up for enemy initialization
+	that.getPlatformBelow = function(o){
+		for(var ptr = root; ptr != null; ptr = ptr.next){
+			px = ptr._x,
+			py = ptr._y,
+			ph = ptr._height,
+			pw = ptr._width,
+			ox = o._x,
+			oy = o._y,
+			oh = o._height,
+			ow = o._width;
+			if(py == oy + oh){
+				if(px <= ox && ox + ow <= px + pw){
+					return ptr;
+				}
+			}
+		}
+		return null;
+	};
+	/*
+	uses exported data from builder to make platforms
+	ps is an array of objects
+	{x,y,width}
+	*/
+	that.importPlatforms = function(ps){
+		for(var i = 0; i < ps.length; i++){
+			var p = new Platform();
+			p.setX(ps[i].x);
+			p.setY(ps[i].y);
+			p.setWidth(ps[i].width);
+			p.setHeight(10);
+			if(root == null){
+				root = p;
+				p.next = null;
+				rear = root;
+			}
+			else{
+				rear.next = p;
+				p.prev = rear;
+				p.next = null;
+				rear = p;
+			}
+		}
+	};
 	/*
 	From experimentation, seems like maximum y difference is 119 away (up) in exactly 11 frames (I think)
 	The maximum x will depend on y. I will have to figure this out later.
@@ -219,6 +264,7 @@ GM.platformList = (function(){
 	
 	that.destroy = function(){
 		root = null;
+		rear = null;
 	};
 	
 	return that;

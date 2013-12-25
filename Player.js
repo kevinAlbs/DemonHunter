@@ -113,7 +113,7 @@ function Player(){
 		else{
 			animation_set.drawFrame(this._x - xOff - (14 * this._facing), this._y + 5, this._width, this._height, ctx, this._facing);
 		}
-		//ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
+		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
 		var prev = null;
 		for(var b = bullets; b != null; b = b.next){
 			b.t--;

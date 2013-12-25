@@ -57,6 +57,41 @@ GM.enemyList = (function(){
 		return root;
 	}
 	
+	/* 
+	uses exported data from builder
+	*/
+	that.importEnemies = function(es){
+		for(var i = 0; i < es.length; i++){
+			//get platform under if exists
+			var e;
+			if(es[i].type == "zombie"){
+				e = new Zombie();
+			}
+			else if(es[i].type == "centaur"){
+				e = new Centaur();
+			}
+			else if(es[i].type == "firebreather"){
+				e = new FireBreather();
+			}
+			else if(es[i].type == "flyer"){
+				e = new Flyer();
+			}
+			e.setX(es[i].x);
+			e.setY(es[i].y);
+			e.setPlatform(GM.platformList.getPlatformBelow(e));
+			if(root == null){
+				root = e;
+				e.next = null;
+				rear = root;
+			}
+			else{
+				rear.next = e;
+				e.prev = rear;
+				e.next = null;
+				rear = e;
+			}
+		}
+	}
 	that.generateEnemies = function(platform, difficulty){
 		var pNode = platform;
 		if(pNode == null){
@@ -137,6 +172,7 @@ GM.enemyList = (function(){
 	
 	that.destroy = function(){
 		root = null;
+		rear = null;
 	};
 	
 	return that;

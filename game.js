@@ -7,9 +7,9 @@
  */
 GM.game = (function(){
 	var that = {};
-	var	paused= false,
+	var	paused= false, //if true, it will still update, but not run anything
 		movementPaused = false,//used for cutscenes, stops user movment
-		started= false,
+		started= false, //if false it won't keep updating, set to true on the first init
 		timer= null,
 		fps= 30,
 		curFPS = 0,
@@ -114,24 +114,42 @@ GM.game = (function(){
 		mouse.pressed = false;
 	}
 
+	//data is exported object from builder
+	//if xStart is provided, it will start building from there
+	function buildFromData(data, xStart){
+		GM.platformList.importPlatforms(GM.data.builder.output.platforms);
+		GM.enemyList.importEnemies(GM.data.builder.output.enemies);
+	}
+
 	function init(){
 		var cnv = document.getElementById("mycanvas");
 		ctx = cnv.getContext("2d");
-
 		ctx.strokeStyle = "#00F";
-
 		//ctx.webkitImageSmoothingEnabled = false;
 		cWidth = cnv.width;
 		cHeight = cnv.height;
 		mapWidth = 50000;//in blocks
-		
-		GM.platformList.generatePlatforms(200, 1);
-		GM.enemyList.generateEnemies(GM.platformList.getRoot().next);
+
+		if(GM.data.hasOwnProperty("builder")){
+			//builder debugging, import data
+			buildFromData(GM.data.builder.output);
+			player = new Player();
+			player.setX(GM.data.builder.output.playerX);
+			player.setY(GM.data.builder.output.playerY);
+		}
+		else{
+			GM.platformList.generatePlatforms(200, 1);
+			GM.enemyList.generateEnemies(GM.platformList.getRoot().next);
+			player = new Player();
+		}
+
 		GM.viewport.init(cWidth, cHeight, mapWidth);
-		player = new Player();
 		that.p = player;
 		paused = false;
-		requestAnimationFrame(update);
+		if(!started){
+			requestAnimationFrame(update);//start updating process
+			started = true;
+		}
 	}
 
 	//called to clean up objects/listeners before restarting
@@ -173,6 +191,7 @@ GM.game = (function(){
 
 	function update(timestamp){
 		if(prevTime == null || paused){
+			//continue to update, but do nothing
 			prevTime =  timestamp;
 			requestAnimationFrame(update);
 			return;

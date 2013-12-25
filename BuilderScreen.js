@@ -79,7 +79,7 @@ function BuilderScreen(){
 		else{
 			selectObj($(e.currentTarget));
 		}
-		if(tool == "delete"){
+		if(tool == "delete" && !$(e.currentTarget).hasClass("player")){
 			$(e.currentTarget).detach();
 		}
 	}
@@ -97,7 +97,6 @@ function BuilderScreen(){
 		}
 	}
 	function handleClick(e){
-		
 	}
 	function handleMousedown(e){
 
@@ -183,8 +182,8 @@ function BuilderScreen(){
 			container.delegate(".object", "click", handleObjectClick);
 		}
 		else{
-			$("#toolbar").unDelegate("button", "click", handleToolbar);	
-			container.unDelegate(".object", "click", handleObjectClick);
+			$("#toolbar").undelegate("button", "click", handleToolbar);	
+			container.undelegate(".object", "click", handleObjectClick);
 			container.draggable("disable");
 		}
 
@@ -241,9 +240,21 @@ function BuilderScreen(){
 		var es = $(".zombie,.centaur,.firebreather,.flyer");
 		for(var i = 0; i < es.size(); i++){
 			var e = $(es.get(i));
+			var type = "zombie";
+			if(e.hasClass("centaur")){
+				type = "centaur";
+			}
+			else if(e.hasClass("firebreather")){
+				type = "firebreather";
+			}
+			else if(e.hasClass("flyer")){
+				type = "flyer";
+			}
+
 			enemies.push({
 				x: e.position().left,
-				y: e.position().top
+				y: e.position().top,
+				type: type
 			});
 		}
 		enemies = sort(enemies);
@@ -256,7 +267,9 @@ function BuilderScreen(){
 			playerY: player.position().top
 		};
 		$("#output").html(JSON.stringify(output));
-		
+		GM.data.builder = {};
+		GM.data.builder.output = output;
+		GM.data.builder.screen = this;
 	}
 
 	/* screen methods */
