@@ -11,6 +11,9 @@ function BuilderScreen(){
 		"d": "delete",
 		"m": "move",
 		"z": "zombie",
+		"f": "flyer",
+		"b": "firebreather",
+		"t": "centaur",
 		"s": "spike",
 		"e": "export"
 	};
@@ -134,6 +137,33 @@ function BuilderScreen(){
 					top: y + "px"
 				});
 				newObj.draggable({containment: container, snap: ".platform", snapMode: "outer"});
+				selectObj(newObj);
+				container.append(newObj);
+			break;
+			case "firebreather":
+				var newObj = $("<div></div>").addClass("firebreather object").css({
+					left: x + "px",
+					top: y + "px"
+				});
+				newObj.draggable({containment: container, snap: ".platform", snapMode: "outer"});
+				selectObj(newObj);
+				container.append(newObj);
+			break;
+			case "centaur":
+				var newObj = $("<div></div>").addClass("centaur object").css({
+					left: x + "px",
+					top: y + "px"
+				});
+				newObj.draggable({containment: container, snap: ".platform", snapMode: "outer"});
+				selectObj(newObj);
+				container.append(newObj);
+			break;
+			case "flyer":
+				var newObj = $("<div></div>").addClass("flyer object").css({
+					left: x + "px",
+					top: y + "px"
+				});
+				newObj.draggable({containment: container});
 				selectObj(newObj);
 				container.append(newObj);
 			break;

@@ -1,6 +1,6 @@
 ## Highest Priority ##
 - Create world editor and hard code a lot of the level (platforms, enemies, and spikes)
-- Basics of enemy sprites
+- Basics of enemy sprites [done]
 - Have enemies move around when visible on platform
 
 ## TODO ##

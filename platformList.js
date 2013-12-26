@@ -112,6 +112,9 @@ GM.platformList = (function(){
 			p.setY(ps[i].y);
 			p.setWidth(ps[i].width);
 			p.setHeight(10);
+			for(var j = 0; j < ps[i].spikes.length; j++){
+				p.addSpike(ps[i].spikes[j].x);
+			}
 			if(root == null){
 				root = p;
 				p.next = null;
