@@ -1,13 +1,13 @@
 function Centaur(p){
-	this._width = 20, 
-	this._height = 80;
+	this._width = 25, 
+	this._height = 89;
 	this._walkingSpeed = .2;
 	this._jumpSpeed = -.45;
 	this._health = 60;
 	this._state = "idle";
 	this._attachedPlatform = p;
 	
-	var animation_set = new AnimationSet(GM.data.animation_sets.Zombie);
+	var animation_set = new AnimationSet(GM.data.animation_sets.Centaur);
 	animation_set.switchAnimation("idle");
 
 	function behave(){
@@ -22,7 +22,7 @@ function Centaur(p){
 		if(this._hurt){
 			ctx.globalAlpha = .5;
 		}
-		animation_set.drawFrame(this._x - xOff - (-15 * this._facing), this._y, this._width, this._height, ctx, -1 * this._facing);
+		animation_set.drawFrame(this._x - xOff - (-25 * this._facing), this._y, this._width, this._height, ctx, -1 * this._facing);
 		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
 		if(this._hurt){
 			ctx.globalAlpha = 1;
@@ -69,7 +69,7 @@ function Centaur(p){
 				animation_set.switchAnimation("idle");
 			break;
 			case "follow_player":
-				animation_set.switchAnimation("walking");
+				animation_set.switchAnimation("running");
 				if(dist > threshold){
 					//move towards the player
 					this.moveX(disp/dist);

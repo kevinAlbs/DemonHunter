@@ -1,6 +1,6 @@
 function Flyer(){
-	this._width = 15, 
-	this._height = 87;
+	this._width = 30, 
+	this._height = 80;
 	this._walkingSpeed = .04;
 	this._health = 130; //todo random health?
 	this._state = "idle";
@@ -15,8 +15,8 @@ function Flyer(){
 	var s1 = false; //shot 1,2
 	var s2 = false;
 
-	var animation_set = new AnimationSet(GM.data.animation_sets.Zombie);
-	animation_set.switchAnimation("idle");
+	var animation_set = new AnimationSet(GM.data.animation_sets.Flyer);
+	animation_set.switchAnimation("flying");
 
 	function behave(){
 
@@ -32,7 +32,7 @@ function Flyer(){
 		if(this._hurt){
 			ctx.globalAlpha = .5;
 		}
-		animation_set.drawFrame(this._x - xOff - (-15 * this._facing), this._y, this._width, this._height, ctx, -1 * this._facing);
+		animation_set.drawFrame(this._x - xOff - (-15 * this._facing), this._y - 15, this._width, this._height, ctx, -1 * this._facing);
 		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
 		if(this._hurt){
 			ctx.globalAlpha = 1;
@@ -103,13 +103,13 @@ function Flyer(){
 		}
 		switch(this._state){
 			case "idle":
-				animation_set.switchAnimation("idle");
+				animation_set.switchAnimation("flying");
 			break;
 			case "fly_at_speed":
 
 			break;
 			case "move_to_position":
-				animation_set.switchAnimation("walking");
+				animation_set.switchAnimation("flying");
 
 				//set velocity to go towards the end position
 				var tgx = targetX + GM.game.getXOffset();//actual x offset

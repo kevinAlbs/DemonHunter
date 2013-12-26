@@ -239,7 +239,7 @@ GM.game = (function(){
 				player.shoot(mouse.x,mouse.y);
 			}
 			else{
-				//player.unshoot();
+				player.unlockShot();
 				player.mouseUpdate(mouse.x, mouse.y);
 			}
 		}

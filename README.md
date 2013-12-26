@@ -1,34 +1,28 @@
 ## Highest Priority ##
 - Create world editor and hard code a lot of the level (platforms, enemies, and spikes)
-- Enemy sprites
+- Basics of enemy sprites
+- Have enemies move around when visible on platform
 
 ## TODO ##
-- Add support for multiple platforms (doubly linked list, make a seperate PlatformList singleton class) [done]
-- Add back gravity (need methods to check if on platform) [done]
-- rewrite setOnGround [unnecessary as I can fix initial conditions]
-- clean up unused classes/methods (ground, etc.)
-- use requestAnimation method [done]
-- move generateTerrain into PlatformList class [done]
-- Do not update enemies offscreen [done]
-- Remove platforms as they go offscreen to the left (unless reconsidering game) [done]
-- At maximum gun angle you should still be able to shoot, only at that angle though [done]
-- add support for multiple enemies [done]
 
 ### Technical ###
 - Add spikes [done]
 - implement enemy and player death (enemies need not be removed from the linked list since they can just be removed after they are offscreen)
-- Add other three enemies
+- Add other three enemies [done]
+- Add multiple shots which end on collision
 - Add barrel roll (dodges fire + jump) [done]
 - Add particles
 - Add HUD
 - Add boss
+- Possibly add initial conditions to editor (e.g. some enemies start out running at you regardless of platform, others stay)
 - Add screens and ability to restart game [dpne]
 - tweak difficulty of platforms, enemies, and spikes for optimal gameplay
 	+ I'm thinking my best plan of action is to continue trial-and-error to get basic difficulties of platforms THEN use hard coded patterns for more intricate designs which are placed randomly throughout the level
 - optimizations (no floating point painting, read article)
+- Have enemies move around when visible on platform (back and forth?, also so they can jump down on you possibly)
 
 ### Design ###
-- sprite for centaur, fire breather, flyer
+- sprite for centaur [done], fire breather, flyer
 - trees and clouds in background
 - sprites for deaths, spikes, platforms
 - bullets are now limited

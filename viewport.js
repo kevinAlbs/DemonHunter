@@ -12,7 +12,7 @@ GM.viewport = (function(){
 	var moon = document.getElementById("moon");
 	var startMoonX = 720;
 	var endMoonX = -50;
-	var moonXSpeed = .00257; //takes ~5 minutes
+	var moonXSpeed = .001285; //takes ~10 minutes
 	var moonX;
 	/*
 	 this is the absolute x and y of the player

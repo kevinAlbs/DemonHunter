@@ -16,15 +16,275 @@ GM.data = {
 			type: 'sound',
 			name: 'shot2',
 			src: 'sounds/shotgun.mp3'
-		},
-		{
+		}
+		/*{
 			type: 'sound',
 			name: 'bg',
 			src: 'sounds/recording.mp3'
-		}
+		}*/
 	],
 	//all of the animation data for the locations/times on spritesheet
 	animation_sets:{
+		Fireball:{
+			idle:[{
+				x: 309,
+				y: 226,
+				width: 10,
+				height: 9,
+				time: 1
+			}]
+		},
+		Flyer:{
+			flying:[
+			{
+				x: 0,
+				y: 578,
+				width: 75,
+				height: 94,
+				time: 90
+			},
+			{
+				x: 75,
+				y: 578,
+				width: 75,
+				height: 94,
+				time: 80
+			},
+			{
+				x: 150,
+				y: 578,
+				width: 75,
+				height: 94,
+				time: 80
+			},
+			{
+				x: 225,
+				y: 578,
+				width: 75,
+				height: 94,
+				time: 80
+			},
+			{ //peak
+				x: 300,
+				y: 578,
+				width: 75,
+				height: 94,
+				time: 90
+			},
+			{
+				x: 225,
+				y: 578,
+				width: 75,
+				height: 94,
+				time: 80
+			},
+			{
+				x: 150,
+				y: 578,
+				width: 75,
+				height: 94,
+				time: 80
+			},
+			{
+				x: 75,
+				y: 578,
+				width: 75,
+				height: 94,
+				time: 80
+			}
+			]
+		},
+		FireBreatherArm:{
+			idle:[
+			{
+				x: 458,
+				y: 84,
+				width: 29,
+				height: 30,
+				time: 40
+			}
+			],
+			throwing:[
+			{
+				x: 458,
+				y: 84,
+				width: 29,
+				height: 30,
+				time: 70
+			},
+			{
+				x: 487,
+				y: 84,
+				width: 29,
+				height: 30,
+				time: 70
+			},
+			{
+				x: 516,
+				y: 84,
+				width: 29,
+				height: 30,
+				time: 70
+			},
+			{
+				x: 458,
+				y: 114,
+				width: 29,
+				height: 30,
+				time: 70
+			}
+			]
+		},
+		FireBreather:{
+			walking:[
+			{
+				x:458,
+				y:0,
+				width: 20,
+				height: 84,
+				time: 100
+			},
+			{
+				x:478,
+				y:0,
+				width: 20,
+				height: 84,
+				time: 100
+			},
+			{
+				x:498,
+				y:0,
+				width: 20,
+				height: 84,
+				time: 100
+			},
+			{
+				x:518,
+				y:0,
+				width: 20,
+				height: 84,
+				time: 100
+			}
+			]
+		},
+		Centaur:{
+			idle:[
+				{
+				x: 0,
+				y: 475,
+				width: 103,
+				height: 89,
+				time: 40
+				}
+			],
+			running:[
+			{
+				x: 0,
+				y: 297,
+				width: 103,
+				height: 89,
+				time: 40
+			},
+			{
+				x: 103,
+				y: 297,
+				width: 103,
+				height: 89,
+				time: 40
+			},
+			{
+				x: 206,
+				y: 297,
+				width: 103,
+				height: 89,
+				time: 40
+			},
+			{
+				x: 309,
+				y: 297,
+				width: 103,
+				height: 89,
+				time: 40
+			},
+			{
+				x: 412,
+				y: 297,
+				width: 103,
+				height: 89,
+				time: 40
+			},
+			{
+				x: 0,
+				y: 386,
+				width: 103,
+				height: 89,
+				time: 40
+			},
+			{
+				x: 103,
+				y: 386,
+				width: 103,
+				height: 89,
+				time: 40
+			},
+			{
+				x: 206,
+				y: 386,
+				width: 103,
+				height: 89,
+				time: 40
+			},
+			{
+				x: 309,
+				y: 386,
+				width: 103,
+				height: 89,
+				time: 40
+			},
+			{
+				x: 412,
+				y: 386,
+				width: 103,
+				height: 89,
+				time: 40
+			},
+			{
+				x: 0,
+				y: 475,
+				width: 103,
+				height: 89,
+				time: 40
+			},
+			{
+				x: 103,
+				y: 475,
+				width: 103,
+				height: 89,
+				time: 40
+			},
+			{
+				x: 206,
+				y: 475,
+				width: 103,
+				height: 89,
+				time: 40
+			},
+			{
+				x: 309,
+				y: 475,
+				width: 103,
+				height: 89,
+				time: 40
+			},
+			{
+				x: 412,
+				y: 475,
+				width: 103,
+				height: 89,
+				time: 40
+			}
+			]
+		},
 		Zombie:{
 			idle: [
 			{

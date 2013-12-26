@@ -102,6 +102,19 @@ GM.enemyList = (function(){
 			root.next = null;
 			root.prev = null;
 			rear = root;
+
+			
+
+			//add flyers after
+			var f = new Flyer();
+			f.setX(root.getX() + 10);
+			f.setY(100);
+			rear.next = f;
+			f.next = null;
+			f.prev = rear;
+			rear = f;
+
+			/*
 			//add flyers after
 			var f = new Flyer();
 			f.setX(root.getX() + 10);
@@ -118,17 +131,11 @@ GM.enemyList = (function(){
 			f.next = null;
 			f.prev = rear;
 			rear = f;
-			//add flyers after
-			var f = new Flyer();
-			f.setX(root.getX() + 10);
-			f.setY(100);
-			rear.next = f;
-			f.next = null;
-			f.prev = rear;
-			rear = f;
+
+			*/
 		}
 		for(var p = pNode.next; p != null; p = p.next){
-			var newObj = new Zombie(p);
+			var newObj = new Centaur(p);
 			rear.next = newObj;
 			newObj.prev = rear;
 			newObj.next = null;
@@ -142,7 +149,7 @@ GM.enemyList = (function(){
 		var prev = null;
 		var ptr = root;
 		while(ptr != null){
-			if(ptr.getX() + ptr.getWidth() - GM.viewport.getXOffset() < 0){
+			if(ptr.getX() + ptr.getWidth() - GM.viewport.getXOffset() < 0 || ptr.getY() > GM.game.getCHeight()){
 				console.log("Removing enemy");
 				//remove
 				if(prev == null){

@@ -21,6 +21,7 @@ function Player(){
 
 	var bullets = null; //linked list of bullets for drawing
 	var shooting = false;
+	var shotLocked = false;//forces click
 	var rollHeightDiff = 40;
 	var rollLocked = false;//enforces key press every time
 	var animation_set = new AnimationSet(GM.data.animation_sets.Player);
@@ -142,10 +143,11 @@ function Player(){
 	};
 
 	this.shoot = function(){
+		if(shotLocked) return;
 		if(shooting) return;
 		if(this._rolling){return;}
 
-
+		shotLocked = true;
 		if(GM.deps.shot1.currentTime == 0 || GM.deps.shot1.ended){
 			GM.deps.shot1.play();
 			console.log("1");
@@ -189,6 +191,10 @@ function Player(){
 
 	this.unshoot = function(){
 		shooting = false;
+	}
+
+	this.unlockShot = function(){
+		shotLocked = false;
 	}
 
 	this.duck = function(){

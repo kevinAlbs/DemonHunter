@@ -1,13 +1,22 @@
 function FireBreather(p){
-	this._width = 15, 
+	this._width = 20, 
 	this._height = 87;
 	this._walkingSpeed = .04;
-	this._health = 60;
+	this._health = 90;
 	this._state = "idle";
 	this._attachedPlatform = p;
 	var shotFire =false;
-	var animation_set = new AnimationSet(GM.data.animation_sets.Zombie);
-	animation_set.switchAnimation("idle");
+	//the bounce gives the up and down bouncing on paint
+	var bounce = 0;
+	var BOUNCE_TIME = 200;
+	var bounceTimer = BOUNCE_TIME;
+	var bounceUp = true;
+	var SHOOT_DELAY = 600;
+	var shootDelay = SHOOT_DELAY;
+	var animation_set = new AnimationSet(GM.data.animation_sets.FireBreather);
+	var arm_animation = new AnimationSet(GM.data.animation_sets.FireBreatherArm);
+	arm_animation.switchAnimation("idle");
+	animation_set.switchAnimation("walking");
 
 	function behave(){
 
@@ -23,7 +32,8 @@ function FireBreather(p){
 		if(this._hurt){
 			ctx.globalAlpha = .5;
 		}
-		animation_set.drawFrame(this._x - xOff - (-15 * this._facing), this._y, this._width, this._height, ctx, -1 * this._facing);
+		animation_set.drawFrame(this._x - xOff - (1 * this._facing), this._y + bounce, this._width, this._height, ctx, -1 * this._facing);
+		arm_animation.drawFrame(this._x - xOff - (-17 * this._facing), this._y + 15 + bounce, this._width, this._height, ctx, -1 * this._facing);
 		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
 		if(this._hurt){
 			ctx.globalAlpha = 1;
@@ -32,6 +42,24 @@ function FireBreather(p){
 	this.update = function(){
 		if(!this._activated){
 			return;
+		}
+
+		shootDelay -= GM.game.delta;
+		bounceTimer -= GM.game.delta;
+		if(bounceTimer < 0){
+			bounceTimer = BOUNCE_TIME;
+			if(bounceUp){
+				bounce++;
+				if(bounce >= 2){
+					bounceUp = false;
+				}
+			}
+			else{
+				bounce--;
+				if(bounce <= -2){
+					bounceUp = true;
+				}
+			}
 		}
 		//call super.update to update hurt state
 		FireBreather.prototype.update.apply(this);
@@ -66,14 +94,21 @@ function FireBreather(p){
 		}
 		if(pp == this._attachedPlatform && !this._dead){
 			this._state = "follow_player";
-			if(!shotFire){
+			if(!shotFire && shootDelay < 0){
 				shotFire = true;
-				GM.game.addFireBall(this.getX() + this.getWidth()/2, this.getY() + 10, -.275, 0); 
+				var that = this;
+				arm_animation.switchAnimation("throwing", function(){
+					GM.game.addFireBall(that.getX() + (17 * that._facing), that.getY() + 16 + bounce, .275 * that._facing, 0); 	
+					arm_animation.switchAnimation("idle");
+					shootDelay = SHOOT_DELAY;
+					shotFire = false;
+				});
+				
 			}
 		}
 		switch(this._state){
 			case "idle":
-				animation_set.switchAnimation("idle");
+				animation_set.switchAnimation("walking");
 			break;
 			case "follow_player":
 				animation_set.switchAnimation("walking");
