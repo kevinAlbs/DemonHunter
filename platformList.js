@@ -34,6 +34,8 @@ GM.platformList = (function(){
 			newObj.setWidth(500);
 			newObj.setY(300);
 			newObj.setHeight(10);
+			newObj.addPickup(new Pickup("health", 20));
+			newObj.addPickup(new Pickup("ammo", 400));
 			return newObj;
 		}
 		else if(difficulty == 1){

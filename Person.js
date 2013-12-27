@@ -56,6 +56,11 @@ Person.prototype.hurt = function(amt){
 	return 1;
 };
 
+Person.prototype.gainHealth = function(amt){
+	if(this._dead){return;}
+	this._health += amt;
+};
+
 Person.prototype.isHurt = function(){
 	return this._hurt;
 };

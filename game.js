@@ -182,6 +182,14 @@ GM.game = (function(){
 			if(p.collisionWithSpikes(player) != null){
 				player.hurt(10);
 			}
+			//check collisions with pickups
+			var pickups = p.collisionWithPickups(player, true);
+			for(var i = 0; i < pickups.length; i++){
+				var pi = pickups[i];
+				if(pi.type == "health"){
+					player.gainHealth(10);
+				}
+			}
 		}
 	}
 	var d = new Date();
