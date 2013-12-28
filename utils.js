@@ -13,6 +13,14 @@ GM.utils = {
 	},
 	dist: function(x1,y1,x2,y2){
 		return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
+	},
+	//replaces adds any properties to o1 from o2 which are not in o1
+	extend_obj: function(o1, o2){
+		for(p in o2){
+			if(!o1.hasOwnProperty(p)){
+				o1[p] = o2[p];
+			}
+		}
 	}
 };
 

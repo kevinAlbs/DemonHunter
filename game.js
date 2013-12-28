@@ -295,7 +295,7 @@ GM.game = (function(){
 		keys.zp = false;
 
 		GM.textOverlay.update();
-
+		GM.particleList.update();
 		
 		ticks++;
 		var now = new Date().getTime();
@@ -344,7 +344,7 @@ GM.game = (function(){
 			p.paint(ctx);
 			//ctx.strokeRect(p.getX() - GM.viewport.getXOffset(), p.getY(), p.getWidth(), p.getHeight());
 		}
-		
+		GM.particleList.paint(ctx);
 		//ctxout.clearRect(0,0,cWidth,cHeight);
 		//ctxout.drawImage(buffer, 0, 0);
 
@@ -429,6 +429,7 @@ GM.game = (function(){
 	that.getPlayerWidth = function(){return player.getWidth();};
 	that.generateParticles = function(stg){
 		//to be implemented
+		GM.particleList.generateParticles(stg);
 		
 	};
 	that.addFireBall = function(x,y,xVel,yVel){
@@ -452,6 +453,7 @@ GM.game = (function(){
 		var closestT = cWidth + cHeight; //cWidth + cHeight is always larger than longest possible distance
 		var dx = Math.cos(angle);
 		var dy = Math.sin(angle);
+		var xColl, yColl;
 		for(var e = GM.enemyList.getRoot(); e != null; e = e.next){
 			if(e.isActivated()){
 				//calculate collisions, deal damage to enemies
@@ -465,6 +467,8 @@ GM.game = (function(){
 				if(ey < projY && projY < ey + eh){
 					if(tx > 0 && tx < closestT){
 						closestT = tx;
+						xColl = startX + dx * tx;
+						yColl = projY;
 						closestE = e;
 					}
 				}
@@ -473,6 +477,8 @@ GM.game = (function(){
 				if(ey < projY && projY < ey + eh){
 					if(tx > 0 && tx < closestT){
 						closestT = tx;
+						xColl = startX + dx * tx;
+						yColl = projY;
 						closestE = e;
 					}
 				}
@@ -482,6 +488,8 @@ GM.game = (function(){
 				if(ex < projX && projX < ex + ew){
 					if(ty > 0 && ty < closestT){
 						closestT = ty;
+						xColl = projX;
+						yColl = startY + dy * ty;
 						closestE = e;
 					}
 				}
@@ -533,6 +541,18 @@ GM.game = (function(){
 		if(closestE != null){
 			console.log(closestT);
 			closestE.hurt(35);
+			that.generateParticles({
+				x: xColl - that.getXOffset(),
+				y: yColl,
+				num: 2,
+				angle: 0,
+				angle_variance: Math.PI,
+				time: 500,
+				time_variance: 100,
+				init_speed_x: .2, //px/ms
+				init_speed_y: .1,
+				color: "#F00"
+			});
 		}
 		//update hud to show ammo
 		that.updateHUD();

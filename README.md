@@ -1,6 +1,7 @@
 ## Highest Priority ##
 - Create world editor and hard code a lot of the level (platforms, enemies, and spikes)
 - Basics of enemy sprites [done]
+- Create the map
 - Have enemies move around when visible on platform
 
 ## TODO ##
@@ -9,7 +10,7 @@
 - Add spikes [done]
 - implement enemy and player death (enemies need not be removed from the linked list since they can just be removed after they are offscreen)
 - Add other three enemies [done]
-- Add multiple shots which end on collision
+- Add multiple shots which end on collision [done]
 - Add barrel roll (dodges fire + jump) [done]
 - Add particles
 - Add HUD

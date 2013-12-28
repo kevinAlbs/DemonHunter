@@ -56,10 +56,20 @@ function Player(){
 	this.getArmX = function(){return this._x + (8 * this._facing)};
 	this.getArmY = function(){return this._y + 16;}
 
-	this.getCenterArmX = function(){return this.getArmX() + 3;};
+	this.getCenterArmX = function(){return this.getArmX() + 3 * this._facing;};
 	this.getCenterArmY = function(){return this.getArmY() + 8;};
-	this.getGunTipX  = function(){return this.getCenterArmX() + Math.cos(this._armAngle) * 35;};
+	this.getGunTipX  = function(){
+		return this.getCenterArmX() + Math.cos(this._armAngle) * 35 * this._facing;
+	};
 	this.getGunTipY = function(){return this.getCenterArmY() - 1 + Math.sin(this._armAngle) * 37;};
+	this.getShootAngle = function(){
+		if(this._facing == -1){
+			return Math.PI - this._armAngle;
+		}
+		else{
+			return this._armAngle;
+		}
+	};
 
 	this.mouseUpdate = function(mx, my){
 		var xOff = GM.game.getXOffset();
@@ -70,34 +80,54 @@ function Player(){
 			var ang = Math.atan2(my -  ay, mx - ax);
 			var pi = Math.PI;
 			var max = pi * .4;
-			//this code only works facing right (for this game)
 			if(this._facing == 1){
 				if(ang > max){
 					ang = max;
-					this._canShoot = false;
 				}
 				else if(ang < max * -1){
 					ang = max * -1;
-					this._canShoot = false;
 				}
-				else{
-					this._canShoot = true;
+				this._armAngle = ang;
+				if(this._armAngle < -1 * .35 * pi){
+					head_anim.switchAnimation("head4");
+				}
+				else if(this._armAngle < -1 * pi * .14 && this._armAngle > -1 * pi * .25){
+					head_anim.switchAnimation("head3");
+				}
+				else if(this._armAngle > -1 * pi * .1 && this._armAngle < .29 * pi){
+					head_anim.switchAnimation("head1");
+				}
+				else if(this._armAngle > .31 * pi){
+					head_anim.switchAnimation("head2");
 				}
 			}
-			this._armAngle = ang;
-			if(this._armAngle < -1 * .35 * pi){
-				head_anim.switchAnimation("head4");
-			}
-			else if(this._armAngle < -1 * pi * .14 && this._armAngle > -1 * pi * .25){
-				head_anim.switchAnimation("head3");
-			}
-			else if(this._armAngle > -1 * pi * .1 && this._armAngle < .29 * pi){
-				head_anim.switchAnimation("head1");
-			}
-			else if(this._armAngle > .31 * pi){
-				head_anim.switchAnimation("head2");
-			}
+			else if(this._facing == -1){
+				if(ang < 0){
+					ang += 2 * pi;
+				}
+				ang = pi - ang;
+				if(ang > max){
+					ang = max;
+				}
+				else if(ang < max * -1){
+					ang = max * -1;
+				}
+				this._armAngle = ang;
 
+				//console.log(this._armAngle);
+				if(this._armAngle < -1 * .35 * pi){
+					head_anim.switchAnimation("head4");
+				}
+				else if(this._armAngle < -1 * pi * .14 && this._armAngle > -1 * pi * .25){
+					head_anim.switchAnimation("head3");
+				}
+				else if(this._armAngle >  -1 * pi * .1 && this._armAngle < .29 * pi){
+					head_anim.switchAnimation("head1");
+				}
+				else if(this._armAngle > .31 * pi){
+					head_anim.switchAnimation("head2");
+				}
+			}
 		}
 	};
 	this.paint = function(ctx){
@@ -175,6 +205,7 @@ function Player(){
 		if(this._rolling){return;}
 		if(this._ammo <= 0){return;}
 
+
 		shotLocked = true;
 		if(GM.deps.shot1.currentTime == 0 || GM.deps.shot1.ended){
 			//GM.deps.shot1.play();
@@ -193,18 +224,30 @@ function Player(){
 		var x1 = this.getGunTipX(); //again, apologies for hard coding
 		var y1 = this.getGunTipY();
 
+		GM.game.generateParticles({
+			x: x1 - xOff,
+			y: y1,
+			num: 1,
+			angle: Math.PI/-2,
+			angle_variance: Math.PI/2,
+			time: 500,
+			time_variance: 100,
+			init_speed_x: .05, //px/ms
+			init_speed_y: .1,
+			color: "#FF0"
+		})
 
 		this._ammo--;
 
-		var shootAngle = this._armAngle;
+		var shootAngle = this.getShootAngle();
 		var hyp = GM.game.shootGun(x1, y1, shootAngle);
 		addBullet(shootAngle, hyp);
 
-		shootAngle = this._armAngle + .02;
+		shootAngle = this.getShootAngle() + .02;
 		hyp = GM.game.shootGun(x1, y1, shootAngle);
 		addBullet(shootAngle, hyp);
 
-		shootAngle = this._armAngle - .02;
+		shootAngle = this.getShootAngle() - .02;
 		hyp = GM.game.shootGun(x1, y1, shootAngle);
 		addBullet(shootAngle, hyp);
 
