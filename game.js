@@ -7,6 +7,9 @@
  */
 GM.game = (function(){
 	var that = {};
+	that.bulletsCollideWithPlatforms = true;
+	that.collisionDebug = true; //when I was testing, TODO: remove this
+	that.delta = 0;	
 	var	paused= false, //if true, it will still update, but not run anything
 		movementPaused = false,//used for cutscenes, stops user movment
 		started= false, //if false it won't keep updating, set to true on the first init
@@ -33,7 +36,12 @@ GM.game = (function(){
 			x: cWidth,
 			y: cHeight/2
 		},
-		player = null;
+		player = null,
+		HUD = {
+			health : document.getElementById("health_amt"),
+			ammo : document.getElementById("ammo_amt"),
+			score: document.getElementById("score_amt")
+		};
 
 
 	function handleKeyDown(e){
@@ -146,6 +154,7 @@ GM.game = (function(){
 		GM.viewport.init(cWidth, cHeight, mapWidth);
 		that.p = player;
 		paused = false;
+		that.updateHUD();
 		if(!started){
 			requestAnimationFrame(update);//start updating process
 			started = true;
@@ -162,7 +171,10 @@ GM.game = (function(){
 		
 	}
 	function checkCollisions(){
-		GM.enemyList.checkFireBallCollisions(player);
+		var i = GM.enemyList.checkFireBallCollisions(player);
+		if(i.length > 0){
+			player.hurt(i.length * 5);
+		}
 		for(var e = GM.enemyList.getRoot(); e != null; e = e.next){
 			if(e.isActivated()){
 				//check collisions between player and enemies
@@ -186,8 +198,13 @@ GM.game = (function(){
 			var pickups = p.collisionWithPickups(player, true);
 			for(var i = 0; i < pickups.length; i++){
 				var pi = pickups[i];
-				if(pi.type == "health"){
+				if(pi.getType() == "health"){
 					player.gainHealth(10);
+					that.updateHUD();
+				}
+				else if(pi.getType() == "ammo"){
+					player.gainAmmo(10);
+					that.updateHUD();
 				}
 			}
 		}
@@ -244,7 +261,7 @@ GM.game = (function(){
 			}
 			if(mouse.pressed){
 				player.mouseUpdate(mouse.x, mouse.y);
-				player.shoot(mouse.x,mouse.y);
+				player.shoot();
 			}
 			else{
 				player.unlockShot();
@@ -437,8 +454,45 @@ GM.game = (function(){
 		var dy = Math.sin(angle);
 		for(var e = GM.enemyList.getRoot(); e != null; e = e.next){
 			if(e.isActivated()){
-				//check collisions between player and enemies
-				if(!e.isDead()){
+				//calculate collisions, deal damage to enemies
+				//calculate time at which the x matches either side of the enemy, see if the y is within bounds
+				var ex = e.getX();
+				var ey = e.getY();
+				var ew = e.getWidth();
+				var eh = e.getHeight();
+				var tx = (ex - startX)/dx;
+				var projY = startY + tx * dy;
+				if(ey < projY && projY < ey + eh){
+					if(tx > 0 && tx < closestT){
+						closestT = tx;
+						closestE = e;
+					}
+				}
+				tx = ((ex + ew) - startX)/dx;
+				projY = startY + tx * dy;
+				if(ey < projY && projY < ey + eh){
+					if(tx > 0 && tx < closestT){
+						closestT = tx;
+						closestE = e;
+					}
+				}
+				//check just one other side (it must hit at least two sides), so checking all but one is fine
+				var ty = (ey - startY)/dy;
+				var projX = startX + ty * dx;
+				if(ex < projX && projX < ex + ew){
+					if(ty > 0 && ty < closestT){
+						closestT = ty;
+						closestE = e;
+					}
+				}
+			}
+			else{
+				break;
+			}
+		}
+		if(GM.game.bulletsCollideWithPlatforms){
+			for(var e = GM.platformList.getRoot(); e != null; e = e.next){
+				if(e.getX() < cWidth + GM.game.getXOffset()){
 					//calculate collisions, deal damage to enemies
 					//calculate time at which the x matches either side of the enemy, see if the y is within bounds
 					var ex = e.getX();
@@ -450,7 +504,7 @@ GM.game = (function(){
 					if(ey < projY && projY < ey + eh){
 						if(tx > 0 && tx < closestT){
 							closestT = tx;
-							closestE = e;
+							closestE = null;
 						}
 					}
 					tx = ((ex + ew) - startX)/dx;
@@ -458,7 +512,7 @@ GM.game = (function(){
 					if(ey < projY && projY < ey + eh){
 						if(tx > 0 && tx < closestT){
 							closestT = tx;
-							closestE = e;
+							closestE = null;
 						}
 					}
 					//check just one other side (it must hit at least two sides), so checking all but one is fine
@@ -466,24 +520,29 @@ GM.game = (function(){
 					var projX = startX + ty * dx;
 					if(ex < projX && projX < ex + ew){
 						if(ty > 0 && ty < closestT){
-							closestT = tx;
-							closestE = e;
+							closestT = ty;
+							closestE = null;
 						}
 					}
 				}
-			}
-			else{
-				break;
+				else{
+					break;
+				}
 			}
 		}
 		if(closestE != null){
 			console.log(closestT);
 			closestE.hurt(35);
 		}
-		
+		//update hud to show ammo
+		that.updateHUD();
+		return closestT;
 	};
-	that.collisionDebug = true;
-	that.delta = 0;	
-	that.sJG = function(x,y){player._jumpSpeed = x; player._gravity = y;}
+
+	that.updateHUD = function(){
+		HUD.health.innerHTML = player.getHealth();
+		HUD.ammo.innerHTML = player.getAmmo();
+	};
+
 	return that;
 }());

@@ -4,6 +4,7 @@ function Player(){
 	}
 	
 	//"protected"
+	this._ammo = 20;
 	this._x = 80;
 	this._y = 210;
 	this._walkingSpeed = .3; //in pixels per ms
@@ -27,6 +28,7 @@ function Player(){
 	var animation_set = new AnimationSet(GM.data.animation_sets.Player);
 	var head_anim = new AnimationSet(GM.data.animation_sets.Player_head);
 	var arm_anim = new AnimationSet(GM.data.animation_sets.Player_arms);
+
 	head_anim.switchAnimation("head1");
 	arm_anim.switchAnimation("arms");
 	animation_set.switchAnimation("standing");
@@ -116,8 +118,9 @@ function Player(){
 		}
 		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
 		var prev = null;
+		ctx.strokeStyle = "rgba(255,255,255,.1)";
 		for(var b = bullets; b != null; b = b.next){
-			b.t--;
+			b.t -= GM.game.delta;
 			if(b.t <= 0){
 				if(prev == null){
 					bullets = bullets.next;
@@ -127,7 +130,7 @@ function Player(){
 				}
 			}
 			ctx.beginPath();
-			ctx.moveTo(cax, cay);
+			ctx.moveTo(cax + Math.cos(this._armAngle) * 35, cay - 1 + Math.sin(this._armAngle) * 37); //I apologize for hard-coding coordinates
 			ctx.lineTo(cax + b.xDiff, cay + b.yDiff);
 			ctx.stroke();
 			ctx.closePath();
@@ -142,19 +145,40 @@ function Player(){
 		}
 	};
 
-	this.shoot = function(){
+
+	//adds bullet to linked list
+	function addBullet(angle, hyp){
+		var b = {
+			a: angle,
+			xDiff:  Math.cos(angle) *  hyp,
+			yDiff:  Math.sin(angle) * hyp,
+			t: 40,
+			next: null
+		};
+		if(bullets == null){
+			bullets = b;
+		}
+		else{
+			b.next = bullets;
+			bullets = b;
+		}
+	}
+
+	//if first, add other bullets randomly above and below
+	this.shoot = function(first){
 		if(shotLocked) return;
 		if(shooting) return;
 		if(this._rolling){return;}
+		if(this._ammo <= 0){return;}
 
 		shotLocked = true;
 		if(GM.deps.shot1.currentTime == 0 || GM.deps.shot1.ended){
-			GM.deps.shot1.play();
+			//GM.deps.shot1.play();
 			console.log("1");
 		}
 		else{
 			console.log("2");
-			GM.deps.shot2.play();
+			//GM.deps.shot2.play();
 			
 		}
 		//this._yVel -= 2;
@@ -162,29 +186,36 @@ function Player(){
 		var xOff = GM.game.getXOffset();
 		var cax = this.getCenterArmX();
 		var cay = this.getCenterArmY();
-		var hyp = 1200;//approximate hypotenuse of canvas
-		var newBullet = {
-			xDiff:  Math.cos(this._armAngle) *  hyp,
-			yDiff:  Math.sin(this._armAngle) * hyp,
-			t: 4,
-			next: null
-		};
 		var x1 = cax;
 		var y1 = cay;
-		GM.game.shootGun(x1, y1, this._armAngle);
+
+
+		this._ammo--;
+
+		var shootAngle = this._armAngle;
+		var hyp = GM.game.shootGun(x1, y1, shootAngle);
+		addBullet(shootAngle, hyp);
+
+		shootAngle = this._armAngle + .02;
+		hyp = GM.game.shootGun(x1, y1, shootAngle);
+		addBullet(shootAngle, hyp);
+
+		shootAngle = this._armAngle - .02;
+		hyp = GM.game.shootGun(x1, y1, shootAngle);
+		addBullet(shootAngle, hyp);
+
+
+		
 		//check for collisions with enemies etc. call a GM.game function which handles this
-		if(bullets == null){
-			bullets = newBullet;
-		}
-		else{
-			newBullet.next = bullets;
-			bullets = newBullet;
-		}
+		
+		
 		var that = this;
 		arm_anim.switchAnimation("shot", function(){
 			that.unshoot();
 			arm_anim.switchAnimation("arms");
 		});
+		
+		
 		
 		//animation_set.switchAnimation("swing_sword", doneSwing);
 	};
@@ -253,6 +284,22 @@ function Player(){
 			}
 		}
 	}
+
+	this.hurt = function(amt){
+		Player.prototype.hurt.call(this, amt);
+		GM.game.updateHUD();
+	};
+	this.gainHealth = function(amt){
+		Player.prototype.gainHealth.call(this, amt);
+		GM.game.updateHUD();
+	};
+
+	this.gainAmmo = function(amt){
+		this._ammo += amt;
+	};
+	this.getAmmo = function(amt){
+		return this._ammo;
+	};
 };
 
 GM.utils.inherits(Player, Person);

@@ -41,11 +41,14 @@ GM.enemyList = (function(){
 	}
 
 	that.checkFireBallCollisions = function(m){
+		var coll = [];
 		for(var f = fbRoot; f != null; f = f.next){
 			if(f.explodingOn(m)){
 				f.explode();
+				coll.push(f);
 			}
 		}
+		return coll;
 	}
 
 	that.paintFireBalls = function(ctx){

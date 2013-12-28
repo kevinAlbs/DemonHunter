@@ -25,6 +25,9 @@ function Pickup(type, x){
 			ctx.restore();
 		}
 	}
+	this.getType = function(){
+		return this._type;
+	}
 	this.setType = function(newType){
 		this._type = newType;
 	}

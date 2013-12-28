@@ -55,6 +55,11 @@ function Enemy(p){
 		//call super.update to update hurt state
 		Enemy.prototype.update.apply(this);
 		this.movementUpdate();
+	};
+
+	this.hurt = function(amt){
+		Enemy.prototype.hurt.call(this, amt);
+		this._hurt = false;//we need for multiple bullets to hurt enemies
 	}
 	this.initPos();
 }

@@ -2,6 +2,7 @@ function Person(){
 	if(this == window){
 		return new Person();
 	}
+	this._maxHealth = 100;
 	this._dead = false;
 	this._dying = false;//true when in process of dying (show animation, etc.)
 	this._health = 100;
@@ -59,6 +60,9 @@ Person.prototype.hurt = function(amt){
 Person.prototype.gainHealth = function(amt){
 	if(this._dead){return;}
 	this._health += amt;
+	if(this._health > this._maxHealth){
+		this._health = this._maxHealth;
+	}
 };
 
 Person.prototype.isHurt = function(){
