@@ -56,8 +56,10 @@ function Player(){
 	this.getArmX = function(){return this._x + (8 * this._facing)};
 	this.getArmY = function(){return this._y + 16;}
 
-	this.getCenterArmX = function(){return this.getArmX() + 3;}
-	this.getCenterArmY = function(){return this.getArmY() + 8;}
+	this.getCenterArmX = function(){return this.getArmX() + 3;};
+	this.getCenterArmY = function(){return this.getArmY() + 8;};
+	this.getGunTipX  = function(){return this.getCenterArmX() + Math.cos(this._armAngle) * 35;};
+	this.getGunTipY = function(){return this.getCenterArmY() - 1 + Math.sin(this._armAngle) * 37;};
 
 	this.mouseUpdate = function(mx, my){
 		var xOff = GM.game.getXOffset();
@@ -104,19 +106,8 @@ function Player(){
 		var ay = this.getArmY();
 		var cax = this.getCenterArmX() - xOff;
 		var cay = this.getCenterArmY();
-		if(this._hurt){
-			ctx.globalAlpha = .5;
-		}
-		
-		if(!this._rolling){
-			animation_set.drawFrame(this._x - xOff - (14 * this._facing), this._y + 19, this._width, this._height, ctx, this._facing);
-			head_anim.drawFrame(this._x - xOff - (4 * this._facing), this._y + 2, this._width, this._height, ctx, this._facing);
-			arm_anim.drawFrame(ax, ay, this._width, this._height, ctx, this._facing, this._armAngle, cax-ax, cay-ay); //rotate about center
-		}
-		else{
-			animation_set.drawFrame(this._x - xOff - (14 * this._facing), this._y + 5, this._width, this._height, ctx, this._facing);
-		}
-		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
+		var gtx = this.getGunTipX() - xOff;
+		var gty = this.getGunTipY();
 		var prev = null;
 		ctx.strokeStyle = "rgba(255,255,255,.1)";
 		for(var b = bullets; b != null; b = b.next){
@@ -130,12 +121,25 @@ function Player(){
 				}
 			}
 			ctx.beginPath();
-			ctx.moveTo(cax + Math.cos(this._armAngle) * 35, cay - 1 + Math.sin(this._armAngle) * 37); //I apologize for hard-coding coordinates
-			ctx.lineTo(cax + b.xDiff, cay + b.yDiff);
+			ctx.moveTo(gtx, gty);
+			ctx.lineTo(gtx + b.xDiff, gty + b.yDiff);
 			ctx.stroke();
 			ctx.closePath();
 			prev = b;
 		}
+		if(this._hurt){
+			ctx.globalAlpha = .5;
+		}
+		
+		if(!this._rolling){
+			animation_set.drawFrame(this._x - xOff - (14 * this._facing), this._y + 19, this._width, this._height, ctx, this._facing);
+			head_anim.drawFrame(this._x - xOff - (4 * this._facing), this._y + 2, this._width, this._height, ctx, this._facing);
+			arm_anim.drawFrame(ax, ay, this._width, this._height, ctx, this._facing, this._armAngle, cax-ax, cay-ay); //rotate about center
+		}
+		else{
+			animation_set.drawFrame(this._x - xOff - (14 * this._facing), this._y + 5, this._width, this._height, ctx, this._facing);
+		}
+		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
 		//bullets = null;
 		if(GM.debug){
 			//ctx.fillText(Math.round(this._x) + "," + Math.round(this._y), this._x - GM.game.getXOffset(), this._y - 10);
@@ -186,8 +190,8 @@ function Player(){
 		var xOff = GM.game.getXOffset();
 		var cax = this.getCenterArmX();
 		var cay = this.getCenterArmY();
-		var x1 = cax;
-		var y1 = cay;
+		var x1 = this.getGunTipX(); //again, apologies for hard coding
+		var y1 = this.getGunTipY();
 
 
 		this._ammo--;
