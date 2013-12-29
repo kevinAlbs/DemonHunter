@@ -11,6 +11,8 @@ function Enemy(p){
 	animation_set.switchAnimation("idle");
 	this._facing = -1;
 	this._attachedPlatform = p;
+	this._PACE_TIME = 800;
+	this._paceTimer = this._PACE_TIME;
 
 	this.initPos = function(){
 		if(this._attachedPlatform){
@@ -31,9 +33,12 @@ function Enemy(p){
 	this._die = function(){
 		Enemy.prototype._die.call(this);
 	}
+	this.activate = function(){
+		this._activated = true;
+	}
 	this.isActivated = function(){
 		if(GM.viewport.inScreen(this) && !this._activated){
-			this._activated = true;
+			this.activate();
 		}
 		return this._activated;
 	}

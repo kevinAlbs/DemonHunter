@@ -183,6 +183,7 @@ GM.enemyList = (function(){
 	that.destroy = function(){
 		root = null;
 		rear = null;
+		fbRoot = null;
 	};
 	
 	return that;

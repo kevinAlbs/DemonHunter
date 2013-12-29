@@ -3,6 +3,9 @@
 - Basics of enemy sprites [done]
 - Create the map
 - Have enemies move around when visible on platform
+- Enemy death with height falling so bullets do not pass through until death completes
+- Player death and restarting
+- Add loading to builder
 
 ## TODO ##
 

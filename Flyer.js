@@ -2,7 +2,7 @@ function Flyer(){
 	this._width = 30, 
 	this._height = 80;
 	this._walkingSpeed = .04;
-	this._health = 130; //todo random health?
+	this._health = 90 + Math.random() * 50; //todo random health?
 	this._state = "idle";
 	this._noPlatformCollision = true;
 

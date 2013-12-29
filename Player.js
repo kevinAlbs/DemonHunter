@@ -224,19 +224,6 @@ function Player(){
 		var x1 = this.getGunTipX(); //again, apologies for hard coding
 		var y1 = this.getGunTipY();
 
-		GM.game.generateParticles({
-			x: x1 - xOff,
-			y: y1,
-			num: 1,
-			angle: Math.PI/-2,
-			angle_variance: Math.PI/2,
-			time: 500,
-			time_variance: 100,
-			init_speed_x: .05, //px/ms
-			init_speed_y: .1,
-			color: "#FF0"
-		})
-
 		this._ammo--;
 
 		var shootAngle = this.getShootAngle();
@@ -260,6 +247,19 @@ function Player(){
 		arm_anim.switchAnimation("shot", function(){
 			that.unshoot();
 			arm_anim.switchAnimation("arms");
+			//bullet falling
+			GM.game.generateParticles({
+				x: that.getGunTipX() - GM.game.getXOffset(),
+				y: that.getGunTipY(),
+				num: 1,
+				angle: Math.PI/-2,
+				angle_variance: Math.PI/2,
+				time: 500,
+				time_variance: 100,
+				init_speed_x: .05, //px/ms
+				init_speed_y: .1,
+				color: "#FF0"
+			})
 		});
 		
 		

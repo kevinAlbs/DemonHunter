@@ -14,8 +14,8 @@ function Zombie(p){
 
 	this._die = function(){
 		Zombie.prototype._die.call(this);
-		this._width = 50;
-		this._height = 20;
+		this._state="dying";
+		//this._height = 20;
 	}
 	this.paint = function(ctx){
 		var xOff = GM.game.getXOffset();
@@ -23,7 +23,7 @@ function Zombie(p){
 			ctx.globalAlpha = .5;
 		}
 		animation_set.drawFrame(this._x - xOff - (-15 * this._facing), this._y, this._width, this._height, ctx, -1 * this._facing);
-		//ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
+		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
 		if(this._hurt){
 			ctx.globalAlpha = 1;
 		}
@@ -79,6 +79,10 @@ function Zombie(p){
 			break;
 			case "dying":
 				//show dying animation
+				if(this._height > 20){
+					var change = .25 * GM.game.delta;
+					this._height -= change;
+				}
 			break;
 		}
 

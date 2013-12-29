@@ -24,8 +24,6 @@ function FireBreather(p){
 
 	this._die = function(){
 		Zombie.prototype._die.call(this);
-		this._width = 50;
-		this._height = 20;
 	}
 	this.paint = function(ctx){
 		var xOff = GM.game.getXOffset();
@@ -119,6 +117,11 @@ function FireBreather(p){
 			break;
 			case "dying":
 				//show dying animation
+				if(this._height > 20){
+					var change = .25 * GM.game.delta;
+					this._height -= change;
+					this._y += change;
+				}
 			break;
 		}
 	}

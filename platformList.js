@@ -117,6 +117,9 @@ GM.platformList = (function(){
 			for(var j = 0; j < ps[i].spikes.length; j++){
 				p.addSpike(ps[i].spikes[j].x);
 			}
+			for(var j = 0; j < ps[i].pickups.length; j++){
+				p.addPickup(new Pickup(ps[i].pickups[j].type, ps[i].pickups[j].x));
+			}
 			if(root == null){
 				root = p;
 				p.next = null;

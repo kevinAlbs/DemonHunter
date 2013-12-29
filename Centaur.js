@@ -3,9 +3,11 @@ function Centaur(p){
 	this._height = 89;
 	this._walkingSpeed = .2;
 	this._jumpSpeed = -.45;
-	this._health = 60;
+	this._health = 25+Math.random()*10;
 	this._state = "idle";
 	this._attachedPlatform = p;
+
+
 	
 	var animation_set = new AnimationSet(GM.data.animation_sets.Centaur);
 	animation_set.switchAnimation("idle");
@@ -28,6 +30,11 @@ function Centaur(p){
 			ctx.globalAlpha = 1;
 		}
 	}
+	this.activate = function(){
+		Centaur.prototype.activate.call(this);
+		this._state="idle";
+		//this.moveX(1);
+	};
 	this.update = function(){
 		if(!this._activated){
 			return;
@@ -68,6 +75,20 @@ function Centaur(p){
 			case "idle":
 				animation_set.switchAnimation("idle");
 			break;
+			case "pacing":
+				animation_set.switchAnimation("running");
+				this._paceTimer -= GM.game.delta;
+				if(this._paceTimer < 0){
+					if(this._xVel < 0){
+						this.moveX(1);
+					}
+					else{
+						this.moveX(-1);
+					}
+					this._paceTimer = this._PACE_TIME;
+				}
+				
+			break;
 			case "follow_player":
 				animation_set.switchAnimation("running");
 				if(dist > threshold){
@@ -80,6 +101,10 @@ function Centaur(p){
 			break;
 			case "dying":
 				//show dying animation
+				if(this._height > 20){
+					var change = .25 * GM.game.delta;
+					this._height -= change;
+				}
 			break;
 		}
 	}

@@ -170,11 +170,18 @@ GM.data = {
 		Centaur:{
 			idle:[
 				{
-				x: 0,
-				y: 475,
-				width: 103,
-				height: 89,
-				time: 40
+					x: 0,
+					y: 475,
+					width: 103,
+					height: 89,
+					time: 500
+				},
+				{
+					x: 103,
+					y: 475,
+					width: 103,
+					height: 89,
+					time: 500
 				}
 			],
 			running:[

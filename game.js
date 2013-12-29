@@ -168,7 +168,6 @@ GM.game = (function(){
 		player = null;
 		GM.platformList.destroy();
 		GM.enemyList.destroy();
-		
 	}
 	function checkCollisions(){
 		var i = GM.enemyList.checkFireBallCollisions(player);
@@ -540,7 +539,7 @@ GM.game = (function(){
 		}
 		if(closestE != null){
 			console.log(closestT);
-			closestE.hurt(35);
+			closestE.hurt(10);
 			that.generateParticles({
 				x: xColl - that.getXOffset(),
 				y: yColl,

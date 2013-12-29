@@ -15,7 +15,9 @@ function BuilderScreen(){
 		"b": "firebreather",
 		"t": "centaur",
 		"s": "spike",
-		"e": "export"
+		"e": "export",
+		"a": "ammo",
+		"h": "health"
 	};
 
 	var container = $("#scroller");
@@ -131,6 +133,24 @@ function BuilderScreen(){
 			case "move":
 				container.draggable("enable");
 			break;
+			case "ammo":
+				var newObj = $("<div></div>").addClass("ammo object").css({
+					left: x + "px",
+					top: y + "px"
+				});
+				newObj.draggable({containment: container, snap: ".platform", snapMode: "outer"});
+				selectObj(newObj);
+				container.append(newObj);
+			break;
+			case "health":
+				var newObj = $("<div></div>").addClass("health object").css({
+					left: x + "px",
+					top: y + "px"
+				});
+				newObj.draggable({containment: container, snap: ".platform", snapMode: "outer"});
+				selectObj(newObj);
+				container.append(newObj);
+			break;
 			case "zombie":
 				var newObj = $("<div></div>").addClass("zombie object").css({
 					left: x + "px",
@@ -244,23 +264,38 @@ function BuilderScreen(){
 		console.log(ps.size() + " platforms");
 		//make list of objects
 		var platforms = [];
+		var pickups = [];
 		for(var i = 0; i < ps.size(); i++){
 			var p = $(ps.get(i));
 			var ss = getObjectsOn(p);
 			var spikes =[];
 			for(var j = 0; j < ss.length; j++){
 				var s = $(ss[j]);
-				if(!s.hasClass("spike")) continue;
-				spikes.push({
-					x: s.position().left
-				});
+				if(s.hasClass("spike")){
+					spikes.push({
+						x: s.position().left
+					});
+				}
+				else if(s.hasClass("ammo")){
+					pickups.push({
+						x: s.position().left,
+						type: "ammo"
+					});
+				}
+				else if(s.hasClass("health")){
+					pickups.push({
+						x: s.position().left,
+						type: "health"
+					});
+				}
 			}
 			spikes = sort(spikes);
 			platforms.push({
 				x: p.position().left,
 				y: p.position().top,
 				width: p.width(),
-				spikes: spikes
+				spikes: spikes,
+				pickups: pickups
 			});
 		}
 		platforms = sort(platforms);
