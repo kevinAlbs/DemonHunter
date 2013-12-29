@@ -118,7 +118,8 @@ GM.platformList = (function(){
 				p.addSpike(ps[i].spikes[j].x);
 			}
 			for(var j = 0; j < ps[i].pickups.length; j++){
-				p.addPickup(new Pickup(ps[i].pickups[j].type, ps[i].pickups[j].x));
+				var pickup = new Pickup(ps[i].pickups[j].type, ps[i].pickups[j].x);
+				p.addPickup(pickup);
 			}
 			if(root == null){
 				root = p;

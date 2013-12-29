@@ -109,7 +109,7 @@ function BuilderScreen(){
 	function handleMouseup(e){
 
 	}
-	function switchTool(t,x,y){
+	function switchTool(t,x,y,w){
 		console.log(t);
 		tool = t;
 		$("#toolbar span").html("Tool: " + tool);
@@ -208,6 +208,9 @@ function BuilderScreen(){
 					left: x + "px",
 					top:  y + "px"
 				});
+				if(w){
+					newObj.css("width", w + "px");
+				}
 				newObj.draggable({containment: container}).resizable({handles: "e,w", containment: container });
 				selectObj(newObj);
 				container.append(newObj);
@@ -258,17 +261,49 @@ function BuilderScreen(){
 		}
 		return sorted;
 	}
+	this.importJson = function(obj){
+		console.log(obj);
+		var spikeHeight = 20, //may need to change if enemy/object sizes change
+			ammoHeight = 10,
+			healthHeight = 10;
+
+		var heights = {
+			"spike": 20,
+			"ammo": 10,
+			"health": 10
+		};
+
+		//remove the initial platform
+		$(".platform.init").detach();
+		$(".player").css({
+			"left": obj.playerX + "px",
+			"top" : obj.playerY + "px"
+		});
+		for(var i = 0; i < obj.platforms.length; i++){
+			switchTool("platform", obj.platforms[i].x, obj.platforms[i].y,  obj.platforms[i].width);
+			for(var j = 0; j < obj.platforms[i].spikes.length; j++){
+				switchTool("spike", obj.platforms[i].spikes[j].x, obj.platforms[i].y - heights["spike"]);
+			}
+			for(var j = 0; j < obj.platforms[i].pickups.length; j++){
+				switchTool(obj.platforms[i].pickups[j].type, obj.platforms[i].pickups[j].x, obj.platforms[i].y - heights[obj.platforms[i].pickups[j].type]);
+			}
+		}
+		for(var i = 0; i < obj.enemies.length; i++){
+			switchTool(obj.enemies[i].type, obj.enemies[i].x, obj.enemies[i].y);
+		}
+	}
+
 	this.exportJson = function(){
 		//sort platforms by x, give them spikes (sorting unnecessary), output
 		var ps = $(".platform");
 		console.log(ps.size() + " platforms");
 		//make list of objects
 		var platforms = [];
-		var pickups = [];
 		for(var i = 0; i < ps.size(); i++){
 			var p = $(ps.get(i));
 			var ss = getObjectsOn(p);
 			var spikes =[];
+			var pickups = [];
 			for(var j = 0; j < ss.length; j++){
 				var s = $(ss[j]);
 				if(s.hasClass("spike")){
@@ -353,6 +388,6 @@ function BuilderScreen(){
 		document.getElementById("screen-builder").style.display = "none";
 		this.toggleListeners("off");
 	};
-
+	this.init();
 };
 GM.utils.inherits(BuilderScreen, Screen);

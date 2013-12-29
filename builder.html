@@ -159,6 +159,7 @@
 <script>
 	var GM = {}; //mediator for gameplay, screens, dependency loading
 	GM.debug = true;
+	var fileInput = null; //used for loading
 	//I don't quite like the sequential file loading, but it'll do for now
 	//Also, the naming scheme is Capital first for class, lowercase for singleton (just object)
 </script>
@@ -173,10 +174,11 @@
 <script src="jquery-ui/ui/jquery.ui.droppable.js"></script>
 <script src="jquery-ui/ui/jquery.ui.resizable.js"></script>
 
+<!-- file input -->
+<script src="potentialBeginning.js"></script>
 <script src="data.js"></script>
 <script src="utils.js"></script>
 <script src="GM.js"></script>
-<script src="testBuilder.js"></script>
 <script src="Screen.js"></script>
 <script src="GameScreen.js"></script>
 <script src="LoadingScreen.js"></script>
@@ -209,6 +211,8 @@
 var bScreen = new BuilderScreen(),
 	gScreen = new GameScreen();
 var flag = false;
+
+
 function toggleScreen(){
 	if(GM.curScreen == bScreen){
 		GM.switchScreen(gScreen);
@@ -229,17 +233,25 @@ function build(){
 	GM.switchScreen(new LoadingScreen(bScreen));
 }
 
-function test(){
+function loadJson(input){
 	GM.data.builder = {};
-	GM.data.builder.output = test1;
-	GM.switchScreen(new LoadingScreen(gScreen));
+	GM.data.builder.output = input;
+	bScreen.importJson(input);
+	GM.switchScreen(new LoadingScreen(bScreen));
 }
 
 function pageLoaded(){
 	//onces deps are loaded, start game
-	//test();
-	GM.switchScreen(new LoadingScreen(bScreen));
+	if(fileInput != null){
+		loadJson(fileInput);
+	}
+	else{
+		GM.switchScreen(new LoadingScreen(bScreen));
+	}
 }
+window.onbeforeunload = function() {
+        return "Are you sure you want to leave?";
+  }
 window.addEventListener("load", pageLoaded);
 </script>
 </body>
