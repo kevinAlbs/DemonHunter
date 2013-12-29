@@ -58,7 +58,6 @@ function Centaur(p){
 			disp = 0;
 		}
 		dist = Math.abs(disp);
-		var pp = GM.game.getPlayerPlatform();
 		if(this._dead){
 			if(this._dying){
 				//show death animation
@@ -68,7 +67,14 @@ function Centaur(p){
 				this._state = "dead";
 			}
 		}
-		if(pp == this._attachedPlatform && !this._dead){
+		if(this._followPlayerDistance == 0 && !this._dead){
+			//follow player on if she is on same platform
+			var pp = GM.game.getPlayerPlatform();
+			if(pp == this._attachedPlatform){
+				this._state = "follow_player";
+			}	
+		}
+		else if(dist < this._followPlayerDistance && !this._dead){
 			this._state = "follow_player";
 		}
 		switch(this._state){
@@ -95,7 +101,7 @@ function Centaur(p){
 					//move towards the player
 					this.moveX(disp/dist);
 				}
-				else{
+				else if(GM.game.getPlayerY() + GM.game.getPlayerHeight() == this._y + this._height){
 					this.jump();
 				}
 			break;

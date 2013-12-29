@@ -4,7 +4,7 @@ function Player(){
 	}
 	
 	//"protected"
-	this._ammo = 20;
+	this._ammo = 30;
 	this._x = 80;
 	this._y = 210;
 	this._walkingSpeed = .3; //in pixels per ms

@@ -7,6 +7,7 @@ function Zombie(p){
 	this._attachedPlatform = p;
 	var animation_set = new AnimationSet(GM.data.animation_sets.Zombie);
 	animation_set.switchAnimation("idle");
+	this._followPlayerDistance = 0;
 
 	function behave(){
 
@@ -34,8 +35,6 @@ function Zombie(p){
 		}
 		//call super.update to update hurt state
 		Zombie.prototype.update.apply(this);
-		//check whether it is on screen
-		var inScreen = GM.game.inScreen(this);
 		var playerX = GM.game.getPlayerX();
 		var playerWidth = GM.game.getPlayerWidth();
 		var leftDisp = (playerX + playerWidth) - this._x; //players displacement
@@ -53,7 +52,7 @@ function Zombie(p){
 			disp = 0;
 		}
 		dist = Math.abs(disp);
-		var pp = GM.game.getPlayerPlatform();
+		
 		if(this._dead){
 			if(this._dying){
 				//show death animation
@@ -63,9 +62,17 @@ function Zombie(p){
 				this._state = "dead";
 			}
 		}
-		if(pp == this._attachedPlatform && !this._dead){
+		if(this._followPlayerDistance == 0 && !this._dead){
+			//follow player on if she is on same platform
+			var pp = GM.game.getPlayerPlatform();
+			if(pp == this._attachedPlatform){
+				this._state = "follow_player";
+			}	
+		}
+		else if(dist < this._followPlayerDistance && !this._dead){
 			this._state = "follow_player";
 		}
+
 		switch(this._state){
 			case "idle":
 				animation_set.switchAnimation("idle");

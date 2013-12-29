@@ -101,15 +101,31 @@ function BuilderScreen(){
 			switchTool(shortcuts[c], curX, curY);
 		}
 	}
-	function handleClick(e){
+
+	function handleTextBlur(e){
+		var tb = $(e.target);
+		var obj = tb.parent();
+		var bar = obj.find(".radius");
+		var newWidth = 2 * parseInt(tb.val()) + obj.width();
+		bar.width(newWidth);
+		bar.css({
+			left: (obj.width()/2 - newWidth/2) + "px"
+		});
 	}
+
+	function handleClick(e){
+
+	}
+
 	function handleMousedown(e){
 
 	}
 	function handleMouseup(e){
 
 	}
-	function switchTool(t,x,y,w){
+	//w is width
+	//d is enemy follow distance
+	function switchTool(t,x,y,w,d){
 		console.log(t);
 		tool = t;
 		$("#toolbar span").html("Tool: " + tool);
@@ -152,28 +168,37 @@ function BuilderScreen(){
 				container.append(newObj);
 			break;
 			case "zombie":
-				var newObj = $("<div></div>").addClass("zombie object").css({
+				var newObj = $("<div><input type='text' /><div class='radius'></div></div>").addClass("zombie object").css({
 					left: x + "px",
 					top: y + "px"
 				});
+				if(d){
+					newObj.find("input[type=text]").val(d).blur();
+				}
 				newObj.draggable({containment: container, snap: ".platform", snapMode: "outer"});
 				selectObj(newObj);
 				container.append(newObj);
 			break;
 			case "firebreather":
-				var newObj = $("<div></div>").addClass("firebreather object").css({
+				var newObj = $("<div><input type='text' /><div class='radius'></div></div>").addClass("firebreather object").css({
 					left: x + "px",
 					top: y + "px"
 				});
+				if(d){
+					newObj.find("input[type=text]").val(d).blur();
+				}
 				newObj.draggable({containment: container, snap: ".platform", snapMode: "outer"});
 				selectObj(newObj);
 				container.append(newObj);
 			break;
 			case "centaur":
-				var newObj = $("<div></div>").addClass("centaur object").css({
+				var newObj = $("<div><input type='text' /><div class='radius'></div></div>").addClass("centaur object").css({
 					left: x + "px",
 					top: y + "px"
 				});
+				if(d){
+					newObj.find("input[type=text]").val(d).blur();
+				}
 				newObj.draggable({containment: container, snap: ".platform", snapMode: "outer"});
 				selectObj(newObj);
 				container.append(newObj);
@@ -195,13 +220,6 @@ function BuilderScreen(){
 				newObj.draggable({containment: container, snap: ".platform", snapMode: "outer"});
 				selectObj(newObj);
 				container.append(newObj);
-			break;
-			case "firebreather":
-			//TODO: implement until sprites are finalized
-			break;
-			case "flyer":
-			break;
-			case "centaur":
 			break;
 			case "platform":
 				var newObj = $("<div></div>").addClass("platform object").css({
@@ -233,10 +251,12 @@ function BuilderScreen(){
 		if(fn == "on"){
 			$("#toolbar").delegate("button", "click", handleToolbar);
 			container.delegate(".object", "click", handleObjectClick);
+			container.delegate(".object input[type=text]", "blur", handleTextBlur);
 		}
 		else{
 			$("#toolbar").undelegate("button", "click", handleToolbar);	
 			container.undelegate(".object", "click", handleObjectClick);
+			container.undelegate(".object input[type=text]", "blur", handleTextBlur)
 			container.draggable("disable");
 		}
 
@@ -289,7 +309,7 @@ function BuilderScreen(){
 			}
 		}
 		for(var i = 0; i < obj.enemies.length; i++){
-			switchTool(obj.enemies[i].type, obj.enemies[i].x, obj.enemies[i].y);
+			switchTool(obj.enemies[i].type, obj.enemies[i].x, obj.enemies[i].y, 0, obj.enemies[i].dist);
 		}
 	}
 
@@ -350,11 +370,19 @@ function BuilderScreen(){
 			else if(e.hasClass("flyer")){
 				type = "flyer";
 			}
+			var dist = e.find("input[type=text]");
+			if(dist.size() > 0){
+				dist = dist.val();
+			}
+			else{
+				dist = 0;
+			}
 
 			enemies.push({
 				x: e.position().left,
 				y: e.position().top,
-				type: type
+				type: type,
+				dist: dist
 			});
 		}
 		enemies = sort(enemies);

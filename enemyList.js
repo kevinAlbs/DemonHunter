@@ -79,6 +79,7 @@ GM.enemyList = (function(){
 			else if(es[i].type == "flyer"){
 				e = new Flyer();
 			}
+			e.setFollowPlayerDistance(es[i].dist);
 			e.setX(es[i].x);
 			e.setY(es[i].y);
 			e.setPlatform(GM.platformList.getPlatformBelow(e));

@@ -41,7 +41,24 @@
 		width: 100px;
 		height: 10px;
 	}
-
+	.object input[type=text]{
+		position: absolute;
+		bottom: -15px;
+		border: 1px black solid;	
+		width: 30px;
+		z-index: 6;
+		display: none;
+	}
+	.object .radius{
+		height: 5px;
+		background: rgba(100,100,100,.5);
+		position: absolute;
+		left: 0px;
+		top: 10px;
+	}
+	.object:hover input[type=text], .object input[type=text]:focus{
+		display: block;
+	}
 	.zombie{
 		width: 15px;
 		height: 87px;
@@ -114,7 +131,7 @@
 		<button value="firebreather" data-cursor="auto">Firebreather (b)</button>
 		<button value="flyer" data-cursor="auto">Flyer (f)</button>
 		<button value="centaur" data-cursor="auto">Centaur (t)</button>
-		<button value="spike" data-cursor="auto">Spike (d)</button>
+		<button value="spike" data-cursor="auto">Spike (s)</button>
 		<button value="ammo" data-cursor="auto">Ammo (a)</button>
 		<button value="health" data-cursor="auto">Health (h)</button>
 		<button value="delete" data-cursor="url('images/delete.png'), auto">Delete (d)</button>
@@ -175,7 +192,8 @@
 <script src="jquery-ui/ui/jquery.ui.resizable.js"></script>
 
 <!-- file input -->
-<script src="potentialBeginning.js"></script>
+<script src="mapTesting.js"></script>
+
 <script src="data.js"></script>
 <script src="utils.js"></script>
 <script src="GM.js"></script>

@@ -80,7 +80,6 @@ function FireBreather(p){
 			disp = 0;
 		}
 		dist = Math.abs(disp);
-		var pp = GM.game.getPlayerPlatform();
 		if(this._dead){
 			if(this._dying){
 				//show death animation
@@ -90,25 +89,31 @@ function FireBreather(p){
 				this._state = "dead";
 			}
 		}
-		if(pp == this._attachedPlatform && !this._dead){
+		if(this._followPlayerDistance == 0 && !this._dead){
+			//follow player on if she is on same platform
+			var pp = GM.game.getPlayerPlatform();
+			if(pp == this._attachedPlatform){
+				this._state = "follow_player";
+			}	
+		}
+		else if(dist < this._followPlayerDistance && !this._dead){
 			this._state = "follow_player";
-			if(!shotFire && shootDelay < 0){
-				shotFire = true;
-				var that = this;
-				arm_animation.switchAnimation("throwing", function(){
-					GM.game.addFireBall(that.getX() + (17 * that._facing), that.getY() + 16 + bounce, .275 * that._facing, 0); 	
-					arm_animation.switchAnimation("idle");
-					shootDelay = SHOOT_DELAY;
-					shotFire = false;
-				});
-				
-			}
 		}
 		switch(this._state){
 			case "idle":
 				animation_set.switchAnimation("walking");
 			break;
 			case "follow_player":
+				if(!shotFire && shootDelay < 0){
+					shotFire = true;
+					var that = this;
+					arm_animation.switchAnimation("throwing", function(){
+						GM.game.addFireBall(that.getX() + (17 * that._facing), that.getY() + 16 + bounce, .275 * that._facing, 0); 	
+						arm_animation.switchAnimation("idle");
+						shootDelay = SHOOT_DELAY;
+						shotFire = false;
+					});
+				}
 				animation_set.switchAnimation("walking");
 				if(dist > threshold){
 					//move towards the player

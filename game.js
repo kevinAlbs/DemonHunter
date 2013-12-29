@@ -202,7 +202,7 @@ GM.game = (function(){
 					that.updateHUD();
 				}
 				else if(pi.getType() == "ammo"){
-					player.gainAmmo(10);
+					player.gainAmmo(20);
 					that.updateHUD();
 				}
 			}
@@ -426,6 +426,7 @@ GM.game = (function(){
 	that.getPlayerY = function(){return player.getY();};
 	that.getPlayerPlatform = function(){return player.whichPlatform();};
 	that.getPlayerWidth = function(){return player.getWidth();};
+	that.getPlayerHeight = function(){return player.getHeight();};
 	that.generateParticles = function(stg){
 		//to be implemented
 		GM.particleList.generateParticles(stg);

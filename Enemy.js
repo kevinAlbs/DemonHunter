@@ -13,6 +13,11 @@ function Enemy(p){
 	this._attachedPlatform = p;
 	this._PACE_TIME = 800;
 	this._paceTimer = this._PACE_TIME;
+	this._followPlayerDistance = 0;//0 means when player is on the same platform
+
+	this.setFollowPlayerDistance = function(val){
+		this._followPlayerDistance = val;
+	};
 
 	this.initPos = function(){
 		if(this._attachedPlatform){
