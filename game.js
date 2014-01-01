@@ -7,6 +7,7 @@
  */
 GM.game = (function(){
 	var that = {};
+	that.mapTest = true;
 	that.bulletsCollideWithPlatforms = true;
 	that.collisionDebug = true; //when I was testing, TODO: remove this
 	that.delta = 0;	
@@ -123,10 +124,64 @@ GM.game = (function(){
 	}
 
 	//data is exported object from builder
-	//if xStart is provided, it will start building from there
-	function buildFromData(data, xStart){
-		GM.platformList.importPlatforms(GM.data.builder.output.platforms);
-		GM.enemyList.importEnemies(GM.data.builder.output.enemies);
+	function buildFromData(data){
+		GM.platformList.importPlatforms(data.platforms);
+		GM.enemyList.importEnemies(data.enemies);
+	}
+
+	//update map data to start at specified xOff
+	function updateXCoords(frag, xOff){
+		for(var i = 0; i < frag.platforms.length; i++){
+			var p = frag.platforms[i];
+			p.x += xOff;
+			for(var j = 0; j < p.spikes.length; j++){
+				p.spikes[j].x += xOff;
+			}
+			for(var j = 0; j < p.pickups.length; j++){
+				p.pickups[j].x += xOff;
+			}
+		}
+		for(var i = 0; i < frag.enemies.length; i++){
+			frag.enemies[i].x += xOff;
+		}
+	}
+
+	function makeGlue(){
+		//TODO
+	}
+
+	//tie all map fragments together with glue
+	function buildMap(){
+		var xOff = 0;
+		//for now just append all of them
+		var frags = GM.data.mapFragments;
+		if(!frags || frags.length == 0){
+			return;//need at least one fragment
+		}
+		//arrange by difficulty
+		var diff = {1:[],2:[],3:[],4:[],5:[]};
+		for(var i = 0; i < frags.length; i++){
+			diff[frags[i].difficulty].push(frags[i]);
+		}
+		//now diff is a map from difficulty to map fragments
+		
+		var output = {
+			platforms: [],
+			enemies: [],
+			playerX: -1,
+			playerY: -1
+		};
+		output.playerX = frags[0].data.playerX;
+		output.playerY = frags[0].data.playerY;
+		for(var i = 0; i < frags.length; i++){
+			updateXCoords(frags[i].data, xOff);
+			var last = frags[i].data.platforms[frags[i].data.platforms.length-1];
+			xOff = last.x + last.width;
+			output.platforms = output.platforms.concat(frags[i].data.platforms);
+			output.enemies = output.enemies.concat(frags[i].data.enemies);
+		}
+		console.log(xOff); //~4.28 minutes
+		buildFromData(output);
 	}
 
 	function init(){
@@ -137,8 +192,12 @@ GM.game = (function(){
 		cWidth = cnv.width;
 		cHeight = cnv.height;
 		mapWidth = 50000;//in blocks
-		
-		if(GM.data.hasOwnProperty("builder")){
+
+		if(GM.game.mapTest){
+			buildMap();
+			player = new Player();
+		}
+		else if(GM.data.hasOwnProperty("builder")){
 			//builder debugging, import data
 			buildFromData(GM.data.builder.output);
 			player = new Player();
@@ -191,7 +250,7 @@ GM.game = (function(){
 			}
 			//else
 			if(p.collisionWithSpikes(player) != null){
-				player.hurt(10);
+				player.hurt(1);
 			}
 			//check collisions with pickups
 			var pickups = p.collisionWithPickups(player, true);

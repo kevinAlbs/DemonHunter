@@ -33,6 +33,7 @@ function Platform(){
 	this.collisionWithSpikes = function(m){
 		for(var node = this.spikes; node != null; node = node.next){
 			if(node.collidingWith(m)){
+				console.log(node);
 				return node;
 			}
 		}
