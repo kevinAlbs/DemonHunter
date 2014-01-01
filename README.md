@@ -26,12 +26,11 @@
 - Have enemies move around when visible on platform (back and forth?, also so they can jump down on you possibly)
 
 ### Design ###
-- sprite for centaur [done], fire breather, flyer
+- sprite for centaur [done], fire breather, flyer [done]
 - trees and clouds in background
-- sprites for deaths, spikes, platforms
-- bullets are now limited
-- background
-- change shirt color
+- sprites for deaths, spikes, platforms, pickups
+- background [done]
+- possible bg music http://opengameart.org/content/thrust-sequence
 
 At this point, the basic wireframe running should be nearly complete
 
