@@ -145,9 +145,55 @@ GM.game = (function(){
 			frag.enemies[i].x += xOff;
 		}
 	}
-
-	function makeGlue(){
+	/*
+		This function puts platforms between to fragments so it is possible to get from the end of one fragment to the beginning of the other
+		It will also generate health/ammo if the player's current amount is below a certain threshold.
+	*/
+	function glueFragmentData(part1, part2){
 		//TODO
+		//calculate difference
+		console.log(part1.length);
+		if(part1.platforms.length == 0){
+			return part2;
+		}
+		
+		var last = part1.platforms[part1.platforms.length - 1];
+		/*
+		var first = part2.platforms[0];
+		var diff = first.y - last.y;//if positive, max y distance is 90 pixels
+		var numPlatforms = Math.ceil(Math.abs(diff) / 70);//70 should be easy
+		var curX = last.x + last.width;
+		var curY = last.y;
+		console.log(numPlatforms);
+		for(var i = 0; i < numPlatforms; i++){
+			curX += 70;
+			curY += diff > 0 ? 70 : -70;
+			curWidth = 200;
+			var p = {
+				x: curX, 
+				y: curY,
+				width: curWidth,
+				spikes: [],
+				pickups: []
+			};
+			if(i == 0){
+				//if player needs health/ammo badly add it
+			}
+			curX += curWidth;
+			part1.platforms.push(p);
+			last = p;
+		}
+		*/
+		var xOff = last.x + last.width + 70;
+		updateXCoords(part2, xOff);
+
+		var finalFragment = {
+			playerX: part1.playerX,
+			playerY: part1.playerY,
+			platforms: part1.platforms.concat(part2.platforms),
+			enemies: part1.enemies.concat(part2.enemies)
+		};
+		return finalFragment;
 	}
 
 	//tie all map fragments together with glue
@@ -164,7 +210,7 @@ GM.game = (function(){
 			diff[frags[i].difficulty].push(frags[i]);
 		}
 		//now diff is a map from difficulty to map fragments
-		
+
 		var output = {
 			platforms: [],
 			enemies: [],
@@ -174,11 +220,7 @@ GM.game = (function(){
 		output.playerX = frags[0].data.playerX;
 		output.playerY = frags[0].data.playerY;
 		for(var i = 0; i < frags.length; i++){
-			updateXCoords(frags[i].data, xOff);
-			var last = frags[i].data.platforms[frags[i].data.platforms.length-1];
-			xOff = last.x + last.width;
-			output.platforms = output.platforms.concat(frags[i].data.platforms);
-			output.enemies = output.enemies.concat(frags[i].data.enemies);
+			output = glueFragmentData(output, frags[i].data);
 		}
 		console.log(xOff); //~4.28 minutes
 		buildFromData(output);
@@ -250,7 +292,7 @@ GM.game = (function(){
 			}
 			//else
 			if(p.collisionWithSpikes(player) != null){
-				player.hurt(1);
+				player.hurt(10);
 			}
 			//check collisions with pickups
 			var pickups = p.collisionWithPickups(player, true);

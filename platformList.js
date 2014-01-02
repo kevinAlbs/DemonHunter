@@ -134,6 +134,21 @@ GM.platformList = (function(){
 			}
 		}
 	};
+
+	this.generatePlatform = function(x,y,width){
+		var newObj = new Platform();
+		newObj.setX(x);
+		newObj.setY(y);
+		newObj.setWidth(width);
+		if(root == null){
+			root = newObj;
+			rear = root;
+		}
+		else{
+			rear.next = newObj;
+			rear = newObj;
+		}
+	}
 	/*
 	From experimentation, seems like maximum y difference is 119 away (up) in exactly 11 frames (I think)
 	The maximum x will depend on y. I will have to figure this out later.
