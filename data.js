@@ -10,21 +10,77 @@ GM.data = {
 		{
 			type: 'sound',
 			name: 'shot1',
-			src: 'sounds/shotgun.mp3'
+			src: 'sounds/shotgun2.wav'
 		},
 		{
 			type: 'sound',
 			name: 'shot2',
-			src: 'sounds/shotgun.mp3'
+			src: 'sounds/shotgun2.wav'
+		},
+		{
+			type: 'sound',
+			name: 'shot3',
+			src: 'sounds/shotgun2.wav'
+		},
+		{
+			type: 'sound',
+			name: 'empty',
+			src: 'sounds/empty.wav'
 		}
-		/*{
+		/*
+		{
 			type: 'sound',
 			name: 'bg',
 			src: 'sounds/recording.mp3'
-		}*/
+		}
+		*/
 	],
 	//all of the animation data for the locations/times on spritesheet
 	animation_sets:{
+		Pickup:{
+			health:[{
+				x:569,
+				y:14,
+				width:16,
+				height:10
+			}],
+			ammo:[{
+				x:569,
+				y:4,
+				width:16,
+				height:10
+			}]
+		},
+		Spike:{
+			idle:[
+			{
+				x:549,
+				y:4,
+				width:20,
+				height:20
+			}]
+		},
+		Platform:{
+			left:[{
+				x: 440,
+				y: 153,
+				width: 78,
+				height: 40,
+				t: 1
+			}],
+			middle:[{
+				x:440,
+				y:193,
+				width:133,
+				height: 20
+			}],
+			right:[{
+				x:440,
+				y:212,
+				width:19,
+				height:28
+			}]
+		},
 		Fireball:{
 			idle:[{
 				x: 309,
@@ -293,6 +349,43 @@ GM.data = {
 			]
 		},
 		Zombie:{
+			dying:[
+			{
+				x:0,
+				y:672,
+				width:86,
+				height:86,
+				time: 50
+			},
+			{
+				x:86,
+				y:672,
+				width:86,
+				height:86,
+				time: 50
+			},
+			{
+				x:172,
+				y:672,
+				width:86,
+				height:86,
+				time: 50
+			},
+			{
+				x:258,
+				y:672,
+				width:86,
+				height:86,
+				time: 50
+			}
+			],
+			dead:[{
+				x:258,
+				y:672,
+				width:86,
+				height:86,
+				time: 1
+			}],
 			idle: [
 			{
 				x: 0,

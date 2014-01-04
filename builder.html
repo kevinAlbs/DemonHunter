@@ -152,7 +152,9 @@
 		<div id="hud" class="cf">
 			<div class="section">
 				<h2>HEALTH</h2>
-				<h3 id="health_amt">100</h3>
+				<div id="health_bar">
+					<div id="health_bar_fill"></div>
+				</div>
 			</div>
 			<div class="section">
 				<h2>AMMO</h2>
@@ -160,10 +162,16 @@
 			</div>
 			<div class="section">
 				<h2>SCORE</h2>
-				<h3 id="score_amt">100</h3>
+				<h3 id="score_amt">0</h3>
 			</div>
 			<div class="section">
-				<p>STATUS MESSAGE</p>
+				<p id="status">GO!</p>
+			</div>
+		</div>
+		<div class="trees">
+			<div class="large" id="large_tree_container">
+			</div>
+			<div class="small" id="small_tree_container">
 			</div>
 		</div>
 		<img id="moon"  src="images/moon.png" />

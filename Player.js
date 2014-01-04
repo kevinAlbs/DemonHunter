@@ -46,6 +46,10 @@ function Player(){
 		}
 
 		this.movementUpdate();
+
+		if(this._y > GM.game.getCHeight() + 500){
+			this._die();
+		}
 		//this._y = 50;
 		//this._x += 6;
 
@@ -203,18 +207,23 @@ function Player(){
 		if(shotLocked) return;
 		if(shooting) return;
 		if(this._rolling){return;}
-		if(this._ammo <= 0){return;}
+		if(this._ammo <= 0){
+			GM.deps.empty.play();
+			return;
+		}
 
 
 		shotLocked = true;
 		if(GM.deps.shot1.currentTime == 0 || GM.deps.shot1.ended){
-			//GM.deps.shot1.play();
+			GM.deps.shot1.play();
 			console.log("1");
 		}
-		else{
+		else if(GM.deps.shot2.currentTime == 0 || GM.deps.shot2.ended){
 			console.log("2");
-			//GM.deps.shot2.play();
-			
+			GM.deps.shot2.play();	
+		}
+		else{
+			GM.deps.shot3.play();
 		}
 		//this._yVel -= 2;
 		shooting = true;
@@ -230,11 +239,11 @@ function Player(){
 		var hyp = GM.game.shootGun(x1, y1, shootAngle);
 		addBullet(shootAngle, hyp);
 
-		shootAngle = this.getShootAngle() + .02;
+		shootAngle = this.getShootAngle() + (.01 + .015 * Math.random());
 		hyp = GM.game.shootGun(x1, y1, shootAngle);
 		addBullet(shootAngle, hyp);
 
-		shootAngle = this.getShootAngle() - .02;
+		shootAngle = this.getShootAngle() - (.01 + .015 * Math.random());
 		hyp = GM.game.shootGun(x1, y1, shootAngle);
 		addBullet(shootAngle, hyp);
 
@@ -347,6 +356,13 @@ function Player(){
 	this.getAmmo = function(amt){
 		return this._ammo;
 	};
+
+	this._die = function(){
+		Player.prototype._die.call(this);
+
+		//after death animation
+		GM.game.handlePlayerDeath();
+	}
 };
 
 GM.utils.inherits(Player, Person);

@@ -35,8 +35,8 @@ function AnimationSet(set){
 			this._set[this._curAnimation].reset();
 		}
 	}
-	this.drawFrame = function(x,y,width,height,ctx, dir, rot, rx, ry){
-		this._set[this._curAnimation].drawFrame(x,y,width,height,ctx,dir, rot, rx, ry);
+	this.drawFrame = function(x,y,width,height,ctx, dir, rot, rx, ry, clipWidth, clipHeight){
+		this._set[this._curAnimation].drawFrame(x,y,width,height,ctx,dir, rot, rx, ry, clipWidth, clipHeight);
 	}
 
 	this.getCurAnimation = function(){

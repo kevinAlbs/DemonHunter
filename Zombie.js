@@ -15,9 +15,11 @@ function Zombie(p){
 
 	this._die = function(){
 		Zombie.prototype._die.call(this);
-		this._state="dying";
-		//this._height = 20;
+		animation_set.switchAnimation("dying", function(){
+			animation_set.switchAnimation("dead");
+		});
 	}
+
 	this.paint = function(ctx){
 		var xOff = GM.game.getXOffset();
 		if(this._hurt){
@@ -85,10 +87,17 @@ function Zombie(p){
 				}
 			break;
 			case "dying":
-				//show dying animation
-				if(this._height > 20){
+				var dHeight = 15;
+				if(this._height > dHeight){
 					var change = .25 * GM.game.delta;
-					this._height -= change;
+					if(this._height - change < dHeight){
+						this._height = dHeight;
+						this._dying = false;
+						this._state = "dead";
+					}
+					else{
+						this._height -= change;
+					}
 				}
 			break;
 		}

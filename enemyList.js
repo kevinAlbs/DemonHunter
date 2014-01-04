@@ -152,8 +152,9 @@ GM.enemyList = (function(){
 		//cleans up old platforms
 		var prev = null;
 		var ptr = root;
+		var padding = 100;//allows enemies with overhanging sprites to stay until sprite leaves screen
 		while(ptr != null){
-			if(ptr.getX() + ptr.getWidth() - GM.viewport.getXOffset() < 0 || ptr.getY() > GM.game.getCHeight()){
+			if(ptr.getX() + ptr.getWidth() - GM.viewport.getXOffset() + padding < 0 || ptr.getY() > GM.game.getCHeight()){
 				console.log("Removing enemy");
 				//remove
 				if(prev == null){

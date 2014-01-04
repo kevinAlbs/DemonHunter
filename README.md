@@ -46,6 +46,7 @@ Guns + enemies:
 - In Linux, the canvas painting is a little blurry for a high speed. It looks fine in Windows though. Maybe optimizations will alleviate this.
 - There were problems with lag due to incorrect calculation of delta. There is still slight lag on linux but it's worth playing around with to try and minimize lag at the end.
 - Centaurs are removed before they are completely offscreen since their width is smaller than their painted body
+- On restart, map is not glued properly
 
 ## Remarks ##
 - Presently, I have all of the platform collision and gravity in Mob.js. This is under the assumption that Mobs will be the only objects interacting with platforms. In the future, if the need arises, I may want to put this in Movable.

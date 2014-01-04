@@ -3,6 +3,12 @@ function Platform(){
 	this.spikes = null;
 	this.next = null;
 	this.prev = null;
+	var leftSide = new AnimationSet(GM.data.animation_sets.Platform);
+	var middle = new AnimationSet(GM.data.animation_sets.Platform);
+	var rightSide = new AnimationSet(GM.data.animation_sets.Platform);
+	leftSide.switchAnimation("left");
+	middle.switchAnimation("middle");
+	rightSide.switchAnimation("right");
 
 	this.addPickup = function(p){
 		p.setY(this._y - p.getHeight());
@@ -33,7 +39,6 @@ function Platform(){
 	this.collisionWithSpikes = function(m){
 		for(var node = this.spikes; node != null; node = node.next){
 			if(node.collidingWith(m)){
-				console.log(node);
 				return node;
 			}
 		}
@@ -67,6 +72,34 @@ function Platform(){
 	this.paint = function(ctx){
 		var xOff = GM.game.getXOffset();
 		ctx.strokeRect(Math.round(this._x - xOff), Math.round(this._y), this._width, this._height);
+		var lsw = 78, //left side width (sorry for hard coding)
+			rsw = 19,
+			mw = 133;
+		if(lsw > this._width){
+			if(rsw > this._width){
+				//clip both
+				lsw = this._width/2;
+				rsw = lsw;
+			}
+			else{
+				//clip
+				lsw = this._width - rsw;	
+			}
+			
+		}
+		leftSide.drawFrame(this._x - xOff, this._y, this._width, this._height, ctx, 1, false, 0,0, lsw, false);
+		var widthForMiddle = this._width - lsw - rsw;
+		var curX = this._x - xOff + lsw;
+		while(widthForMiddle > 0){
+			var appliedWidth = mw;
+			if(appliedWidth > widthForMiddle){
+				appliedWidth = widthForMiddle;
+			}
+			middle.drawFrame(curX, this._y, this._width, this._height, ctx, 1, false, 0,0, appliedWidth, false);//clip off width if necessary
+			widthForMiddle -= appliedWidth;
+			curX += appliedWidth;
+		}
+		rightSide.drawFrame(curX, this._y, this._width, this._height, ctx, 1, false, 0, 0, rsw, false);
 		for(var node = this.spikes; node != null; node = node.next){
 			node.paint(ctx);
 		}

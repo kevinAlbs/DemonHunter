@@ -1,7 +1,7 @@
 <html>
 <head>
 	<title>Kaitlin - Demon Hunter</title>
-	<link href="style.css" rel="stylesheet" type="text/css" />
+	<link href="style.css?v2" rel="stylesheet" type="text/css" />
 	<style>
 	</style>
 </head>
@@ -11,12 +11,22 @@
 	<div id="screen-loading" class="screen no-highlight">
 		Loading Dependencies...
 	</div>
+	<div id="screen-menu" class="screen no-highlight">
+		<div class="inner">
+			<ul>
+				<li id="btn-play">Play</li>
+				<li id="btn-high">High Scores</li>
+			</ul>
+		</div>
+	</div>
 	<div id="screen-gameplay" class="screen no-highlight">
 		<canvas id="mycanvas" width="1000" height="600"></canvas>
 		<div id="hud" class="cf">
 			<div class="section">
 				<h2>HEALTH</h2>
-				<h3 id="health_amt">100</h3>
+				<div id="health_bar">
+					<div id="health_bar_fill"></div>
+				</div>
 			</div>
 			<div class="section">
 				<h2>AMMO</h2>
@@ -24,10 +34,16 @@
 			</div>
 			<div class="section">
 				<h2>SCORE</h2>
-				<h3 id="score_amt">100</h3>
+				<h3 id="score_amt">0</h3>
 			</div>
 			<div class="section">
-				<p>STATUS MESSAGE</p>
+				<p id="status">GO!</p>
+			</div>
+		</div>
+		<div class="trees">
+			<div class="large" id="large_tree_container">
+			</div>
+			<div class="small" id="small_tree_container">
 			</div>
 		</div>
 		<img id="moon"  src="images/moon.png" />
@@ -47,6 +63,7 @@
 <script src="GM.js"></script>
 <script src="Screen.js"></script>
 <script src="GameScreen.js"></script>
+<script src="MenuScreen.js"></script>
 <script src="LoadingScreen.js"></script>
 <script src="Paintable.js"></script>
 <script src="TextOverlay.js"></script>
@@ -75,7 +92,7 @@
 <script>
 function pageLoaded(){
 	//onces deps are loaded, start game
-	GM.switchScreen(new LoadingScreen());
+	GM.switchScreen(new LoadingScreen(new MenuScreen()));
 }
 window.addEventListener("load", pageLoaded);
 </script>

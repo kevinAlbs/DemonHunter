@@ -30,7 +30,8 @@ GM.game = (function(){
 			d: false,
 			z: false,//letter z
 			zp: false, //true when z is PRESSED ONCE!
-			s: false //space
+			s: false, //space,
+			restart: false
 		},
 		mouse = {
 			pressed: false,
@@ -38,16 +39,36 @@ GM.game = (function(){
 			y: cHeight/2
 		},
 		player = null,
+		playerDead = false,
+		hudStat = "",
 		HUD = {
-			health : document.getElementById("health_amt"),
+			health_bar : document.getElementById("health_bar_fill"),
 			ammo : document.getElementById("ammo_amt"),
-			score: document.getElementById("score_amt")
-		};
+			score: document.getElementById("score_amt"),
+			status : document.getElementById("status")
+		},
+		messages = [
+		"FIGHT WITH EVERYTHING YOU'VE GOT!",
+		"CONSERVE YOU'RE AMMUNITION!",
+		"KICK SOME DEMON BUTT!",
+		"IS THIS THE REAL LIFE!?<BR/>OR IS THIS JUST FANTASY?",
+		"HITTING THE KEYS HARDER<BR/>WON'T HELP!",
+		"I'M NOT AN ARTIST",
+		"TAKE A DEEP BREATH",
+		"THERE IS NO GREATER GLORY<BR/>THAN GOING DOWN FIGHTING",
+		"SHOTGUNS ARE COOL!",
+		"MOTIVATION",
+		"PERSEVERENCE"
+		];
 
 
 	function handleKeyDown(e){
-		console.log(e.which);
+		//console.log(e.which);
 		switch(e.which){
+			case 32:
+			keys.restart = true;
+			e.preventDefault();
+			break;
 			case 39:
 			case 68:
 			keys.r = true;
@@ -82,6 +103,10 @@ GM.game = (function(){
 
 	function handleKeyUp(e){
 		switch(e.which){
+			case 32:
+			keys.restart = false;
+			e.preventDefault();
+			break;
 			case 39:
 			case 68:
 			keys.r = false;
@@ -150,9 +175,7 @@ GM.game = (function(){
 		It will also generate health/ammo if the player's current amount is below a certain threshold.
 	*/
 	function glueFragmentData(part1, part2){
-		//TODO
 		//calculate difference
-		console.log(part1.length);
 		if(part1.platforms.length == 0){
 			return part2;
 		}
@@ -234,17 +257,19 @@ GM.game = (function(){
 		cWidth = cnv.width;
 		cHeight = cnv.height;
 		mapWidth = 50000;//in blocks
+		playerDead = false;
+		hudStat = messages[Math.floor(messages.length * Math.random())];
 
-		if(GM.game.mapTest){
-			buildMap();
-			player = new Player();
-		}
-		else if(GM.data.hasOwnProperty("builder")){
+		if(GM.data.hasOwnProperty("builder")){
 			//builder debugging, import data
 			buildFromData(GM.data.builder.output);
 			player = new Player();
 			player.setX(GM.data.builder.output.playerX);
 			player.setY(GM.data.builder.output.playerY);
+		}
+		else if(GM.game.mapTest){
+			buildMap();
+			player = new Player();
 		}
 		else{
 			GM.platformList.generatePlatforms(200, 1);
@@ -315,6 +340,12 @@ GM.game = (function(){
 	var prevTime = null;
 
 	function update(timestamp){
+		if(playerDead){
+			//check if they are pressing r
+			if(keys.restart){
+				that.startGame();
+			}
+		}
 		if(prevTime == null || paused){
 			//continue to update, but do nothing
 			prevTime =  timestamp;
@@ -661,9 +692,26 @@ GM.game = (function(){
 	};
 
 	that.updateHUD = function(){
-		HUD.health.innerHTML = player.getHealth();
+		var health = player.getHealth();
+		HUD.health_bar.style.width = health  + "%";
+		if(health <= 30){
+			HUD.health_bar.style.background = "#ff1200";
+		}
+		else if(health <= 70){
+			HUD.health_bar.style.background = "#eaff00";
+		}
+		else{
+			HUD.health_bar.style.background = "#2aff00";
+		}
 		HUD.ammo.innerHTML = player.getAmmo();
+		HUD.status.innerHTML = hudStat;
 	};
 
+	that.handlePlayerDeath = function(){
+		paused = true;
+		playerDead = true;
+		hudStat = "YOU DIED :(<br/>PRESS SPACE TO RESTART";
+		that.updateHUD();
+	}
 	return that;
 }());
