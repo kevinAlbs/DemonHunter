@@ -23,7 +23,7 @@ function Flyer(){
 	};
 
 	this._die = function(){
-		Zombie.prototype._die.call(this);
+		Flyer.prototype._die.call(this);
 		this._width = 50;
 		this._height = 20;
 	}

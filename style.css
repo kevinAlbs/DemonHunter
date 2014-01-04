@@ -146,6 +146,31 @@
 		font-size: 24pt;
 		margin-top: 17px;
 	}
+	#screen-gameplay #tutorial{
+		width: 516px;
+		height: 321px;
+		background: url("images/help.png");
+		z-index: 6;
+		position: absolute;
+		left: 240px;
+		top: 150px;
+	}
+	#screen-gameplay #tutorial #tutorial_play{
+		position: absolute;
+		bottom: 40px;
+		left: 120px;
+		padding: 15px;
+		background: #5d47fa;
+		font-family: "SnareDrum", "Arial", "Helvetica";
+		font-size: 64px;
+		cursor: pointer;
+	}
+	#screen-gameplay #tutorial #tutorial_play:hover{
+		background: #998bff;
+		left: 115px;
+		bottom: 35px;
+		padding: 20px;
+	}
 	#screen-menu{
 		background: #000;
 		color: #FFF;
@@ -167,9 +192,21 @@
 	#screen-menu li:hover{
 		color: #FF0;
 	}
+	#screen-menu h1, #screen-menu h2{
+		font-family: "SnareDrum", "Arial", "Helvetica";
+		font-size: 64px;
+		font-weight: normal;
+		padding: 10px 0;
+	}
+	#screen-menu h1{
+		font-size: 124px;
+		color: #A81B1B;
+	}
+	#screen-menu h2{
+		padding-bottom: 400px;
+	}
 	.screen{
 		display: none;
-
 	}
 	#status{
 		line-height: 50%;

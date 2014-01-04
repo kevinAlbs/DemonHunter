@@ -26,14 +26,27 @@ GM.data = {
 			type: 'sound',
 			name: 'empty',
 			src: 'sounds/empty.wav'
-		}
-		/*
+		},
 		{
 			type: 'sound',
 			name: 'bg',
-			src: 'sounds/recording.mp3'
+			src: 'sounds/background.mp3'
+		},
+		{
+			type: 'sound',
+			name: 'ammo',
+			src: 'sounds/ammo.wav'
+		},
+		{
+			type: 'sound',
+			name: 'health',
+			src: 'sounds/health.wav'
+		},
+		{
+			type: 'sound',
+			name: 'fireball',
+			src: 'sounds/fireball.wav'
 		}
-		*/
 	],
 	//all of the animation data for the locations/times on spritesheet
 	animation_sets:{
@@ -91,6 +104,14 @@ GM.data = {
 			}]
 		},
 		Flyer:{
+			dead:[
+			{
+				x:387,
+				y:667,
+				width:74,
+				height:66,
+				time:1
+			}],
 			flying:[
 			{
 				x: 0,
@@ -192,6 +213,45 @@ GM.data = {
 			]
 		},
 		FireBreather:{
+			dying:[
+			{
+				x:387,
+				y:592,
+				width:44,
+				height:75,
+				time: 50
+			},
+			{
+				x:431,
+				y:592,
+				width:44,
+				height:75,
+				time: 50
+			},
+			{
+				x:475,
+				y:592,
+				width:44,
+				height:75,
+				time: 50
+			},
+			{
+				x:519,
+				y:592,
+				width:44,
+				height:75,
+				time: 50
+			}
+			],
+			dead:[
+			{
+				x:519,
+				y:592,
+				width:44,
+				height:75,
+				time: 1
+			}
+			],
 			walking:[
 			{
 				x:458,
@@ -224,6 +284,45 @@ GM.data = {
 			]
 		},
 		Centaur:{
+			dying:[
+			{
+				x:0,
+				y:758,
+				width:98,
+				height:77,
+				time:50
+			},
+			{
+				x:98,
+				y:758,
+				width:98,
+				height:77,
+				time:50
+			},
+			{
+				x:196,
+				y:758,
+				width:98,
+				height:77,
+				time:50
+			},
+			{
+				x:294,
+				y:758,
+				width:98,
+				height:77,
+				time:50
+			}
+			],
+			dead:[
+			{
+				x:294,
+				y:758,
+				width:98,
+				height:77,
+				time:50
+			}
+			],
 			idle:[
 				{
 					x: 0,
@@ -538,6 +637,45 @@ GM.data = {
 			}]
 		},
 		Player:{
+			dying:[
+			{
+				x:0,
+				y:837,
+				width:92,
+				height:76,
+				time:50
+			},
+			{
+				x:92,
+				y:837,
+				width:92,
+				height:76,
+				time:50
+			},
+			{
+				x:184,
+				y:837,
+				width:92,
+				height:76,
+				time:50
+			},
+			{
+				x:276,
+				y:837,
+				width:92,
+				height:76,
+				time:1000
+			}
+			],
+			dead:[
+			{
+				x:276,
+				y:837,
+				width:92,
+				height:76,
+				time:50
+			}
+			],
 			rolling: [
 			{
 				x: 204,

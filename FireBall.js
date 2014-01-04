@@ -11,16 +11,28 @@ function FireBall(){
 	}
 	this.hasExploded = function(){return this._exploded;};
 	this.explode = function(){
+		GM.deps.fireball.play();
 		this._exploded = true;
 		//make particles
+		GM.game.generateParticles({
+			num: 20,
+			x: this._x + this._width/2 - GM.game.getXOffset(),
+			y: this._y + this._height/2,
+			angle: 0,
+			angle_variance: 2*Math.PI,
+			time: 500,
+			time_variance: 100,
+			init_speed_x: .2, //px/ms
+			init_speed_y: .2,
+			color: "#FF9000"
+		})
 		this._xVel = 0;
 		this._yVel = 0;
 	}
 	this.paint = function(ctx){
 		var xOff = GM.game.getXOffset();
-		animation_set.drawFrame(this._x - xOff, this._y, this._width, this._height, ctx, -1 * this._facing);
-		if(this._exploded){
-			//ctx.strokeStyle = "#000";
+		if(!this._exploded){
+			animation_set.drawFrame(this._x - xOff, this._y, this._width, this._height, ctx, -1 * this._facing);
 		}
 		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
 	};

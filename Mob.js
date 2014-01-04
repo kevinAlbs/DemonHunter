@@ -13,18 +13,19 @@ function Mob(){
 	//dir must be -1, 0, or 1
 	this.moveX = function(dir){
 		//if(dir > 1 || dir < -1){return;}
-
-		if(dir != 0){
-			if(!this._ducking){
-				this._walking = true;
+		if(!this._dead){
+			if(dir != 0){
+				if(!this._ducking){
+					this._walking = true;
+				}
+				this._facing = Math.abs(dir)/dir;
+			} 
+			else{
+				this._walking = false;
 			}
-			this._facing = Math.abs(dir)/dir;
-		} 
-		else{
-			this._walking = false;
-		}
-		if(!this._ducking){
-			this._xVel = dir * this._walkingSpeed;
+			if(!this._ducking){
+				this._xVel = dir * this._walkingSpeed;
+			}
 		}
 	};
 	this.unMoveX = function(){

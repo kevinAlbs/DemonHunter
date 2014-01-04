@@ -27,7 +27,7 @@ function AnimationSet(set){
 			}
 		}
 		else{
-			console.log(newAnim + "not in animation set");
+			console.log(newAnim + " not in animation set");
 		}
 	}
 	this.reset = function(){

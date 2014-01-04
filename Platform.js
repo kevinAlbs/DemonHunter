@@ -10,6 +10,7 @@ function Platform(){
 	middle.switchAnimation("middle");
 	rightSide.switchAnimation("right");
 
+
 	this.addPickup = function(p){
 		p.setY(this._y - p.getHeight());
 		p.next = this._pickups;

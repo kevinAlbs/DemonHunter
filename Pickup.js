@@ -23,6 +23,7 @@ function Pickup(type, x){
 		this._type = newType;
 	}
 	this.onCollide = function(){
+		GM.deps[this._type].play();
 		//show that animation etc.
 	};
 	this.init();

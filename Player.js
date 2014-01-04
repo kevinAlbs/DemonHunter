@@ -16,6 +16,7 @@ function Player(){
 	this._hasLongJump = true;
 	this._armAngle = 0;
 	this._canShoot = true;
+	this._health=100;
 
 	this.name = "Kaitlin";
 	this._state = "user_controlled";//no higher level behavior
@@ -34,14 +35,36 @@ function Player(){
 	animation_set.switchAnimation("standing");
 
 	this.update = function(){
+		if(GM.game.mapDebug){
+			this._yVel = -.3;
+			this._walkingSpeed = .8;
+		}
 		//call super.update to update hurt state
 		Player.prototype.update.apply(this);
-		if(!this._jumping && !this._rolling){
-			if(this._walking){
-			animation_set.switchAnimation("walking");//remember, only actually switches if it is not already walking
+
+		if(this._dying){
+			//decrease height
+			var dHeight = 20;
+			if(this._height > dHeight){
+				var change = .25 * GM.game.delta;
+				if(this._height - change < dHeight){
+					this._height = dHeight;
+					this._dying = false;
+				}
+				else{
+					this._height -= change;
+				}
 			}
-			else{
-				animation_set.switchAnimation("standing");
+		}
+
+		if(!this._dead){
+			if(!this._jumping && !this._rolling){
+				if(this._walking){
+				animation_set.switchAnimation("walking");//remember, only actually switches if it is not already walking
+				}
+				else{
+					animation_set.switchAnimation("standing");
+				}
 			}
 		}
 
@@ -161,25 +184,30 @@ function Player(){
 			ctx.closePath();
 			prev = b;
 		}
-		if(this._hurt){
-			ctx.globalAlpha = .5;
-		}
-		
-		if(!this._rolling){
-			animation_set.drawFrame(this._x - xOff - (14 * this._facing), this._y + 19, this._width, this._height, ctx, this._facing);
-			head_anim.drawFrame(this._x - xOff - (4 * this._facing), this._y + 2, this._width, this._height, ctx, this._facing);
-			arm_anim.drawFrame(ax, ay, this._width, this._height, ctx, this._facing, this._armAngle, cax-ax, cay-ay); //rotate about center
+		if(!this._dead){
+			if(this._hurt){
+				ctx.globalAlpha = .5;
+			}
+			if(!this._rolling){
+				animation_set.drawFrame(this._x - xOff - (14 * this._facing), this._y + 19, this._width, this._height, ctx, this._facing);
+				head_anim.drawFrame(this._x - xOff - (4 * this._facing), this._y + 2, this._width, this._height, ctx, this._facing);
+				arm_anim.drawFrame(ax, ay, this._width, this._height, ctx, this._facing, this._armAngle, cax-ax, cay-ay); //rotate about center
+			}
+			else{
+				animation_set.drawFrame(this._x - xOff - (14 * this._facing), this._y + 5, this._width, this._height, ctx, this._facing);
+			}
+			ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
+			//bullets = null;
+			if(GM.debug){
+				//ctx.fillText(Math.round(this._x) + "," + Math.round(this._y), this._x - GM.game.getXOffset(), this._y - 10);
+			}
+			if(this._hurt){
+				ctx.globalAlpha = 1;
+			}
 		}
 		else{
+			ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
 			animation_set.drawFrame(this._x - xOff - (14 * this._facing), this._y + 5, this._width, this._height, ctx, this._facing);
-		}
-		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
-		//bullets = null;
-		if(GM.debug){
-			//ctx.fillText(Math.round(this._x) + "," + Math.round(this._y), this._x - GM.game.getXOffset(), this._y - 10);
-		}
-		if(this._hurt){
-			ctx.globalAlpha = 1;
 		}
 	};
 
@@ -305,7 +333,7 @@ function Player(){
 	}
 
 	this.barrelRoll = function(){
-		if(this._rolling || !this.onPlatform() || rollLocked){return;}
+		if(this._rolling || !this.onPlatform() || rollLocked || this._dead){return;}
 		this._rolling = true;
 		rollLocked = true;
 		this._height -= rollHeightDiff;
@@ -330,7 +358,7 @@ function Player(){
 	}
 	
 	this.jump = function(){
-		if(this.onPlatform() && !this._ducking && !this._rolling){	
+		if(this.onPlatform() && !this._ducking && !this._rolling && !this._dead){	
 			Player.prototype.jump.call(this);
 			if(animation_set.getCurAnimation() == "jumping"){
 				animation_set.switchAnimation("jumping2");
@@ -361,7 +389,10 @@ function Player(){
 		Player.prototype._die.call(this);
 
 		//after death animation
-		GM.game.handlePlayerDeath();
+		animation_set.switchAnimation("dying", function(){
+			animation_set.switchAnimation("dead");
+			GM.game.handlePlayerDeath();
+		});
 	}
 };
 

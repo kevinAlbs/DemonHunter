@@ -4,7 +4,8 @@ GM.platformList = (function(){
 	var root = null;//since platforms only have the extra next/prev properties + spikes, I'm going to use Movable objects
 	var rear = null;
 	var cur = null;
-
+	//TODO: maybe make savers a linked list (but I don't want to screw with the actual linked list)
+	var savers = [];//if saver, it will check if player is low on health/ammo and provide pickups with higher likelihood
 	that.getRoot = function(){
 		return root;//will probably change
 	}
@@ -114,6 +115,9 @@ GM.platformList = (function(){
 			p.setY(ps[i].y);
 			p.setWidth(ps[i].width);
 			p.setHeight(10);
+			if(ps[i].hasOwnProperty("saver") && ps[i].saver == true){
+				savers.push(p);
+			}
 			for(var j = 0; j < ps[i].spikes.length; j++){
 				p.addSpike(ps[i].spikes[j].x);
 			}
@@ -249,6 +253,44 @@ GM.platformList = (function(){
 		}
 	};
 
+	that.checkSavers = function(){
+		//check if new pickups need to be added
+		for(var i = 0; i < savers.length; i++){
+			var p = savers[i];
+			if(p.getX() > GM.game.getCWidth() + GM.game.getXOffset()){
+				//check if within 100 of on screen coming from right side
+				if(p.getX() - GM.game.getXOffset() - GM.game.getCWidth() < 100){
+					console.log("potentially adding pickups");
+					console.log(p, GM.game.getXOffset());
+					var health = GM.game.getPlayerHealth();
+					var ammo = GM.game.getPlayerAmmo();
+					if(health <= 70){
+						p.addPickup(new Pickup("health", p.getX() + Math.random() * p.getWidth()));
+						var chance = (55 + (70 - health) / 2)/100; //max is 90
+						console.log(chance + " for health");
+						if(Math.random() < chance){
+							p.addPickup(new Pickup("health", p.getX() + Math.random() * p.getWidth()));
+						}
+					}
+					if(ammo <= 20){
+						var chance = ((20 - ammo) + 75)/100;//max is 95
+						console.log(chance + " for ammo");
+						if(Math.random() < chance){
+							p.addPickup(new Pickup("ammo", p.getX() + Math.random() * p.getWidth()));
+						}
+					}
+					savers.splice(i,1);
+					break;
+				}
+				break;
+			}
+			else{
+				//already in screen or in left
+				savers.splice(i,1);
+				break;
+			}
+		}
+	}
 	that.cleanUp = function(){
 		//cleans up old platforms
 		var prev = null;

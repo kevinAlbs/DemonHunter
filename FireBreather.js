@@ -23,7 +23,11 @@ function FireBreather(p){
 	};
 
 	this._die = function(){
-		Zombie.prototype._die.call(this);
+		console.log("HERE");
+		FireBreather.prototype._die.call(this);
+		animation_set.switchAnimation("dying", function(){
+			animation_set.switchAnimation("dead");
+		});
 	}
 	this.paint = function(ctx){
 		var xOff = GM.game.getXOffset();
@@ -31,7 +35,9 @@ function FireBreather(p){
 			ctx.globalAlpha = .5;
 		}
 		animation_set.drawFrame(this._x - xOff - (1 * this._facing), this._y + bounce, this._width, this._height, ctx, -1 * this._facing);
-		arm_animation.drawFrame(this._x - xOff - (-17 * this._facing), this._y + 15 + bounce, this._width, this._height, ctx, -1 * this._facing);
+		if(!this._dead){
+			arm_animation.drawFrame(this._x - xOff - (-17 * this._facing), this._y + 15 + bounce, this._width, this._height, ctx, -1 * this._facing);
+		}
 		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
 		if(this._hurt){
 			ctx.globalAlpha = 1;
@@ -44,18 +50,20 @@ function FireBreather(p){
 
 		shootDelay -= GM.game.delta;
 		bounceTimer -= GM.game.delta;
-		if(bounceTimer < 0){
-			bounceTimer = BOUNCE_TIME;
-			if(bounceUp){
-				bounce++;
-				if(bounce >= 2){
-					bounceUp = false;
+		if(!this._dead){
+			if(bounceTimer < 0){
+				bounceTimer = BOUNCE_TIME;
+				if(bounceUp){
+					bounce++;
+					if(bounce >= 2){
+						bounceUp = false;
+					}
 				}
-			}
-			else{
-				bounce--;
-				if(bounce <= -2){
-					bounceUp = true;
+				else{
+					bounce--;
+					if(bounce <= -2){
+						bounceUp = true;
+					}
 				}
 			}
 		}
@@ -121,11 +129,17 @@ function FireBreather(p){
 				}
 			break;
 			case "dying":
-				//show dying animation
-				if(this._height > 20){
+				var dHeight = 15;
+				if(this._height > dHeight){
 					var change = .25 * GM.game.delta;
-					this._height -= change;
-					this._y += change;
+					if(this._height - change < dHeight){
+						this._height = dHeight;
+						this._dying = false;
+						this._state = "dead";
+					}
+					else{
+						this._height -= change;
+					}
 				}
 			break;
 		}

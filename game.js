@@ -7,9 +7,11 @@
  */
 GM.game = (function(){
 	var that = {};
+	that.productionTesting = true;
 	that.mapTest = true;
 	that.bulletsCollideWithPlatforms = true;
 	that.collisionDebug = true; //when I was testing, TODO: remove this
+	//that.mapDebug = true;
 	that.delta = 0;	
 	var	paused= false, //if true, it will still update, but not run anything
 		movementPaused = false,//used for cutscenes, stops user movment
@@ -41,12 +43,14 @@ GM.game = (function(){
 		player = null,
 		playerDead = false,
 		hudStat = "",
+		hudScore = 0,
 		HUD = {
 			health_bar : document.getElementById("health_bar_fill"),
 			ammo : document.getElementById("ammo_amt"),
 			score: document.getElementById("score_amt"),
 			status : document.getElementById("status")
 		},
+		beginningFrags = [],//platforms in the beginning, linked list
 		messages = [
 		"FIGHT WITH EVERYTHING YOU'VE GOT!",
 		"CONSERVE YOU'RE AMMUNITION!",
@@ -175,38 +179,15 @@ GM.game = (function(){
 		It will also generate health/ammo if the player's current amount is below a certain threshold.
 	*/
 	function glueFragmentData(part1, part2){
+		//make copies of both part1 and part2 (so x coordinates are not directly modified)
+		part1 = JSON.parse(JSON.stringify(part1));
+		part2 = JSON.parse(JSON.stringify(part2));
 		//calculate difference
 		if(part1.platforms.length == 0){
 			return part2;
 		}
 		
 		var last = part1.platforms[part1.platforms.length - 1];
-		/*
-		var first = part2.platforms[0];
-		var diff = first.y - last.y;//if positive, max y distance is 90 pixels
-		var numPlatforms = Math.ceil(Math.abs(diff) / 70);//70 should be easy
-		var curX = last.x + last.width;
-		var curY = last.y;
-		console.log(numPlatforms);
-		for(var i = 0; i < numPlatforms; i++){
-			curX += 70;
-			curY += diff > 0 ? 70 : -70;
-			curWidth = 200;
-			var p = {
-				x: curX, 
-				y: curY,
-				width: curWidth,
-				spikes: [],
-				pickups: []
-			};
-			if(i == 0){
-				//if player needs health/ammo badly add it
-			}
-			curX += curWidth;
-			part1.platforms.push(p);
-			last = p;
-		}
-		*/
 		var xOff = last.x + last.width + 70;
 		updateXCoords(part2, xOff);
 
@@ -221,32 +202,53 @@ GM.game = (function(){
 
 	//tie all map fragments together with glue
 	function buildMap(){
-		var xOff = 0;
 		//for now just append all of them
 		var frags = GM.data.mapFragments;
 		if(!frags || frags.length == 0){
 			return;//need at least one fragment
 		}
 		//arrange by difficulty
-		var diff = {1:[],2:[],3:[],4:[],5:[]};
+		var diff = {0:[], 1:[],2:[],3:[],4:[],5:[]};
 		for(var i = 0; i < frags.length; i++){
 			diff[frags[i].difficulty].push(frags[i]);
 		}
 		//now diff is a map from difficulty to map fragments
-
 		var output = {
 			platforms: [],
 			enemies: [],
 			playerX: -1,
 			playerY: -1
 		};
-		output.playerX = frags[0].data.playerX;
-		output.playerY = frags[0].data.playerY;
-		for(var i = 0; i < frags.length; i++){
-			output = glueFragmentData(output, frags[i].data);
+		//difficulty of 0 is first platform
+		output.playerX = diff[0][0].data.playerX;
+		output.playerY = diff[0][0].data.playerY;
+		output.platforms = diff[0][0].data.platforms;
+		output.enemies = diff[0][0].data.enemies;
+
+		//TODO: add multiple possible curves
+		console.log(diff);
+		var curve = [1,3,2,4,3,5,2,4,3,5];
+		for(var i = 0; i < curve.length; i++){
+			var index = Math.floor(diff[curve[i]].length * Math.random());
+			var frag = diff[curve[i]].splice(index, 1)[0];
+			console.log(frag.difficulty);
+			output = glueFragmentData(output, frag.data);
+			var lastP = output.platforms[output.platforms.length-1];
+			lastP.saver = true;
 		}
-		console.log(xOff); //~4.28 minutes
+		var flattened = [];
+		for(var i = 1; i <= 5; i++){
+			flattened = flattened.concat(diff[i]);
+		}
+		
+		var lastX = lastP.x + lastP.width;
+		if(lastX < 80000){
+			//add one more fragment
+			output = glueFragmentData(output, flattened[Math.floor(Math.random() * flattened.length)].data);
+		}
+		console.log(lastX);
 		buildFromData(output);
+		console.log(output);
 	}
 
 	function init(){
@@ -258,6 +260,7 @@ GM.game = (function(){
 		cHeight = cnv.height;
 		mapWidth = 50000;//in blocks
 		playerDead = false;
+		hudScore = 0;
 		hudStat = messages[Math.floor(messages.length * Math.random())];
 
 		if(GM.data.hasOwnProperty("builder")){
@@ -281,7 +284,17 @@ GM.game = (function(){
 		that.p = player;
 		paused = false;
 		that.updateHUD();
+
+		//perform actions that only happen on the first init (not subsequent ones)
 		if(!started){
+			//show tutorial
+			paused = true;
+			var tut = document.getElementById("tutorial");
+			tut.style.display = "block";
+			document.getElementById("tutorial_play").addEventListener("click", function(){
+				tut.style.display = "none";
+				paused = false;
+			})
 			requestAnimationFrame(update);//start updating process
 			started = true;
 		}
@@ -324,7 +337,7 @@ GM.game = (function(){
 			for(var i = 0; i < pickups.length; i++){
 				var pi = pickups[i];
 				if(pi.getType() == "health"){
-					player.gainHealth(10);
+					player.gainHealth(20);
 					that.updateHUD();
 				}
 				else if(pi.getType() == "ammo"){
@@ -360,23 +373,28 @@ GM.game = (function(){
 		checkCollisions();
 		var movementDebug = true;
 		if(!movementPaused){
-			if(keys.r){
-				if(movementDebug)
-					player.moveX(1);
-				else
-					player.moveX(1.2);
-			}
-			else if(keys.l){
-				if(movementDebug)
-					player.moveX(-1);
-				else
-					player.moveX(.7);
+			if(that.productionTesting){
+				player.moveX(1);
 			}
 			else{
-				if(movementDebug)
-					player.unMoveX();
-				else
-					player.moveX(1);
+				if(keys.r){
+					if(movementDebug)
+						player.moveX(1);
+					else
+						player.moveX(1.2);
+				}
+				else if(keys.l){
+					if(movementDebug)
+						player.moveX(-1);
+					else
+						player.moveX(.7);
+				}
+				else{
+					if(movementDebug)
+						player.unMoveX();
+					else
+						player.moveX(1);
+				}
 			}
 			if(keys.u){
 				player.jump();
@@ -420,7 +438,6 @@ GM.game = (function(){
 		}
 
 		paint();
-
 		
 		//now that update has run, set all key presses to false
 		keys.zp = false;
@@ -437,6 +454,7 @@ GM.game = (function(){
 			timeCount = 0;
 		}
 		//prevTime = now;
+		GM.platformList.checkSavers();
 		GM.platformList.cleanUp();
 		GM.enemyList.cleanUp();
 		
@@ -552,6 +570,8 @@ GM.game = (function(){
 	that.inScreen = function(obj){
 		return GM.viewport.inScreen(obj);
 	}
+	that.getPlayerHealth = function(){return player.getHealth();};
+	that.getPlayerAmmo = function(){return player.getAmmo();};
 	that.getPlayerWalking = function(){return player.getWalkingSpeed();};
 	that.getPlayerXVel = function(){return player.getXVel();}
 	that.getPlayerX = function(){return player.getX();};
@@ -671,8 +691,13 @@ GM.game = (function(){
 			}
 		}
 		if(closestE != null){
-			console.log(closestT);
+			var possibleDeath = false;
+			if(!closestE.isDead()){possibleDeath=true;}
 			closestE.hurt(10);
+			if(closestE.isDead() && possibleDeath){
+				//enemy was just killed
+				hudScore++;
+			}
 			that.generateParticles({
 				x: xColl - that.getXOffset(),
 				y: yColl,
@@ -686,7 +711,7 @@ GM.game = (function(){
 				color: "#F00"
 			});
 		}
-		//update hud to show ammo
+		//update hud to show ammo + score
 		that.updateHUD();
 		return closestT;
 	};
@@ -705,6 +730,7 @@ GM.game = (function(){
 		}
 		HUD.ammo.innerHTML = player.getAmmo();
 		HUD.status.innerHTML = hudStat;
+		HUD.score.innerHTML = hudScore;
 	};
 
 	that.handlePlayerDeath = function(){
