@@ -9,7 +9,9 @@ GM.game = (function(){
 	var that = {};
 	that.productionTesting = true;
 	that.mapTest = true;
+	that.endTest = false;
 	that.bulletsCollideWithPlatforms = true;
+	that.rectangleDebug = false;
 	that.collisionDebug = true; //when I was testing, TODO: remove this
 	//that.mapDebug = true;
 	that.delta = 0;	
@@ -44,11 +46,13 @@ GM.game = (function(){
 		playerDead = false,
 		hudStat = "",
 		hudScore = 0,
+		hudBestScore = 0,
 		HUD = {
 			health_bar : document.getElementById("health_bar_fill"),
 			ammo : document.getElementById("ammo_amt"),
 			score: document.getElementById("score_amt"),
-			status : document.getElementById("status")
+			status : document.getElementById("status"),
+			best_score: document.getElementById("best")
 		},
 		beginningFrags = [],//platforms in the beginning, linked list
 		messages = [
@@ -63,7 +67,10 @@ GM.game = (function(){
 		"SHOTGUNS ARE COOL!",
 		"MOTIVATION",
 		"PERSEVERENCE"
-		];
+		],
+		FIREWORK_TIME = 1000,
+		fireworkTimer = FIREWORK_TIME,
+		won = false;
 
 
 	function handleKeyDown(e){
@@ -140,8 +147,8 @@ GM.game = (function(){
 		return false;
 	}
 	function handleMousemove(e){
-		mouse.x = e.offsetX;
-		mouse.y = e.offsetY;
+		mouse.x = e.layerX;
+		mouse.y = e.layerY;
 	}
 	function handleMousedown(e){
 		mouse.pressed = true;
@@ -229,37 +236,48 @@ GM.game = (function(){
 		console.log(diff);
 		var curve = [1,3,2,4,3,5,2,4,3,5];
 		for(var i = 0; i < curve.length; i++){
+			
 			var index = Math.floor(diff[curve[i]].length * Math.random());
 			var frag = diff[curve[i]].splice(index, 1)[0];
 			console.log(frag.difficulty);
 			output = glueFragmentData(output, frag.data);
 			var lastP = output.platforms[output.platforms.length-1];
 			lastP.saver = true;
+			if(that.endTest){
+				break;
+			}
+
 		}
-		var flattened = [];
-		for(var i = 1; i <= 5; i++){
-			flattened = flattened.concat(diff[i]);
+
+		if(!that.endTest){
+			var flattened = [];
+			for(var i = 1; i <= 5; i++){
+				flattened = flattened.concat(diff[i]);
+			}
+			
+			var lastX = lastP.x + lastP.width;
+			if(lastX < 80000){
+				//add one more fragment
+				output = glueFragmentData(output, flattened[Math.floor(Math.random() * flattened.length)].data);
+			}
 		}
-		
-		var lastX = lastP.x + lastP.width;
-		if(lastX < 80000){
-			//add one more fragment
-			output = glueFragmentData(output, flattened[Math.floor(Math.random() * flattened.length)].data);
-		}
-		console.log(lastX);
+		//add end piece
+		diff[0][1].data.platforms[0].end = true;
+		output = glueFragmentData(output, diff[0][1].data);
 		buildFromData(output);
-		console.log(output);
 	}
 
 	function init(){
 		var cnv = document.getElementById("mycanvas");
 		ctx = cnv.getContext("2d");
 		ctx.strokeStyle = "#00F";
+
 		//ctx.webkitImageSmoothingEnabled = false;
 		cWidth = cnv.width;
 		cHeight = cnv.height;
 		mapWidth = 50000;//in blocks
 		playerDead = false;
+		won = false;
 		hudScore = 0;
 		hudStat = messages[Math.floor(messages.length * Math.random())];
 
@@ -365,10 +383,40 @@ GM.game = (function(){
 			requestAnimationFrame(update);
 			return;
 		}
-		
+
 		var newTime = timestamp;
 		GM.game.delta = newTime - prevTime;
 		prevTime = newTime;
+
+		if(won){
+			//check fireworks
+			fireworkTimer -= GM.game.delta;
+			if(fireworkTimer < 0){
+				fireworkTimer = FIREWORK_TIME;
+				//generate between 1-3 fireworks
+				var num = Math.ceil(Math.random() * 3);
+				for(var i = 0; i < num; i++){
+					console.log("FIREWORKS");
+					//random x val
+					var x = Math.random() * 1000;
+					var y = Math.random() * 100;
+					var c = "rgb(" + Math.floor(Math.random() * 100 + 200) + "," + Math.floor(Math.random() * 100 + 200) + "," + Math.floor(Math.random() * 100 + 200) + ")";
+					console.log(c);
+					that.generateParticles({
+						num: 25,
+						x: x,
+						y: y,
+						angle: 0,
+						angle_variance: 2*Math.PI,
+						time: 2000,
+						time_variance: 500,
+						init_speed_x: .1 + Math.random() * .2, //px/ms
+						init_speed_y: .3 + Math.random() * .2,
+						color: "#FF0"
+					});
+				}
+			}
+		}
 
 		checkCollisions();
 		var movementDebug = true;
@@ -455,13 +503,30 @@ GM.game = (function(){
 		}
 		//prevTime = now;
 		GM.platformList.checkSavers();
+		if(GM.platformList.checkEnd()){
+			//player has won the game
+			winGame();
+		}
 		GM.platformList.cleanUp();
 		GM.enemyList.cleanUp();
 		
 		
 		requestAnimationFrame(update);
 	};
-
+	function winGame(){
+		if(!won){
+			//kill all enemies on screen
+			GM.enemyList.killAll();
+			//slow player to stop
+			player.win();
+			//show message
+			hudStat = "VICTORY IS YOURS!<BR/>YOU MADE IT TO <BR/>THE MOUNTAIN...";
+			that.updateHUD();
+			//show fireworks!
+			fireworkTimer = FIREWORK_TIME;
+			won = true;
+		}
+	}
 	function paint(){
 		ctx.clearRect(0,0,cWidth, cHeight);
 		GM.viewport.paint(ctx);
@@ -728,12 +793,16 @@ GM.game = (function(){
 		else{
 			HUD.health_bar.style.background = "#2aff00";
 		}
+		HUD.best_score.innerHTML = hudBestScore;
 		HUD.ammo.innerHTML = player.getAmmo();
 		HUD.status.innerHTML = hudStat;
 		HUD.score.innerHTML = hudScore;
 	};
 
 	that.handlePlayerDeath = function(){
+		if(hudScore > hudBestScore){
+			hudBestScore = hudScore;
+		}
 		paused = true;
 		playerDead = true;
 		hudStat = "YOU DIED :(<br/>PRESS SPACE TO RESTART";

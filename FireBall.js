@@ -15,7 +15,7 @@ function FireBall(){
 		this._exploded = true;
 		//make particles
 		GM.game.generateParticles({
-			num: 20,
+			num: 15,
 			x: this._x + this._width/2 - GM.game.getXOffset(),
 			y: this._y + this._height/2,
 			angle: 0,
@@ -34,7 +34,9 @@ function FireBall(){
 		if(!this._exploded){
 			animation_set.drawFrame(this._x - xOff, this._y, this._width, this._height, ctx, -1 * this._facing);
 		}
-		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
+		if(GM.game.rectangleDebug){
+			ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
+		}
 	};
 }
 GM.utils.inherits(FireBall, Movable);

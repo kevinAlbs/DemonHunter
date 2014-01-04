@@ -5,7 +5,12 @@ GM.data = {
 		{
 			type: 'img',
 			name: 'spritesheet',
-			src: 'spritesheet.gif?v2'
+			src: 'images/spritesheet.gif'
+		},
+		{
+			type: 'img',
+			name: 'cover',
+			src: 'images/cover.png'
 		},
 		{
 			type: 'sound',
@@ -30,7 +35,7 @@ GM.data = {
 		{
 			type: 'sound',
 			name: 'bg',
-			src: 'sounds/background.mp3'
+			src: 'sounds/background.ogg'
 		},
 		{
 			type: 'sound',

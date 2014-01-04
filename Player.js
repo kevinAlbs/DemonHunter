@@ -20,7 +20,8 @@ function Player(){
 
 	this.name = "Kaitlin";
 	this._state = "user_controlled";//no higher level behavior
-
+	
+	var won = false;
 	var bullets = null; //linked list of bullets for drawing
 	var shooting = false;
 	var shotLocked = false;//forces click
@@ -42,6 +43,15 @@ function Player(){
 		//call super.update to update hurt state
 		Player.prototype.update.apply(this);
 
+		if(won){
+			//slow down
+			this._walkingSpeed *= .98;
+			if(this._walkingSpeed < .01){
+				this._walkingSpeed = 0;
+				this.moveX(0);
+			}
+		}
+
 		if(this._dying){
 			//decrease height
 			var dHeight = 20;
@@ -56,7 +66,6 @@ function Player(){
 				}
 			}
 		}
-
 		if(!this._dead){
 			if(!this._jumping && !this._rolling){
 				if(this._walking){
@@ -67,7 +76,7 @@ function Player(){
 				}
 			}
 		}
-
+		
 		this.movementUpdate();
 
 		if(this._y > GM.game.getCHeight() + 500){
@@ -166,6 +175,7 @@ function Player(){
 		var gtx = this.getGunTipX() - xOff;
 		var gty = this.getGunTipY();
 		var prev = null;
+
 		ctx.strokeStyle = "rgba(255,255,255,.1)";
 		for(var b = bullets; b != null; b = b.next){
 			b.t -= GM.game.delta;
@@ -196,7 +206,9 @@ function Player(){
 			else{
 				animation_set.drawFrame(this._x - xOff - (14 * this._facing), this._y + 5, this._width, this._height, ctx, this._facing);
 			}
-			ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
+			if(GM.game.rectangleDebug){
+				ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
+			}
 			//bullets = null;
 			if(GM.debug){
 				//ctx.fillText(Math.round(this._x) + "," + Math.round(this._y), this._x - GM.game.getXOffset(), this._y - 10);
@@ -393,6 +405,10 @@ function Player(){
 			animation_set.switchAnimation("dead");
 			GM.game.handlePlayerDeath();
 		});
+	}
+
+	this.win = function(){
+		won = true;
 	}
 };
 

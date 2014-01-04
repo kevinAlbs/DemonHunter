@@ -90,6 +90,29 @@ GM.viewport = (function(){
 			}
 			treesMade = true;
 		}
+		else{
+			//reset their positions, do not create them though
+			var largeTreeFirstX = false, smallTreeFirstX = false;
+			for(var i = 0; i < largeTrees.length; i++){
+				if(!largeTreeFirstX || largeTrees[i].x < largeTreeFirstX){
+					largeTreeFirstX = largeTrees[i].x;
+				}
+			}
+			//subtract off largeTreeFirstX
+			for(var i = 0; i < largeTrees.length; i++){
+				largeTrees[i].x -= largeTreeFirstX - Math.random() * 500;
+			}
+			for(var i = 0; i < smallTrees.length; i++){
+				if(!smallTreeFirstX || smallTrees[i].x < smallTreeFirstX){
+					smallTreeFirstX = smallTrees[i].x;
+				}
+			}
+			//subtract off smalTreeFirstX
+			for(var i = 0; i < smallTrees.length; i++){
+				smallTrees[i].x -= smallTreeFirstX - Math.random() * 200;
+			}
+
+		}
 
 		xOffset = 0;
 		leftMin = 0;

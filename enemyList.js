@@ -60,6 +60,11 @@ GM.enemyList = (function(){
 		return root;
 	}
 	
+	that.killAll = function(){
+		for(var node = root; node != null; node = node.next){
+			node.hurt(1000);//insta-kill!
+		}
+	}
 	/* 
 	uses exported data from builder
 	*/

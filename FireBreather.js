@@ -38,7 +38,9 @@ function FireBreather(p){
 		if(!this._dead){
 			arm_animation.drawFrame(this._x - xOff - (-17 * this._facing), this._y + 15 + bounce, this._width, this._height, ctx, -1 * this._facing);
 		}
-		ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
+		if(GM.game.rectangleDebug){
+			ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
+		}
 		if(this._hurt){
 			ctx.globalAlpha = 1;
 		}

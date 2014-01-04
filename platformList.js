@@ -6,6 +6,7 @@ GM.platformList = (function(){
 	var cur = null;
 	//TODO: maybe make savers a linked list (but I don't want to screw with the actual linked list)
 	var savers = [];//if saver, it will check if player is low on health/ammo and provide pickups with higher likelihood
+	var endPlatform = null;
 	that.getRoot = function(){
 		return root;//will probably change
 	}
@@ -117,6 +118,9 @@ GM.platformList = (function(){
 			p.setHeight(10);
 			if(ps[i].hasOwnProperty("saver") && ps[i].saver == true){
 				savers.push(p);
+			}
+			if(ps[i].hasOwnProperty("end") && ps[i].end == true){
+				endPlatform = p;
 			}
 			for(var j = 0; j < ps[i].spikes.length; j++){
 				p.addSpike(ps[i].spikes[j].x);
@@ -253,6 +257,9 @@ GM.platformList = (function(){
 		}
 	};
 
+	that.checkEnd = function(){
+		return endPlatform != null && GM.game.getPlayerPlatform() == endPlatform;
+	}
 	that.checkSavers = function(){
 		//check if new pickups need to be added
 		for(var i = 0; i < savers.length; i++){

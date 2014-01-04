@@ -109,6 +109,7 @@
 		background: #000;
 		color: #FFF;
 		font-family: "SnareDrum", "Arial", "Helvetica";
+		line-height: 100%;
 	}
 	#screen-gameplay #hud div.section{
 		padding: 15px 0px;
@@ -142,9 +143,12 @@
 		height: 100%;
 		background: #2aff00;
 	}
+	#screen-gameplay{
+		cursor: url("images/cursor.png"), auto;
+	}
 	#screen-gameplay #hud p{
 		font-size: 24pt;
-		margin-top: 17px;
+		margin-top: 0px;
 	}
 	#screen-gameplay #tutorial{
 		width: 516px;
@@ -162,6 +166,7 @@
 		padding: 15px;
 		background: #5d47fa;
 		font-family: "SnareDrum", "Arial", "Helvetica";
+		line-height: 40%;
 		font-size: 64px;
 		cursor: pointer;
 	}
@@ -171,8 +176,22 @@
 		bottom: 35px;
 		padding: 20px;
 	}
-	#screen-menu{
+	#screen-gameplay .best{
+		font-size: 36px;
+		color: #FF0;
+	}
+	#screen-loading{
 		background: #000;
+
+	}
+	#screen-loading h2{
+		font-size: 92px;
+		color: #FFF;
+		font-family: "SnareDrum", "Arial", "Helvetica";
+		padding: 100px 200px 550px 200px;
+	}
+	#screen-menu{
+		background: url("images/cover.png") #000;
 		color: #FFF;
 	}
 	#screen-menu .inner{
@@ -184,6 +203,7 @@
 	#screen-menu li{
 		cursor: pointer;
 		font-family: "SnareDrum", "Arial", "Helvetica";
+		line-height: 40%;
 		font-size: 48px;
 		text-transform: uppercase;
 		padding: 5px 10px;
@@ -194,6 +214,7 @@
 	}
 	#screen-menu h1, #screen-menu h2{
 		font-family: "SnareDrum", "Arial", "Helvetica";
+		line-height: 40%;
 		font-size: 64px;
 		font-weight: normal;
 		padding: 10px 0;

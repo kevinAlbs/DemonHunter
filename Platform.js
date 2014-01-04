@@ -72,7 +72,9 @@ function Platform(){
 
 	this.paint = function(ctx){
 		var xOff = GM.game.getXOffset();
-		ctx.strokeRect(Math.round(this._x - xOff), Math.round(this._y), this._width, this._height);
+		if(GM.game.rectangleDebug){
+			ctx.strokeRect(Math.round(this._x - xOff), Math.round(this._y), this._width, this._height);
+		}
 		var lsw = 78, //left side width (sorry for hard coding)
 			rsw = 19,
 			mw = 133;
