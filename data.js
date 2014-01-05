@@ -13,6 +13,11 @@ GM.data = {
 			src: 'images/cover.png'
 		},
 		{
+			type: 'img',
+			name: 'tutorial',
+			src: 'images/help.png'
+		},
+		{
 			type: 'sound',
 			name: 'shot1',
 			src: 'sounds/shotgun2.wav'

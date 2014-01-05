@@ -233,6 +233,7 @@ GM.game = (function(){
 		output.enemies = diff[0][0].data.enemies;
 
 		//TODO: add multiple possible curves
+		console.log("Diff:");
 		console.log(diff);
 		var curve = [1,3,2,4,3,5,2,4,3,5];
 		for(var i = 0; i < curve.length; i++){
@@ -355,7 +356,7 @@ GM.game = (function(){
 			for(var i = 0; i < pickups.length; i++){
 				var pi = pickups[i];
 				if(pi.getType() == "health"){
-					player.gainHealth(20);
+					player.gainHealth(10);
 					that.updateHUD();
 				}
 				else if(pi.getType() == "ammo"){

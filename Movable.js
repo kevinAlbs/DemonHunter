@@ -122,7 +122,7 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 		var yCorrect = -1 * dy/Math.abs(dy);
 		if(tx < ty){
 			//since tx is the time in which collision occurs, calculate final x position
-			console.log("Collision on x");
+			//console.log("Collision on x");
 			if(move){
 				m._x += dx * tx + xCorrect;
 				m._xVel = 0;
@@ -137,7 +137,7 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 			}
 		}
 		else if(ty < tx){
-			console.log("Collision on y");
+			//console.log("Collision on y");
 			if(move){
 				m._y += dy * ty + yCorrect;
 				m._yVel = 0;
@@ -152,7 +152,7 @@ Movable.prototype.collMovingStatic = function(m, s, move){
 			}
 		}
 		else{
-			console.log("Collision on x,y");
+			//console.log("Collision on x,y");
 			if(move){
 				m._x += dx * tx + xCorrect;
 				m._y += dy * ty + yCorrect;
