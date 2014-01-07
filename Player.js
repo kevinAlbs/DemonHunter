@@ -218,7 +218,7 @@ function Player(){
 			}
 		}
 		else{
-			ctx.strokeRect(this._x - xOff, this._y, this._width, this._height);
+			/* ctx.strokeRect(this._x - xOff, this._y, this._width, this._height); */
 			animation_set.drawFrame(this._x - xOff - (14 * this._facing), this._y + 5, this._width, this._height, ctx, this._facing);
 		}
 	};
