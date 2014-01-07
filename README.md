@@ -1,3 +1,6 @@
+## About ##
+This is a simple platformer game. You can play it [here](http://kevinalbs.com/demonHunter/). As of now it runs best in Chrome and Firefox. There are still issues and lag on Linux Chromium.
+
 ## TODO ##
 - Add more map fragments, split up tree generation (possibly make world editor open source on it's own and make it more all-purpose)
 - Add more sounds
