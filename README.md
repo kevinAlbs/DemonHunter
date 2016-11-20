@@ -57,13 +57,9 @@ Guns + enemies:
 
 ## Remarks ##
 - Presently, I have all of the platform collision and gravity in Mob.js. This is under the assumption that Mobs will be the only objects interacting with platforms. In the future, if the need arises, I may want to put this in Movable.
-- Possibly change duck to barrel roll
-- In the context of this game it is okay, but I would like to change the xOffset to reset periodically so we don't end up with large numbers for x/y coordinates. After a very very long time we could reach integer overflow. But I'm sure I'll end the game before that ;)
 - Possibly add bullet boost
-- Thoreau
-
 
 ## Builder ##
 
-### Todo ###
+### TODO ###
 - possibly add autosaving

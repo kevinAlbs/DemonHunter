@@ -568,6 +568,21 @@ GM.game = (function(){
 	function toggleMovement(val){
 		movementPaused = val;
 	}
+
+	function handleBestSubmit() {
+		var name = prompt("Enter your name for the leaderboard");
+		if (!name) return;
+		var n = btoa(name);
+		var s = btoa(hudBestScore + "");
+		var req = new XMLHttpRequest();
+		req.open('GET', 'submit.php?n=' + n + '&s=' + s, true);
+		req.onload = function() {
+			if (req.status == 200) {
+				alert("Recorded high score of " + hudBestScore);
+			}
+		};
+		req.send();
+ 	}
 	/* public methods */
 	/* deps is defined as an array of objects describing media type:
 	[{
@@ -612,11 +627,14 @@ GM.game = (function(){
 	that.toggleListeners = function(val){
 		var fn = val + "EventListener";
 		var cnv = document.getElementById("mycanvas");
+		var submitBtn = document.getElementById("submit");
+
 		document[fn]("keydown",handleKeyDown, false);
 		document[fn]("keyup",handleKeyUp, false);
 		cnv[fn]("mousedown", handleMousedown, false);
 		cnv[fn]("mouseup", handleMouseup, false);
 		cnv[fn]("mousemove", handleMousemove, false);
+		submitBtn[fn]("click", handleBestSubmit, false);
 	};
 
 	that.startGame = function(){
@@ -668,7 +686,7 @@ GM.game = (function(){
 
 	that.shootGun = function(startX, startY, angle){
 		var closestE = null;
-		var closestT = cWidth + cHeight; //cWidth + cHeight is always larger than longest possible distance
+		var closestT = 10 * (cWidth + cHeight); //cWidth + cHeight is always larger than longest possible distance
 		var dx = Math.cos(angle);
 		var dy = Math.sin(angle);
 		var xColl, yColl;

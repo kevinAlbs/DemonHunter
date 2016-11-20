@@ -18,8 +18,28 @@
 			<h2>DEMON HUNTER</h2>
 			<ul>
 				<li id="btn-play">Play</li>
-				<!--<li id="btn-high">High Scores</li>-->
+				<li id="btn-leaderboard">Leaderboard</li>
 			</ul>
+		</div>
+	</div>
+	<div id="screen-leaderboard" class="screen no-highlight">
+		<div class="inner">
+		<h2>TOP 100 SCORES</h2>
+		<div class="scroller">
+			<table>
+				<?php
+					require('mysqlconfig.php');
+					$results = mysqli_query($cxn, 'SELECT * FROM scores ORDER BY score DESC LIMIT 100');
+					while ($row = mysqli_fetch_assoc($results)) {
+					$niceDate = explode(' ', $row['date'])[0];
+				?>
+				<tr><td><?php echo $niceDate ?></td><td><?php echo $row['name'] ?></td><td><?php echo $row['score'] ?></td></tr>
+				<?php
+					}
+				?>
+			</table>
+		</div>
+		<ul><li id='btn-back'>Back to Menu</li></ul>
 		</div>
 	</div>
 	<div id="screen-gameplay" class="screen no-highlight">
@@ -34,12 +54,17 @@
 					<div id="health_bar_fill"></div>
 				</div>
 			</div>
-			<div class="section">
+			<div class="section ammo">
 				<h2>AMMO</h2>
 				<h3 id="ammo_amt">100</h3>
 			</div>
-			<div class="section">
-				<h2>SCORE <span class="best">BEST: <span id="best">0</span></h2>
+			<div class="section score">
+				<h2>SCORE</h2>
+				<div class='best-section'>
+					<span class="best">BEST: <span id="best">0</span></span><br/>
+					<span id="submit">[SUBMIT]</span>
+				</div>
+				<br style='clear:both'>
 				<h3 id="score_amt">0</h3>
 			</div>
 			<div class="section">
@@ -56,9 +81,8 @@
 	</div>
 </div>
 <footer>
-	Developed by <a href="http://kevinalbs.com" target="_blank" title="View Kevin Albertson's Portfolio">Kevin Albertson</a><br/>
-	View source or contribute on <a href="https://github.com/kevinAlbs/DemonHunter" target="_blank" title="View GitHub repository">GitHub</a><br/>
-	Works best in Chrome/Firefox. This is still under active development. Please report issues via Github.
+	Developed by <a href="http://kevinalbs.com" target="_blank" title="View Kevin Albertson's Portfolio">Kevin Albertson</a>. 
+	View source or contribute on <a href="https://github.com/kevinAlbs/DemonHunter" target="_blank" title="View GitHub repository">GitHub</a>. Works best in Chrome/Firefox.
 </footer>
 <p id="debug"></p>
 <script>
@@ -74,6 +98,7 @@
 <script src="GM.js"></script>
 <script src="Screen.js"></script>
 <script src="GameScreen.js"></script>
+<script src="LeaderboardScreen.js"></script>
 <script src="MenuScreen.js"></script>
 <script src="LoadingScreen.js"></script>
 <script src="Paintable.js"></script>
@@ -85,7 +110,6 @@
 <script src="Mob.js"></script>
 <script src="Person.js"></script>
 <script src="Player.js"></script>
-<script src="Professor.js"></script>
 <script src="Enemy.js"></script>
 <script src="Zombie.js"></script>
 <script src="Centaur.js"></script>

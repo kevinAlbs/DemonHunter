@@ -129,6 +129,18 @@
 		padding-left: 2%;
 		float: left;
 	}
+	#screen-gameplay #hud .section.score h2, #screen-gameplay #hud .section.score .best-section {
+		float: left;
+	}
+	#screen-gameplay #hud .section.score .best-section {
+		margin-top: -6px;
+	}
+	#screen-gameplay #hud .section.score .best-section #submit {
+		font-size: 36px;
+	}
+	#screen-gameplay #hud .section.score .best-section #submit:hover {
+		color: #FF0;
+	}
 	#screen-gameplay #hud h2{
 		font-size: 48pt;
 	}
@@ -202,17 +214,20 @@
 		font-family: "SnareDrum", "Arial", "Helvetica";
 		padding: 100px 200px 550px 200px;
 	}
-	#screen-menu{
+	#screen-leaderboard, #screen-menu{
 		background: url("images/cover.png") #000;
 		color: #FFF;
 	}
-	#screen-menu .inner{
+	#screen-leaderboard .inner, #screen-menu .inner{
 		padding: 60px 0px 60px 200px;
 	}
-	#screen-menu ul{
+	#screen-leaderboard .inner {
+		height: 550px;
+	}
+	#screen-leaderboard ul, #screen-menu ul{
 		list-style-type: none;
 	}
-	#screen-menu li{
+	#screen-leaderboard li, #screen-menu li{
 		cursor: pointer;
 		font-family: "SnareDrum", "Arial", "Helvetica";
 		line-height: 40%;
@@ -221,10 +236,10 @@
 		padding: 5px 10px;
 		color: #FFF;
 	}
-	#screen-menu li:hover{
+	#screen-leaderboard li:hover, #screen-menu li:hover{
 		color: #FF0;
 	}
-	#screen-menu h1, #screen-menu h2{
+	#screen-leaderboard h2, #screen-menu h1, #screen-menu h2{
 		font-family: "SnareDrum", "Arial", "Helvetica";
 		line-height: 40%;
 		font-size: 64px;
@@ -237,6 +252,17 @@
 	}
 	#screen-menu h2{
 		padding-bottom: 400px;
+	}
+	#screen-leaderboard .scroller {
+		height: 400px;
+		overflow: auto;
+	}
+	#screen-leaderboard td {
+		font-family: "SnareDrum", "Arial", "Helvetica";
+		color: #FFF;
+		font-size: 36px;
+		padding-right: 10px;
+		text-transform: uppercase;
 	}
 	.screen{
 		display: none;
