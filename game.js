@@ -47,6 +47,7 @@ GM.game = (function(){
 		hudStat = "",
 		hudScore = 0,
 		hudBestScore = 0,
+		hudBestScoreSubmitted = 0,
 		HUD = {
 			health_bar : document.getElementById("health_bar_fill"),
 			ammo : document.getElementById("ammo_amt"),
@@ -522,6 +523,7 @@ GM.game = (function(){
 			player.win();
 			//show message
 			hudStat = "VICTORY IS YOURS!<BR/>YOU MADE IT TO <BR/>THE MOUNTAIN...";
+			hudBestScore = Math.max(hudScore, hudBestScore);
 			that.updateHUD();
 			//show fireworks!
 			fireworkTimer = FIREWORK_TIME;
@@ -570,6 +572,13 @@ GM.game = (function(){
 	}
 
 	function handleBestSubmit() {
+		if (hudBestScore == 0) {
+			alert("Not impressive enough!");
+			return;
+		} else if (hudBestScoreSubmitted >= hudBestScore) {
+			alert("Previously submitted score of " + hudBestScoreSubmitted + ". Only submit higher.");
+			return;
+		}
 		var name = prompt("Enter your name for the leaderboard");
 		if (!name) return;
 		var n = btoa(name);
@@ -582,6 +591,7 @@ GM.game = (function(){
 			}
 		};
 		req.send();
+		hudBestScoreSubmitted = hudBestScore;
  	}
 	/* public methods */
 	/* deps is defined as an array of objects describing media type:
@@ -819,9 +829,7 @@ GM.game = (function(){
 	};
 
 	that.handlePlayerDeath = function(){
-		if(hudScore > hudBestScore){
-			hudBestScore = hudScore;
-		}
+		hudBestScore = Math.max(hudScore, hudBestScore);
 		paused = true;
 		playerDead = true;
 		hudStat = "YOU DIED :(<br/>PRESS SPACE TO RESTART";
