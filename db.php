@@ -37,6 +37,6 @@ function dbSaveScore($score, $name, $date) {
 
 function dbGetScores() {
     global $db;
-    $stmt = $db->prepare("SELECT * FROM scores ORDER BY score DESC");
+    $stmt = $db->prepare("SELECT * FROM scores ORDER BY score DESC LIMIT 100");
     return $stmt->execute();
 }
