@@ -1,3 +1,7 @@
+<?php 
+	require_once("db.php");
+	dbInit();
+?>
 <html>
 <head>
 	<!-- Google tag (gtag.js) -->
@@ -37,10 +41,9 @@
 		<div class="scroller">
 			<table>
 				<?php
-					require('mysqlconfig.php');
-					$results = mysqli_query($cxn, 'SELECT * FROM scores ORDER BY score DESC LIMIT 100');
-					while ($row = mysqli_fetch_assoc($results)) {
-					$niceDate = explode(' ', $row['date'])[0];
+					$res = dbGetScores();
+					while ($row = $res->fetchArray()) {
+					$niceDate = date("m/d/Y", $row['date']);
 				?>
 				<tr><td><?php echo $niceDate ?></td><td><?php echo $row['name'] ?></td><td><?php echo $row['score'] ?></td></tr>
 				<?php
@@ -143,3 +146,5 @@ window.addEventListener("load", pageLoaded);
 
 </body>
 </html>
+
+<?php dbClose(); ?>
